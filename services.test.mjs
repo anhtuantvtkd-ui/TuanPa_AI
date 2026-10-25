@@ -31,3 +31,11 @@ test("Llama bounded request, real response only",async()=>{
 test("reject upstream redirects without following them",async()=>{
  for(const status of [301,302,307,308]) await assert.rejects(()=>readRepo("README.md",async()=>new Response(null,{status,headers:{Location:"https://example.com/"}})),new RegExp("GitHub returned HTTP "+status));
 });
+
+test("public raw fallback retains exact Git blob SHA",async()=>{
+ let calls=0;const r=await readRepo("hello.txt",async(url,opt)=>{calls++;assert.equal(opt.redirect,"manual");if(calls===1)return new Response(null,{status:403});assert.equal(url,"https://raw.githubusercontent.com/anhtuantvtkd-ui/TuanPa_AI/refs/heads/main/hello.txt");return new Response("hello\n");});
+ assert.equal(r.sha,"ce013625030ba8dba906f756967f9e9ca394464a");assert.equal(r.text,"hello\n");assert.equal(calls,2);
+});
+test("raw fallback rejects redirects, binary and oversized data",async()=>{
+ for(const raw of [new Response(null,{status:302,headers:{Location:"https://example.com"}}),new Response("a\u0000b"),new Response("x".repeat(64001))]){let count=0;await assert.rejects(()=>readRepo("file",async()=>++count===1?new Response(null,{status:403}):raw));}
+});
