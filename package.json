@@ -12,7 +12,7 @@
     "workflow:check": "node workflow-check.mjs"
   },
   "dependencies": {
-    "@cloudflare/workers-oauth-provider": "^0.8.3",
+    "@cloudflare/workers-oauth-provider": "^1.2.3",
     "@modelcontextprotocol/server": "2.3.1",
     "agents": "^0.29.0",
     "hono": "^4.12.27",
