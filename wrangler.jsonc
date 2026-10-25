@@ -1,0 +1,20 @@
+{
+  "name": "tuanpa-ai",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "d9d407fc5c02463fa716c7fdbcc94a23"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  },
+  "observability": {
+    "enabled": false
+  }
+}
