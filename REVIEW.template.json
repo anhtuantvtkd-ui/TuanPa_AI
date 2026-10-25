@@ -1,0 +1,11 @@
+{
+  "task_id": null,
+  "reviewed_commit": null,
+  "reviewer": null,
+  "model": null,
+  "independent": false,
+  "verdict": "PENDING",
+  "findings": [],
+  "evidence": [],
+  "limitations": []
+}

@@ -1,3 +1,15 @@
+# Hệ thống phát triển phần mềm kỹ thuật MEPS
+
+Bắt đầu tại [WORKFLOW.md](WORKFLOW.md), [phân vai](ROLES.md), [quy tắc agent](AGENTS.md) và [hướng dẫn Gemini](GEMINI.md).
+
+Luồng: yêu cầu → đặc tả có nguồn → nhánh triển khai → kiểm thử → review độc lập → chủ sở hữu duyệt → phát hành có rollback. Xem [backlog](PRODUCT_BACKLOG.md).
+
+Sao chép TASK.template.json vào work-items/TASK-xxxx.json cho mỗi việc. Hồ sơ review và release được nhúng vào trường review/release của task; hai template tương ứng mô tả cấu trúc. result_commit là commit chứa mã được kiểm, không phải commit chỉ cập nhật hồ sơ. Mỗi evidence gồm check, status, commit, reference; approval gồm by, commit, reference. Chỉ liệt kê required_checks thực sự áp dụng và ghi lý do loại trừ trong đặc tả.
+
+CI chạy kiểm tra bridge và hồ sơ task qua npm test; không chứng nhận tính đúng chuyên môn hay nghiệm thu AutoCAD. Chưa có bộ điều phối nhiều AI tự chạy; Gemini hiện chỉ đọc main qua MCP và gọi Llama.
+
+---
+
 # TuanPa AI Bridge
 Gemini có thể gọi Meta Llama qua MCP và đọc repo anhtuantvtkd-ui/TuanPa_AI.
 

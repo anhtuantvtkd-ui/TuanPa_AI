@@ -1,0 +1,29 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0001",
+  "title": "Thay bằng mục tiêu cụ thể",
+  "status": "NEEDS_INPUT",
+  "module": "electrical",
+  "risk": "high",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "unassigned",
+  "reviewer": "unassigned",
+  "base_commit": null,
+  "branch": null,
+  "scope": [],
+  "out_of_scope": [],
+  "sources": [],
+  "missing_inputs": [
+    "Mô tả yêu cầu, dữ liệu và tiêu chí nghiệm thu"
+  ],
+  "acceptance_criteria": [],
+  "required_checks": [
+    "unit",
+    "technical_reference",
+    "native_if_applicable"
+  ],
+  "evidence": [],
+  "review": null,
+  "approval": null,
+  "release": null
+}
