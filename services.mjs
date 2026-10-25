@@ -13,7 +13,7 @@ export function safePath(path) {
 export async function readRepo(path = "", fetcher = fetch) {
   const response = await fetcher("https://api.github.com/repos/" + REPO + "/contents/" + safePath(path) + "?ref=main", {
     headers: {Accept:"application/vnd.github+json","User-Agent":"TuanPa-AI-Bridge"},
-    redirect:"error", signal:AbortSignal.timeout(15000)
+    redirect:"manual", signal:AbortSignal.timeout(15000)
   });
   if (!response.ok) throw new Error("GitHub returned HTTP " + response.status);
   const body = await response.json();

@@ -10,7 +10,7 @@ test("reject traversal and control characters",()=>{
  assert.equal(safePath("docs/hello world.md"),"docs/hello%20world.md");
 });
 test("repo target fixed, directory fields limited",async()=>{
- const r=await readRepo("",async(url,opt)=>{assert.equal(url,"https://api.github.com/repos/anhtuantvtkd-ui/TuanPa_AI/contents/?ref=main");assert.equal(opt.redirect,"error");return Response.json([{name:"README.md",path:"README.md",type:"file",size:10,secret:"not exposed"}]);});
+ const r=await readRepo("",async(url,opt)=>{assert.equal(url,"https://api.github.com/repos/anhtuantvtkd-ui/TuanPa_AI/contents/?ref=main");assert.equal(opt.redirect,"manual");return Response.json([{name:"README.md",path:"README.md",type:"file",size:10,secret:"not exposed"}]);});
  assert.equal(r.entries[0].secret,undefined);
 });
 test("decode UTF8 with SHA provenance",async()=>{
@@ -26,4 +26,8 @@ test("Llama bounded request, real response only",async()=>{
  assert.equal((await askLlama(ai,"hello")).answer,"ok");
  await assert.rejects(()=>askLlama(ai,"x".repeat(6001)));assert.equal(calls,1);
  await assert.rejects(()=>askLlama({run:async()=>({})},"hello"));
+});
+
+test("reject upstream redirects without following them",async()=>{
+ for(const status of [301,302,307,308]) await assert.rejects(()=>readRepo("README.md",async()=>new Response(null,{status,headers:{Location:"https://example.com/"}})),new RegExp("GitHub returned HTTP "+status));
 });
