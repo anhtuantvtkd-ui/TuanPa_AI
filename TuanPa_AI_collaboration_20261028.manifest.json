@@ -1,0 +1,18 @@
+{
+  "repository": "anhtuantvtkd-ui/TuanPa_AI",
+  "branch": "task/TASK-0001-collaboration-foundation",
+  "head": "7f0e5ce7b8c3241e22a935e3dd91288e1454073e",
+  "tested_code_commit": "3e22f50d388a8eab992f2da10e600ff5a70fc932",
+  "tests": "31/31 PASS",
+  "publication": "LOCAL_ONLY",
+  "artifacts": [
+    {
+      "file": "TuanPa_AI_collaboration_20261028.bundle",
+      "sha256": "9d8d7a2ab1bf1e7535dd804c1cf6456cb289f0d412ff4bf514794c1a595c79ad"
+    },
+    {
+      "file": "TuanPa_AI_collaboration_20261028.zip",
+      "sha256": "ec6cfb5811b476efcce775e0708de39bf9d66745c242462409711ccd245ab994"
+    }
+  ]
+}
