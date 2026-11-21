@@ -1,0 +1,238 @@
+{
+  "schema": "tvxd.installer-verified-source/v1",
+  "source_commit": "ed35da35ab71e1c69c5df998e4b3a32d579e9409",
+  "artifact": {
+    "path": "C:\\Users\\tuanpa\\Documents\\Codex\\2026-10-25\\work-space-recovery\\InstallR27.compile.exe",
+    "sha256": "f24aaf4960c27f48b8ceb9e65f3b4a15514c73ea63b563bb78b945129a083dc8"
+  },
+  "source": {
+    "inputs": [
+      {
+        "path": "installer/InstallR27.cs",
+        "local": "C:\\Users\\tuanpa\\Documents\\Codex\\2026-10-25\\work-space-recovery\\InstallR27.cs",
+        "sha256": "6e878d88ddf64fe66f2215f1019cc4363664b8f7853b7a3e86b8609f90b286ef",
+        "blob_sha": "da66f71c12feafa32fecdf94d1712aff6e5d3386"
+      }
+    ]
+  },
+  "references": [
+    {
+      "name": "Accessibility.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\Accessibility.dll",
+      "sha256": "22f8f2b03f5aeddab86b41682e4c32cc179a349106039434c9d777d492110bfb"
+    },
+    {
+      "name": "Microsoft.CSharp.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\Microsoft.CSharp.dll",
+      "sha256": "b9f636b629f33ff5f41797cde4b0f5cd3cf26979f98b9bea87fb8b54a571f373"
+    },
+    {
+      "name": "mscorlib.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\mscorlib.dll",
+      "sha256": "cbba0b14d43901ff3d92cc44efe6a79149bfcaa3006c08ca05e186b2a75b54b5"
+    },
+    {
+      "name": "System.Configuration.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Configuration.dll",
+      "sha256": "04a0018561b48efe2a4d56aff686783fd7f8b7f395f4c88c58ba2eb8e8118d41"
+    },
+    {
+      "name": "System.Configuration.Install.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Configuration.Install.dll",
+      "sha256": "c32290ffb20e7123a2e0ba05d5e0c26e15bb8cd35ff3843b67362c571149088c"
+    },
+    {
+      "name": "System.Core.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Core.dll",
+      "sha256": "78c77c7250b6e318e69c1162980640bf7da5e8d3303d3abcc32401a52d667139"
+    },
+    {
+      "name": "System.Data.DataSetExtensions.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.DataSetExtensions.dll",
+      "sha256": "af31cdf81c6f2feba17ea99596a48d4663bd47e51d36444c72fc28df125c4f3d"
+    },
+    {
+      "name": "System.Data.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.dll",
+      "sha256": "d479439eaba17fdff2ff0423c3f729dfabdf8ab9c675957cab136da94f81b62a"
+    },
+    {
+      "name": "System.Data.Linq.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.Linq.dll",
+      "sha256": "bf1dc6bed09d0f29a6314d4ba9d6904628c7f09a2472102ad8fb4cc5f8842fe7"
+    },
+    {
+      "name": "System.Data.OracleClient.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Data.OracleClient.dll",
+      "sha256": "046c332ee80203cf9499623d963f62299f44b7e8df6774ad62cb874cc58440e8"
+    },
+    {
+      "name": "System.Deployment.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Deployment.dll",
+      "sha256": "38040ed91df1c1eda2c8c6949f6c55839725926b2dd876e3ff2bdc23f702d5f6"
+    },
+    {
+      "name": "System.Design.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Design.dll",
+      "sha256": "59ecec113185a688f8833352d0f635d221a364656cd6323914dbde928aeef0ad"
+    },
+    {
+      "name": "System.DirectoryServices.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.DirectoryServices.dll",
+      "sha256": "5b62bde4e879bebbac5b419ebf35cfd007cc535a1d053f1094f6933d41cb44f5"
+    },
+    {
+      "name": "System.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.dll",
+      "sha256": "af12577769e3b0c94fc8e4715cdfd21cbcf0f665bf63489f81e5a0934c94c7e4"
+    },
+    {
+      "name": "System.Drawing.Design.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Drawing.Design.dll",
+      "sha256": "42b9d57f24f8392b3c4d1db5caa7abd9d902ae35234e78ee7cac8acfc4420213"
+    },
+    {
+      "name": "System.Drawing.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Drawing.dll",
+      "sha256": "e2b4072e3fce12e5b9caf9a0c818f25c7a96bd6b3e84ab89b60a1225c124acc2"
+    },
+    {
+      "name": "System.EnterpriseServices.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.EnterpriseServices.dll",
+      "sha256": "0632682331fca0a7547a108b3cb1158560764984b6282ffe1c0c4c4071115429"
+    },
+    {
+      "name": "System.Management.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Management.dll",
+      "sha256": "09cb39097192dd9c1cdceb8a3ec6cd78173c62c9588937130d0816c8490a5793"
+    },
+    {
+      "name": "System.Messaging.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Messaging.dll",
+      "sha256": "60fa05e72e824e802a53c058e75844b0c758da20bee1a780378c90f46fc26c26"
+    },
+    {
+      "name": "System.Runtime.Remoting.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Remoting.dll",
+      "sha256": "0873984573560e6a07e44a89c3772b77cd8680a812a714554a4e417828abe4db"
+    },
+    {
+      "name": "System.Runtime.Serialization.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Serialization.dll",
+      "sha256": "cace1b664087b14643b214a0bab93605945d35c86e25d4801f28aa414ad424fc"
+    },
+    {
+      "name": "System.Runtime.Serialization.Formatters.Soap.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Runtime.Serialization.Formatters.Soap.dll",
+      "sha256": "113da567bcacc1b802a8a2d7dfdf3bbaa92050144b5cd09995c226f017044b50"
+    },
+    {
+      "name": "System.Security.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Security.dll",
+      "sha256": "0e2fec9af2dad6071f627840b059ebb3ed4c37abe1c2ce9cd7f290156e5e1c1a"
+    },
+    {
+      "name": "System.ServiceModel.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.dll",
+      "sha256": "3911b2243ca2f85c2f026d3ad669a77b599aba225ca95afb6b13e9300daaf53d"
+    },
+    {
+      "name": "System.ServiceModel.Web.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceModel.Web.dll",
+      "sha256": "5216615b35566d43a891e31f33be02c3a1bfd5dfd2ecc17d45cce46c8624c135"
+    },
+    {
+      "name": "System.ServiceProcess.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.ServiceProcess.dll",
+      "sha256": "8d464add148c985482877ce2db8d9037a1bc5d37907552c367f3edce8e7909e6"
+    },
+    {
+      "name": "System.Transactions.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Transactions.dll",
+      "sha256": "78baf438ea27532d67dbbf51293441b5847ec81657e2f028a7635bc4984c9dce"
+    },
+    {
+      "name": "System.Web.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.dll",
+      "sha256": "a38e14a5989aa0af8024fd0b44d36e12266dd83b72426d9881568e0dabf0439a"
+    },
+    {
+      "name": "System.Web.Extensions.Design.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Extensions.Design.dll",
+      "sha256": "4b1ab155e913c89be0fee931e860d52466284595be8688c1fed4f899599a0d61"
+    },
+    {
+      "name": "System.Web.Extensions.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Extensions.dll",
+      "sha256": "4ab5606b6a0cafdd5650630bafeddd96d24939f85c2a88dda2aeec69ccf274c0"
+    },
+    {
+      "name": "System.Web.Mobile.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Mobile.dll",
+      "sha256": "385030f03fed148c45a69fd5dd374728401d2cd5c1136ac927a321ea4718b3c5"
+    },
+    {
+      "name": "System.Web.RegularExpressions.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.RegularExpressions.dll",
+      "sha256": "36d5f1876ee4b9c924c0032ccd5ac8c7dd4bb06a1eaa69be9e7b766e9e75ce45"
+    },
+    {
+      "name": "System.Web.Services.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Web.Services.dll",
+      "sha256": "eb75546e0293fd4284fb87989a57fc2aeb8571f70e9198e15f0287f4c2bd86c8"
+    },
+    {
+      "name": "System.Windows.Forms.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Windows.Forms.dll",
+      "sha256": "870989bc37604b75c63e9de9b60ed1ef3dc14d1d5b2400540bfdbabbdd32bbf6"
+    },
+    {
+      "name": "System.Workflow.Activities.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Workflow.Activities.dll",
+      "sha256": "11eb1d7b38f91160be69633123fb690570739309c370fcc277e2f57e9a07dac1"
+    },
+    {
+      "name": "System.Workflow.ComponentModel.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Workflow.ComponentModel.dll",
+      "sha256": "ebad8e820dc29215ed73c54769877d807c214617f1c59811a8a7d07f801a0c67"
+    },
+    {
+      "name": "System.Workflow.Runtime.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Workflow.Runtime.dll",
+      "sha256": "9e987a90c6b02956c12f4d1d03b856b9cbfe1a1fd18a9b1e7154750f2ee64660"
+    },
+    {
+      "name": "System.Xml.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Xml.dll",
+      "sha256": "29576323ef3abb2af666828b9e03c1b562918b41fa7288f144018925f6164413"
+    },
+    {
+      "name": "System.Xml.Linq.dll",
+      "path": "C:\\WINDOWS\\Microsoft.NET\\Framework64\\v4.0.30319\\System.Xml.Linq.dll",
+      "sha256": "51875b0332be5100de7da48f392b315cffc0a0b75e08d1833b5f4df5e5478deb"
+    },
+    {
+      "name": "compiler/csc.exe",
+      "path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe",
+      "sha256": "aae1db57f898ca8bda18590c56f86ced6d0ead80c22033b76fdfe9119706f116"
+    }
+  ],
+  "response": {
+    "path": "C:\\Users\\tuanpa\\Documents\\Codex\\2026-10-25\\work-space-recovery\\InstallR27.compile.rsp",
+    "sha256": "03d0c9c309ab49238ca3d0137274bda00c4f7d56213d94e82c50e11f02de301a"
+  },
+  "compile": {
+    "exit_code": 0,
+    "log": "C:\\Users\\tuanpa\\Documents\\Codex\\2026-10-25\\work-space-recovery\\InstallR27.compile.log",
+    "log_sha256": "08bf75f1c9c113b84f3ac2a107473ad9a6efd52f1caf3e797e9935257c928aee",
+    "command": [
+      "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe",
+      "/noconfig",
+      "@C:\\Users\\tuanpa\\Documents\\Codex\\2026-10-25\\work-space-recovery\\InstallR27.compile.rsp"
+    ]
+  },
+  "artifact_copy": {
+    "path": "C:\\Users\\tuanpa\\TVXD_AI_WORKSPACE\\PROJECTS\\MEPS_ELECTRICAL\\WORK\\MEP_SDNL152\\INSTALLER\\CAI_DAT.exe",
+    "sha256": "f24aaf4960c27f48b8ceb9e65f3b4a15514c73ea63b563bb78b945129a083dc8"
+  }
+}

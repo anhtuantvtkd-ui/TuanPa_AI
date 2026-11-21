@@ -1,0 +1,18 @@
+# Build outputs & temporaries
+meps_final.il
+ToadoPart.il
+ToadoPart.dll
+ToadoPart.res
+merge_toado.exe
+update_v4.exe
+*.obj
+*.pdb
+*.tmp
+
+# AutoCAD lock files
+*.dwl
+*.dwl2
+
+# Local archives
+*.rar
+*.zip
