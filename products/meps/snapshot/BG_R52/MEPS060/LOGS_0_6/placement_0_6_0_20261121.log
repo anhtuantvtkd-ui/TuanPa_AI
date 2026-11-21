@@ -1,0 +1,12 @@
+2026-11-21T14:02:02.891Z	v0.6.0	req=1	REQUEST	E-AT-2P	ms=0.6	gửi lệnh hệ số 1
+2026-11-21T14:02:02.925Z	v0.6.0	req=1	START	E-AT-2P	ms=35.2	-
+2026-11-21T14:02:03.024Z	v0.6.0	req=1	PREVIEW	E-AT-2P	ms=134.5	4 đối tượng xem trước
+2026-11-21T14:02:03.025Z	v0.6.0	req=1	JIG_START	E-AT-2P	ms=135.5	hệ số 1
+2026-11-21T14:02:03.105Z	v0.6.0	req=1	POINT	E-AT-2P	ms=215.2	frames=3 samples=3
+2026-11-21T14:02:03.292Z	v0.6.0	req=1	INSERTED	E-AT-2P	ms=402.1	0 cảnh báo kiểu chữ
+2026-11-21T14:02:05.351Z	v0.6.0	req=2	REQUEST	E-CT-1	ms=0.0	gửi lệnh hệ số 1
+2026-11-21T14:02:05.363Z	v0.6.0	req=2	START	E-CT-1	ms=12.5	-
+2026-11-21T14:02:05.452Z	v0.6.0	req=2	PREVIEW	E-CT-1	ms=101.5	4 đối tượng xem trước
+2026-11-21T14:02:05.452Z	v0.6.0	req=2	JIG_START	E-CT-1	ms=101.5	hệ số 1
+2026-11-21T14:02:05.558Z	v0.6.0	req=2	POINT	E-CT-1	ms=206.8	frames=5 samples=5
+2026-11-21T14:02:05.608Z	v0.6.0	req=2	INSERTED	E-CT-1	ms=256.7	0 cảnh báo kiểu chữ
