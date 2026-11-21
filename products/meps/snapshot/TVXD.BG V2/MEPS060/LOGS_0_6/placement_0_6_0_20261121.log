@@ -1,0 +1,36 @@
+2026-11-21T16:14:37.683Z	v0.6.0	req=1	REQUEST	E-CT-1	ms=1.0	gửi lệnh hệ số 1
+2026-11-21T16:14:37.718Z	v0.6.0	req=1	START	E-CT-1	ms=36.3	-
+2026-11-21T16:14:37.934Z	v0.6.0	req=1	PREVIEW	E-CT-1	ms=252.5	4 đối tượng xem trước
+2026-11-21T16:14:37.934Z	v0.6.0	req=1	JIG_START	E-CT-1	ms=252.5	hệ số 1
+2026-11-21T16:14:38.117Z	v0.6.0	req=1	POINT	E-CT-1	ms=435.6	frames=2 samples=2
+2026-11-21T16:14:38.452Z	v0.6.0	req=1	INSERTED	E-CT-1	ms=770.6	0 cảnh báo kiểu chữ
+2026-11-21T16:14:40.378Z	v0.6.0	req=2	REQUEST	E-CT-2C-1	ms=0.0	gửi lệnh hệ số 1
+2026-11-21T16:14:40.390Z	v0.6.0	req=2	START	E-CT-2C-1	ms=11.7	-
+2026-11-21T16:14:40.476Z	v0.6.0	req=2	PREVIEW	E-CT-2C-1	ms=97.1	5 đối tượng xem trước
+2026-11-21T16:14:40.477Z	v0.6.0	req=2	JIG_START	E-CT-2C-1	ms=98.3	hệ số 1
+2026-11-21T16:14:40.591Z	v0.6.0	req=2	POINT	E-CT-2C-1	ms=213.0	frames=7 samples=7
+2026-11-21T16:14:40.640Z	v0.6.0	req=2	INSERTED	E-CT-2C-1	ms=261.9	0 cảnh báo kiểu chữ
+2026-11-21T16:30:19.349Z	v0.6.0	req=1	REQUEST	E-CT-6	ms=1.0	gửi lệnh hệ số 1
+2026-11-21T16:30:19.376Z	v0.6.0	req=1	START	E-CT-6	ms=29.1	-
+2026-11-21T16:30:19.472Z	v0.6.0	req=1	PREVIEW	E-CT-6	ms=126.0	9 đối tượng xem trước
+2026-11-21T16:30:19.474Z	v0.6.0	req=1	JIG_START	E-CT-6	ms=127.5	hệ số 1
+2026-11-21T16:30:19.618Z	v0.6.0	req=1	POINT	E-CT-6	ms=271.9	frames=5 samples=5
+2026-11-21T16:30:19.761Z	v0.6.0	req=1	INSERTED	E-CT-6	ms=414.1	0 cảnh báo kiểu chữ
+2026-11-21T16:30:23.369Z	v0.6.0	req=2	REQUEST	E-CT-4	ms=0.0	gửi lệnh hệ số 1
+2026-11-21T16:30:23.379Z	v0.6.0	req=2	START	E-CT-4	ms=10.5	-
+2026-11-21T16:30:23.470Z	v0.6.0	req=2	PREVIEW	E-CT-4	ms=101.6	7 đối tượng xem trước
+2026-11-21T16:30:23.471Z	v0.6.0	req=2	JIG_START	E-CT-4	ms=102.6	hệ số 1
+2026-11-21T16:30:23.783Z	v0.6.0	req=2	POINT	E-CT-4	ms=414.0	frames=24 samples=24
+2026-11-21T16:30:23.832Z	v0.6.0	req=2	INSERTED	E-CT-4	ms=463.4	0 cảnh báo kiểu chữ
+2026-11-21T17:00:06.029Z	v0.6.0	req=3	REQUEST	E-CT-1	ms=0.0	gửi lệnh hệ số 1
+2026-11-21T17:00:06.040Z	v0.6.0	req=3	START	E-CT-1	ms=10.5	-
+2026-11-21T17:00:06.128Z	v0.6.0	req=3	PREVIEW	E-CT-1	ms=99.0	4 đối tượng xem trước
+2026-11-21T17:00:06.128Z	v0.6.0	req=3	JIG_START	E-CT-1	ms=99.0	hệ số 1
+2026-11-21T17:00:06.266Z	v0.6.0	req=3	POINT	E-CT-1	ms=237.0	frames=7 samples=7
+2026-11-21T17:00:06.315Z	v0.6.0	req=3	INSERTED	E-CT-1	ms=285.3	0 cảnh báo kiểu chữ
+2026-11-21T17:00:07.871Z	v0.6.0	req=4	REQUEST	E-CT-1	ms=0.0	gửi lệnh hệ số 1
+2026-11-21T17:00:07.882Z	v0.6.0	req=4	START	E-CT-1	ms=11.0	-
+2026-11-21T17:00:07.972Z	v0.6.0	req=4	PREVIEW	E-CT-1	ms=100.3	4 đối tượng xem trước
+2026-11-21T17:00:07.972Z	v0.6.0	req=4	JIG_START	E-CT-1	ms=100.9	hệ số 1
+2026-11-21T17:00:08.317Z	v0.6.0	req=4	POINT	E-CT-1	ms=445.2	frames=27 samples=27
+2026-11-21T17:00:08.365Z	v0.6.0	req=4	INSERTED	E-CT-1	ms=493.8	0 cảnh báo kiểu chữ

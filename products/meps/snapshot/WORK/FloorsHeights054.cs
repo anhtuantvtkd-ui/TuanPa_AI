@@ -1,0 +1,20 @@
+using System;using System.Collections.Generic;using System.Linq;using System.IO;using System.Text;using System.Web.Script.Serialization;
+namespace Tvxd.Meps {
+ public sealed class DeviceHeight055 {public string id=Guid.NewGuid().ToString("N");public string name;public decimal? height;}
+ public sealed class InputTemplate055 {public string kind="TVXD_INPUT_TEMPLATE";public int version=1;public string name;public Floors054 data;}
+ public sealed partial class Floors054 {
+  public List<DeviceHeight055> devices=new List<DeviceHeight055>();
+  public void SeedDevices(){if(devices==null)devices=new List<DeviceHeight055>();if(devices.Count==0)foreach(var n in new[]{"Ổ CẮM","CÔNG TẮC","TỦ ĐIỆN","ĐÈN ÂM TRẦN","ĐÈN ỐP TRẦN","ĐÈN TREO","ĐÈN TƯỜNG"})devices.Add(new DeviceHeight055{name=n});}
+  void ValidateHeights(HashSet<string> ids){
+   if(devices==null||devices.Count>500)throw new InvalidOperationException("Tối đa 500 loại thiết bị.");var names=new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+   foreach(var d in devices){Guid g;if(d==null||!Guid.TryParseExact(d.id,"N",out g)||!ids.Add(d.id))throw new InvalidOperationException("Mã thiết bị không hợp lệ.");if(string.IsNullOrWhiteSpace(d.name)||d.name.Length>60||d.name.Any(char.IsControl)||!names.Add(d.name.Trim().Normalize()))throw new InvalidOperationException("Tên loại thiết bị không được trùng hoặc rỗng (tối đa 60 ký tự).");if(d.height<0)throw new InvalidOperationException("Cao độ lắp đặt từ sàn hoàn thiện phải không âm.");}
+   var valid=new HashSet<string>(devices.Select(x=>x.id));foreach(var r in floors.SelectMany(f=>f.rooms)){if(r.heights==null)throw new InvalidOperationException("Cao độ riêng của phòng bị thiếu cấu trúc.");foreach(var v in r.heights)if(!valid.Contains(v.Key)||v.Value<0)throw new InvalidOperationException("Cao độ riêng tham chiếu loại thiết bị không hợp lệ.");}
+  }
+  public decimal? Height(string deviceId,string roomId){var d=devices.Single(x=>x.id==deviceId);if(roomId!=null){var r=floors.SelectMany(f=>f.rooms).Single(x=>x.id==roomId);decimal h;if(r.heights.TryGetValue(deviceId,out h))return h;}return d.height;}
+  public void SetHeight(string deviceId,string roomId,decimal? h){if(h<0)throw new InvalidOperationException("Cao độ không được âm.");var d=devices.Single(x=>x.id==deviceId);if(roomId==null)d.height=h;else{var r=floors.SelectMany(f=>f.rooms).Single(x=>x.id==roomId);if(h.HasValue)r.heights[deviceId]=h.Value;else r.heights.Remove(deviceId);}}
+  public void RemoveDevice(string id){if(!devices.Any(x=>x.id==id))throw new InvalidOperationException("Không tìm thấy thiết bị.");devices.RemoveAll(x=>x.id==id);foreach(var r in floors.SelectMany(f=>f.rooms))r.heights.Remove(id);}
+  public string Template(string name){return new JavaScriptSerializer().Serialize(new InputTemplate055{name=name,data=Clone()});}
+  public static Floors054 FromTemplate(string text){if(text==null||text.Length>1000000)throw new InvalidOperationException("Mẫu quá lớn hoặc rỗng.");var t=new JavaScriptSerializer().Deserialize<InputTemplate055>(text);if(t==null||t.kind!="TVXD_INPUT_TEMPLATE"||t.version!=1||t.data==null)throw new InvalidOperationException("Không phải mẫu INPUT được hỗ trợ.");var d=Decode(new JavaScriptSerializer().Serialize(t.data));var map=new Dictionary<string,string>();foreach(var x in d.devices){var old=x.id;x.id=Guid.NewGuid().ToString("N");map.Add(old,x.id);}foreach(var f in d.floors){f.id=Guid.NewGuid().ToString("N");foreach(var r in f.rooms){r.id=Guid.NewGuid().ToString("N");r.heights=r.heights.ToDictionary(x=>map[x.Key],x=>x.Value);}}d.Validate();return d;}
+  public static void WriteTemplate(string path,string text){FromTemplate(text);var full=Path.GetFullPath(path);var tmp=full+"."+Guid.NewGuid().ToString("N")+".tmp";try{File.WriteAllText(tmp,text,new UTF8Encoding(false));if(File.ReadAllText(tmp)!=text)throw new IOException("Đọc lại mẫu không khớp.");if(File.Exists(full))File.Replace(tmp,full,full+".bak");else File.Move(tmp,full);}finally{if(File.Exists(tmp))File.Delete(tmp);}}
+ }
+}

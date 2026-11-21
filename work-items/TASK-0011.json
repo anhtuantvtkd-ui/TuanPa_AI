@@ -1,0 +1,42 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0011",
+  "title": "Import owner-authorized MEPS workspace snapshot",
+  "status": "IMPLEMENTING",
+  "module": "meps",
+  "risk": "medium",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex (GPT-6)",
+  "reviewer": "Owner; Gemini 3.8 Flash (High) consulted on migration plan only",
+  "base_commit": "b0412a3f0dd6f3cf681dc4225908513d433cb679",
+  "branch": "task/TASK-0011-import-meps",
+  "scope": [
+    "Import unchanged product files, including drawings and binaries explicitly authorized for publication",
+    "Record per-file SHA-256 and excluded local agent state"
+  ],
+  "out_of_scope": [
+    "Change CAD behavior",
+    "Merge main or deploy",
+    "Certify source-to-binary reproducibility or native CAD operation"
+  ],
+  "sources": [
+    "Owner-selected Antigravity scratch workspace",
+    "GitHub issue #11"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "All included files match source SHA-256",
+    "Existing bridge files unchanged",
+    "Required repository checks pass"
+  ],
+  "required_checks": [
+    "snapshot_integrity",
+    "unit",
+    "type-check",
+    "workflow:check"
+  ],
+  "evidence": [],
+  "review": null,
+  "approval": null,
+  "release": null
+}
