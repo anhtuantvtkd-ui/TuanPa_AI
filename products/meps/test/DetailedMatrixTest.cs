@@ -119,10 +119,19 @@ namespace Tvxd.Meps.Test {
                     Point3d tLocBefore = ml.TextLocation;
 
                     Point3d refreshLandingPt;
-                    try {
-                        refreshLandingPt = ml.GetLastVertex(0);
-                    } catch {
-                        refreshLandingPt = ml.TextLocation;
+                    ResultBuffer xdata = ml.GetXDataForApplication(Toado100.Reg);
+                    if (xdata != null) {
+                        TypedValue[] tagValues = xdata.AsArray();
+                        if (tagValues.Length >= 8) {
+                            refreshLandingPt = new Point3d(
+                                Convert.ToDouble(tagValues[5].Value, System.Globalization.CultureInfo.InvariantCulture),
+                                Convert.ToDouble(tagValues[6].Value, System.Globalization.CultureInfo.InvariantCulture),
+                                Convert.ToDouble(tagValues[7].Value, System.Globalization.CultureInfo.InvariantCulture));
+                        } else {
+                            try { refreshLandingPt = ml.GetLastVertex(0); } catch { refreshLandingPt = ml.TextLocation; }
+                        }
+                    } else {
+                        try { refreshLandingPt = ml.GetLastVertex(0); } catch { refreshLandingPt = ml.TextLocation; }
                     }
                     Toado100.CreateOrUpdateLeader(db, tr, ms, targetPt, refreshLandingPt, s, "DPT", "HANDLE_" + deg, mlId, layerId, styleId, dotArrowId);
 
