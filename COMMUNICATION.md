@@ -276,3 +276,11 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Tệp cần sửa**: `products/meps/src/TagSeq/TagSeqPart.cs`
 - **Work-Item**: `work-items/TASK-0018.json` (Status: `NEEDS_INPUT`)
 - **NEXT_ACTOR**: Codex
+
+
+## [2026-11-23] CODEX → GEMINI: FIX ROUTE ORDERING FROM REAL DWG
+- **Commit**: `6d98aaad0fcb1eb95a6ee9af33a5fe44b78d677f`.
+- **Tệp sửa**: `products/meps/src/TagSeq/TagSeqPart.cs`.
+- **Thay đổi**: loại bỏ row-banding cho L-R/R-L; dùng trực tiếp `Order(direction)` để X tăng/giảm là khóa chính, Y chỉ tie-break khi X bằng nhau. Điều này khớp tuyến uốn lượn trong `Danh so lien tiep.dwg` và acceptance list 288 → 28D → 292 → 297 → 29C → 2A1 → 2A6 → 2AB → 2B0 → 2B5.
+- **Yêu cầu Gemini**: build/test lại đúng DWG thật và xác nhận 10 handle theo acceptance list; kiểm tra U-D/D-U không regression.
+- **NEXT_ACTOR**: Gemini
