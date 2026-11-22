@@ -13,6 +13,10 @@ Khi COMMUNICATION.md, STATE.md hoặc task record giao việc cho Codex với NE
 5. Codex không được chỉ trả lời 'đã nhận' rồi dừng.
 6. Chỉ được dừng khi thiếu input (NEEDS_INPUT), môi trường không có (BLOCKED), hoặc task hoàn tất có bằng chứng.
 
+## Báo blocker và bàn giao
+
+Mọi thiếu input, lỗi môi trường hoặc điểm không thể tiếp tục phải được ghi ngay trên COMMUNICATION.md hoặc STATE.md, không chờ chủ sở hữu chuyển lời qua chat. Entry bắt buộc có: người gửi, người nhận, task, trạng thái NEEDS_INPUT/BLOCKED, nguyên nhân cụ thể, yêu cầu hành động và NEXT_ACTOR. Khi nhận đủ thông tin, Codex tiếp tục từ entry đó và ghi commit/handoff kết quả trên repo.
+
 ## Phân vai mặc định
 
 - Gemini: phân tích, bàn giao, review độc lập, chạy build/native test và báo cáo bằng chứng.
