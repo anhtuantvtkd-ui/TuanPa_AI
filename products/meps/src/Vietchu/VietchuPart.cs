@@ -97,7 +97,11 @@ namespace Tvxd.Meps
                 tr.AddNewlyCreatedDBObject(ltr, true);
                 return id;
             }
-            return lt[layerName];
+            ObjectId existingId = lt[layerName];
+            var existing = (LayerTableRecord)tr.GetObject(existingId, OpenMode.ForWrite);
+            existing.Color = AcColor.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 7);
+            existing.LineWeight = LineWeight.LineWeight018;
+            return existingId;
         }
 
         public static ObjectId EnsureTextStyle(Database db, Transaction tr, string styleName)
