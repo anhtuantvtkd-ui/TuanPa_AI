@@ -75,3 +75,7 @@ Việc chuyển gói giữa AI, review chuyên môn, merge và phát hành hiệ
 ## Cổng kiểm tra
 workflow:check chỉ kiểm cấu trúc/những khai báo còn thiếu; không xác minh tính thật của test/review hay tự cấp quyền.
 Phê duyệt và khóa nhánh trong GitHub là lớp riêng. Không coi văn bản hướng dẫn là branch protection.
+
+
+## 8. Học tập sau mỗi task
+Sau khi kiểm thử và review, người viết phải hoàn thành retrospective ngắn. Chỉ đưa bài học vào `KNOWLEDGE.md` khi có bằng chứng cụ thể; quyết định lớn lưu trong `docs/decisions/`. Mỗi lỗi đã sửa phải có test hồi quy hoặc lý do rõ ràng nếu không thể tự động hóa. Reviewer kiểm tra cả code thay đổi và việc cập nhật bài học liên quan. Kiến thức mới không thay thế hồ sơ task, bằng chứng native hoặc nghiệm thu của chủ sở hữu.
