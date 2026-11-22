@@ -138,6 +138,16 @@ namespace Tvxd.Meps
             double toleranceY = o != null && o.toleranceY > 0 && !double.IsNaN(o.toleranceY) && !double.IsInfinity(o.toleranceY) ? o.toleranceY : 1.0;
             if (direction == TagSeqDir073.LR || direction == TagSeqDir073.RL)
             {
+                double minY = list.Count == 0 ? 0.0 : list.Min(e => e.y);
+                double maxY = list.Count == 0 ? 0.0 : list.Max(e => e.y);
+                double minX = list.Count == 0 ? 0.0 : list.Min(e => e.x);
+                double maxX = list.Count == 0 ? 0.0 : list.Max(e => e.x);
+                double spreadY = maxY - minY;
+                double spreadX = maxX - minX;
+                if (spreadY <= Math.Max(toleranceY, spreadX * 0.10))
+                    toleranceY = spreadY + 1e-9;
+                else
+                    toleranceY = Math.Max(toleranceY, spreadY * 0.05);
                 var bands = new List<List<TagSeqEntry073>>();
                 foreach (var entry in list.OrderByDescending(e => e.y).ThenBy(e => e.x).ThenBy(e => e.id, StringComparer.Ordinal))
                 {
