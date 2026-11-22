@@ -46,6 +46,17 @@ Gói cuối: source commit, artifact+SHA256, hướng dẫn dùng/cài, release 
 Thử rollback trên môi trường thử trước cài đè. Chỉ tuyên bố sản phẩm cuối khi checklist RELEASE đạt.
 Mã tính toán/CAD không được tự phát hành qua pipeline Cloudflare dành cho bridge.
 
+### Quy chuẩn lưu trữ & Thư mục bàn giao cục bộ (Bắt buộc cho cả 2 AI):
+- **Thư mục làm việc duy nhất**: Toàn bộ mã nguồn, công cụ và phát hành của 2 AI (Gemini & Codex) tập trung tại duy nhất: `D:\TuanPa_AI\`. Tuyệt đối không lưu rải rác vào `%LocalAppData%`, thư mục tạm `scratch/` hay ổ C.
+- **Thư mục OUTPUT bàn giao**: Mọi phiên bản phát hành thương phẩm bàn giao cho chủ sở hữu bắt buộc đặt trong `D:\TuanPa_AI\OUTPUT\` và đánh số thứ tự tuần tự theo đúng mẫu:
+  * `1. TVXD.BG V1`
+  * `2. TVXD.BG V2`
+  * `3. TVXD.BG V3`
+  * `4. TVXD.BG V4`
+  * `5. TVXD.BG V5` (và các phiên bản tiếp theo tương tự).
+- **Cấu trúc gói bàn giao**: Mỗi thư mục phiên bản phải chứa đầy đủ gói cài đặt độc lập: `CAI_DAT.cmd`, `CAI_DAT.exe`, thư mục `MEPS060/` (chứa `TVXD.Meps.dll` đã ráp), các tệp `.json` cấu hình và `SHA256SUMS.json` kiểm toán toàn vẹn.
+- **Bảo vệ Git**: Thư mục `OUTPUT/` được khai báo trong `.gitignore` để tránh phình dung lượng repo Git.
+
 ## 7. Sửa lỗi sau giao
 Ghi version, bước tái hiện, expected/actual, input đã ẩn dữ liệu riêng.
 Tái hiện -> regression test -> fix trên nhánh -> review -> version mới -> kiểm lại môi trường người dùng.
