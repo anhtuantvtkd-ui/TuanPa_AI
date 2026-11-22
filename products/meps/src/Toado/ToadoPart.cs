@@ -344,13 +344,16 @@ namespace Tvxd.Meps {
             return list;
         }
 
-        public static ResultBuffer Tag(string handle, Point3d p) {
+        public static ResultBuffer Tag(string handle, Point3d p, Point3d landingPt) {
             return new ResultBuffer(
                 new TypedValue((int)DxfCode.ExtendedDataRegAppName, Reg),
                 new TypedValue((int)DxfCode.ExtendedDataAsciiString, handle ?? ""),
                 new TypedValue((int)DxfCode.ExtendedDataReal, p.X),
                 new TypedValue((int)DxfCode.ExtendedDataReal, p.Y),
-                new TypedValue((int)DxfCode.ExtendedDataReal, p.Z)
+                new TypedValue((int)DxfCode.ExtendedDataReal, p.Z),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.X),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Y),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Z)
             );
         }
 
@@ -558,7 +561,7 @@ namespace Tvxd.Meps {
                 tr.AddNewlyCreatedDBObject(ml, true);
             }
 
-            ml.XData = Tag(blockHandle, targetPt);
+            ml.XData = Tag(blockHandle, targetPt, landingPt);
             return ml.ObjectId;
         }
 
@@ -765,10 +768,27 @@ namespace Tvxd.Meps {
                         }
 
                         Point3d landingPt;
-                        try {
-                            landingPt = ml.GetLastVertex(0);
-                        } catch {
-                            landingPt = ml.TextLocation;
+                        TypedValue[] tagValues = xdata.AsArray();
+                        if (tagValues.Length >= 8) {
+                            landingPt = new Point3d(
+                                Convert.ToDouble(tagValues[5].Value, Inv),
+                                Convert.ToDouble(tagValues[6].Value, Inv),
+                                Convert.ToDouble(tagValues[7].Value, Inv));
+                        } else {
+                            // Backward compatibility for labels created before landing was stored.
+                            // Vertical leaders end at endPt = landingPt +/- textLen.
+                            Point3d endPt = ml.GetLastVertex(0);
+                            double dx = endPt.X - targetPt.X;
+                            double dy = endPt.Y - targetPt.Y;
+                            bool oldVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
+                            if (oldVertical) {
+                                double textLen = ml.MText != null && ml.MText.ActualWidth > 0
+                                    ? ml.MText.ActualWidth : (s.Height * 6.0);
+                                double sign = dy >= 0 ? 1.0 : -1.0;
+                                landingPt = new Point3d(targetPt.X, endPt.Y - sign * textLen, endPt.Z);
+                            } else {
+                                landingPt = endPt;
+                            }
                         }
                         CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, id, layerId, styleId, dotArrowId);
                         count++;
