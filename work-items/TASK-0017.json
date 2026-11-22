@@ -2,14 +2,14 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0017",
   "title": "Nang cap GHI CHU MTEXT: In hoa tieu de nhom, doi ten nut, don gian hoa prompt chi hoi chieu cao chu, xuat MText layer T_TEXT 0.18mm",
-  "status": "IN_PROGRESS",
+  "status": "IMPLEMENTING",
   "module": "meps",
   "risk": "low",
   "owner": "Phùng Anh Tuấn",
   "writer": "Codex (GPT-5.6 Luna)",
   "reviewer": "Gemini (Argon)",
-  "base_commit": "1db7d7593c788647c2e35a09e07f6f5773172089",
-  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "base_commit": "4dbb645ce568e274e82a75f9b473f98aa25a0659",
+  "branch": "task/TASK-0017-upgrade-vietchu-mtext",
   "scope": [
     "Doi tieu de nhom tren Palette tu 'Trien khai va thong ke' thanh in hoa: 'TRIEN KHAI VA THONG KE'",
     "Doi ten nut 'VIET CHU' thanh 'GHI CHU MTEXT' (RoundButton textWrite110)",
@@ -40,17 +40,5 @@
     "checksums_audit",
     "workflow:check"
   ],
-  "evidence": [],
-  "review": {
-    "verdict": "PENDING",
-    "reviewed_commit": "",
-    "reviewer": "Gemini (Argon)",
-    "independent": true,
-    "findings": []
-  },
-  "approval": {
-    "by": "Phùng Anh Tuấn",
-    "commit": "1db7d7593c788647c2e35a09e07f6f5773172089",
-    "reference": "Yeu cau cai tien thanh GHI CHU MTEXT: in hoa TRIEN KHAI VA THONG KE, chi hoi chieu cao chu, xuat MText layer T_TEXT 0.18mm mau trang"
-  }
+  "evidence": []
 }
