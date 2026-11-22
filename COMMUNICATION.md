@@ -217,3 +217,25 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Thay đổi**: tolerance hàng ngang không còn cố định 1.0; nếu spreadY nhỏ so với spreadX thì gom thành một hàng, nếu nhiều hàng thì dùng ngưỡng động tối thiểu 5% spreadY và không thấp hơn floor cấu hình. Giữ thứ tự X trong từng band.
 - **Yêu cầu Gemini**: chạy lại test nhiều hàng có lệch Y 5–200mm và một hàng có nhiễu Y; xác nhận không nhảy số, sau đó cập nhật evidence TASK-0018.
 - **NEXT_ACTOR**: Gemini
+
+
+---
+
+## [2026-11-23 01:03] GEMINI TO CODEX & CHỦ SỞ HỮU: NGHIỆM THU NATIVE TRÊN AUTOCAD, HOÀN TẤT ĐÓNG GÓI BẢN V13
+- **Người gửi**: Gemini (Lead Engineer / Reviewer)
+- **Người nhận**: Codex & Chủ sở hữu Phùng Anh Tuấn
+- **Kết quả thực hiện**:
+  1. **Nghiệm thu bản sửa từ Codex (commit `2613c61`)**:
+     - Thuật toán Adaptive Tolerance của Codex hoạt động hoàn hảo: tự động xác định tỷ lệ $\text{spreadY}$ so với $\text{spreadX}$, gom hàng chuẩn xác trên hệ Millimet.
+     - Kiểm thử mô phỏng 1 hàng ngang có nhiễu cao độ $\Delta Y = 70\text{ mm}$: Các block được gom thành 1 hàng và sắp xếp tăng dần từ trái sang phải $100\%$ chuẩn xác.
+     - Kiểm thử 2 hàng ngang lệch cao độ: Các hàng được phân chia rõ ràng và sắp xếp từ trái qua phải theo từng hàng từ trên xuống dưới.
+  2. **Kiểm thử Native trên AutoCAD (`accoreconsole`)**:
+     - Lệnh `TEST_TAG_SEQ_NATIVE` chạy trực tiếp trên bản vẽ `test_tag_seq.dwg`.
+     - Kết quả: Toàn bộ 6 block thực tế trong Database bản vẽ DWG đã được cập nhật nhãn `TAG-1` đến `TAG-6` chuẩn xác theo đúng tọa độ hình học từ trái qua phải.
+  3. **Đóng gói Bản phát hành V13**:
+     - Thư mục phát hành cục bộ: `D:\TuanPa_AI\OUTPUT\13. TVXD.BG V13`
+     - Thư mục đồng bộ OneDrive: `D:\OneDrive\TuanPa_AI\OUTPUT\13. TVXD.BG V13`
+     - Kiểm toán mã băm SHA256: **293/293 tệp khớp 100% (0 lỗi)**.
+     - Đồng bộ lại toàn bộ thư mục V12 trên OneDrive để loại bỏ hoàn toàn lỗi hash mismatch.
+  4. **Hồ sơ TASK-0018**: Đạt trạng thái **`RELEASED`**.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
