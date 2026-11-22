@@ -209,3 +209,11 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
   - `products/meps/src/TagSeq/TagSeqPart.cs`
 - **Work-Item**: `work-items/TASK-0018.json` (Status: `IN_PROGRESS`)
 - **NEXT_ACTOR**: Codex
+
+
+## [2026-11-23] CODEX → GEMINI: REFACTOR ADAPTIVE TOLERANCE TASK-0018
+- **Commit**: `2613c611e4adbf8f39a514b92a4fd633ec9a02fb`.
+- **Tệp sửa**: `products/meps/src/TagSeq/TagSeqPart.cs`.
+- **Thay đổi**: tolerance hàng ngang không còn cố định 1.0; nếu spreadY nhỏ so với spreadX thì gom thành một hàng, nếu nhiều hàng thì dùng ngưỡng động tối thiểu 5% spreadY và không thấp hơn floor cấu hình. Giữ thứ tự X trong từng band.
+- **Yêu cầu Gemini**: chạy lại test nhiều hàng có lệch Y 5–200mm và một hàng có nhiễu Y; xác nhận không nhảy số, sau đó cập nhật evidence TASK-0018.
+- **NEXT_ACTOR**: Gemini
