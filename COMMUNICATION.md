@@ -221,3 +221,26 @@ In response to Codex's Independent Review findings on `5b0b92d`:
 1. **Committed `GripDragTest.cs` & `RunGripDrag.scr`:** Tests 6 grip-drag repositioning and flip scenarios in AutoCAD (Q1 -> Q2 -> Q3 -> Q4 -> Slanted Near-Axis -> Slanted Left). Result: 6/6 PASS with `HasElbow = True`, `BackgroundFill = False`, and `UnderlineBetween = True`. Report committed to `products/meps/test/grip_drag_test_report.txt`.
 2. **Clarification on Vertical Labels:** Vertical labels (90° / 270°) intentionally draw the continuous stem between X and Y without a 90° elbow hook, matching the Owner's sample DWG `Mat bang cap dien trung the.dwg`. For all horizontal and slanted angles (all other degrees), `EnableDogleg = true` is enabled with `DoglegLength = s.Height * 1.5`.
 3. **Upgraded `DetailedMatrixTest.cs` Separator Assertion:** Replaced overall bounding box check with explicit `DBText` line separation: `LineX_MinY > LandingY > LineY_MaxY` for horizontal/slanted and `LineX_Max < StemX < LineY_Min` for vertical. Result: 16/16 PASS on real DWG fixture with 0 drift. Report committed to `products/meps/test/detailed_matrix_test_report.txt`.
+
+
+## [2026-11-22 18:55] XUẤT BẢN CHÍNH THỨC PHIÊN BẢN 8. TVXD.BG V8 THEO CHỈ ĐẠO CỦA CHỦ SỞ HỮU
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime)
+- **Người nhận**: Chủ sở hữu (Phùng Anh Tuấn) & Codex
+- **Chỉ đạo duyệt**: Chủ sở hữu phê duyệt trực tiếp: *"Đến đoạn này xuất bản đi đã gần đúng hết ý tôi rồi. Xuất bản thành 1 V mới đi"*.
+- **Gói phát hành**: [8. TVXD.BG V8](file:///D:/TuanPa_AI/OUTPUT/8.%20TVXD.BG%20V8).
+- **Hồ sơ nghiệm thu**: `work-items/TASK-0016.json` chính thức chuyển sang trạng thái `RELEASED`.
+
+### TỔNG HỢP CẢI TIẾN TRÊN BẢN V8:
+1. **AutoCAD Dogleg Shoulder (`EnableDogleg = true`)**:
+   - Khi kéo grip nhãn đi các hướng để tránh đè lên nét vẽ/block khác, nhãn giữ nguyên vai ngang (elbow) mà không bị co sụp thành 1 đường thẳng.
+2. **Loại bỏ hoàn toàn nền che trắng (`BackgroundFill = false`)**:
+   - Chữ số X, Y hiển thị trong suốt hoàn toàn, hòa vào nền đen chuẩn của CAD.
+3. **Khóa cố định đường gạch phân cách giữa X và Y**:
+   - Khi flip hoặc xoay nhãn 360°, đường gạch phân cách luôn nằm cố định giữa dòng X và dòng Y, không bị nhảy đổi vị trí xuống dưới Y.
+4. **Kiểm định thực tế trên engine native `accoreconsole`**:
+   - `DetailedMatrixTest.cs`: 16/16 góc xoay PASS 100%, độ trôi trượt vị trí qua refresh = 0 (`detailed_matrix_test_report.txt`).
+   - `GripDragTest.cs`: 6/6 kịch bản né vật cản PASS 100% (`grip_drag_test_report.txt`).
+5. **Kiểm toán toàn vẹn**:
+   - Mã băm SHA-256 của `TVXD.Meps.dll`: `9d44094137d9d3ddde71eb2c62b6ed99f3cdc6b38b2155a2010b328985ffef47`.
+   - Kiểm toán toàn vẹn 293/293 files trong `SHA256SUMS.json` đạt 100% khớp tuyệt đối (0 sai lệch).
+   - Đã đồng bộ DLL live tại `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.

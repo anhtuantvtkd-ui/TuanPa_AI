@@ -1,56 +1,38 @@
 # TRẠNG THÁI DỰ ÁN (PROJECT STATE)
-Cập nhật lần cuối: 2026-11-22 13:45 | Phụ trách điều phối: Gemini Argon & Codex
+Cập nhật lần cuối: 2026-11-22 18:50 | Phụ trách điều phối: Gemini Argon & Codex
 
 ---
 
-## 1. Mục tiêu vừa hoàn thành (Gemini đã thực hiện)
-- **Đã xử lý triệt để 2 lỗi hình học của lệnh `T-TOADO`**:
-  1. Hướng ngang / xiên (Q1, Q2, Q3, Q4): Nét gạch nằm xen giữa dòng X và dòng Y, không gạch xuyên qua chữ X, ổn định tuyệt đối khi xoay 360°.
-  2. Hướng thẳng đứng 90°: Text tự động xoay 90° dọc theo đường gióng, dòng X ở bên trái, dòng Y ở bên phải, đường gióng chạy thẳng ở giữa (khớp 100% bản vẽ `Mat bang cap dien trung the.dwg` và ảnh `media_1795321591323_25784349.png`).
-- **Đã kiểm thử thực tế trên AutoCAD engine (`accoreconsole.exe`)**: 6/6 trường hợp Explode bóc tách tọa độ đều PASS.
-- **Đã biên dịch tự động (`build_v4.cmd`)**: Hợp nhất giữ nguyên vẹn 1.295 blocks/hàm của MEPS ra `TVXD.Meps.Merged.dll`.
-- **Đã cập nhật live CAD**: `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
-- **Đã đóng gói bản phát hành V7**: `D:\TuanPa_AI\OUTPUT\7. TVXD.BG V7` (293/293 files khớp SHA256 100%).
+## 1. Mục tiêu vừa hoàn thành: Phát hành chính thức phiên bản TVXD.BG V8
+Chủ sở hữu (Phùng Anh Tuấn) đã trực tiếp nghiệm thu và chỉ đạo xuất bản phiên bản mới:
+> *"Đến đoạn này xuất bản đi đã gần đúng hết ý tôi rồi. Xuất bản thành 1 V mới đi"*
+
+- **3 cải tiến kỹ thuật đột phá trong bản V8**:
+  1. **Kích hoạt AutoCAD Dogleg Shoulder (`EnableDogleg = true`, `DoglegLength = s.Height * 1.5`)**: Người dùng tự do kéo các điểm grip của nhãn để né vật cản / tránh đè lên các block hoặc đường nét khác mà **không bị sụp đổ thành một đường thẳng chéo**. Nhãn luôn duy trì vai gấp khúc ngang chuẩn AutoCAD.
+  2. **Bỏ hoàn toàn nền che trắng/xám (`BackgroundFill = false`)**: Chữ số tọa độ hiển thị trong suốt hoàn toàn, trả lại nền đen tự nhiên của AutoCAD theo đúng yêu cầu *"TÔI KHÔNG CẦN CHỮ NỀN TRẮNG"*.
+  3. **Khóa cố định đường gạch phân cách giữa X và Y**: Sử dụng `AttachmentHorizontal` và `AttachmentBottomOfTopLine` cho cả LeftLeader và RightLeader. Khi xoay hoặc flip qua trục đứng/ngang, đường gạch luôn nằm vững chắc ở giữa dòng X và dòng Y, **không bao giờ bị nhảy đổi sang gạch chân dưới tọa độ Y**.
+- **Kiểm thử Native Engine (`accoreconsole.exe`) trên bản vẽ thực tế `Mat bang cap dien trung the.dwg`**:
+  + `DetailedMatrixTest.cs`: 16/16 góc xoay 360° tỏa tròn quanh block đều **PASS 100%**, độ trôi vị trí qua các lần làm mới (refresh) bằng 0 tuyệt đối (`detailed_matrix_test_report.txt`).
+  + `GripDragTest.cs`: 6/6 trường hợp kéo grip né vật cản (Q1 $\to$ Q2 $\to$ Q3 $\to$ Q4, xiên lệch trục) đều **PASS 100%** (`grip_drag_test_report.txt`).
+- **Biên dịch & Đóng gói sản phẩm**:
+  + Biên dịch hợp nhất nguyên vẹn 1.295 MEPS types qua `build_v4.cmd`. Mã băm SHA-256 của `TVXD.Meps.dll`: `9d44094137d9d3ddde71eb2c62b6ed99f3cdc6b38b2155a2010b328985ffef47`.
+  + Tệp kiểm toán `SHA256SUMS.json`: 293/293 files khớp 100% (0 sai lệch).
+  + Thư mục phát hành chính thức: [8. TVXD.BG V8](file:///D:/TuanPa_AI/OUTPUT/8.%20TVXD.BG%20V8).
+  + Live runtime đã cập nhật: `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
 - **Hồ sơ nghiệm thu**: `work-items/TASK-0016.json` đã hoàn thiện và đạt chuẩn `RELEASED`.
 
 ---
 
-## 2. Giao việc cho Codex (Pending Tasks Handed Over to Codex)
+## 2. Kế hoạch tiếp theo (Next Steps / Backlog)
 
-Theo phân vai tại `ROLES.md` và quy trình `WORKFLOW.md` (TUANPA-ENG-1), các công việc chưa hoàn thành hoặc cần Codex thực hiện trên repo gồm có 3 gói việc sau:
-
-### Gói việc 1: Review độc lập (Independent Review) cho `TASK-0016` (Bản V7)
-- **TASK_ID**: `TASK-0016`
-- **Vai trò của Codex**: Reviewer độc lập (Gemini là Writer).
-- **Phạm vi kiểm tra**:
-  + Tệp đã sửa: `products/meps/src/Toado/ToadoPart.cs` (hàm `CreateOrUpdateLeader`).
-  + Bản phát hành: `D:\TuanPa_AI\OUTPUT\7. TVXD.BG V7\MEPS060\TVXD.Meps.dll`.
-  + Log kiểm toán: `SHA256SUMS.json` (293 files khớp 100%).
-- **Hành động của Codex**:
-  + Kiểm tra logic hình học `isVertical` và căn chỉnh `TextLocation` cho MLeader.
-  + Xác nhận `verdict: "APPROVED"` và ghi nhận `independent: true` vào hồ sơ review để bảo đảm nguyên tắc 2 bên độc lập.
-
-### Gói việc 2: Xử lý và chuẩn hóa các Task còn treo (`TASK-0011`, `TASK-0014`, `TASK-0015`)
-- **TASK-0011** (*Import MEPS workspace snapshot*):
-  + Tác giả ghi nhận là Codex (`writer: "Codex (GPT-6)"`), hiện vẫn ở trạng thái `IMPLEMENTING`.
-  + Codex cần kiểm tra lại thư mục `products/meps/`, xác nhận snapshot integrity và bổ sung evidence để hoàn tất đóng task.
-- **TASK-0014 & TASK-0015**:
-  + Là các task trung gian của các đợt phát hành V5 và V6. Codex cần rà soát và đóng đồng bộ để lịch sử `work-items/` được khép kín gọn gàng.
-
-### Gói việc 3: Khởi tạo & Triển khai tính năng tiếp theo trên Backlog (`TASK-0017`)
-- **TASK_ID**: `TASK-0017`
-- **Module**: `products/meps` (hạng mục 3: CAD Tooling trong `PRODUCT_BACKLOG.md`).
-- **Nội dung công việc**:
-  + Xây dựng lệnh xuất bảng tọa độ các đối tượng đã đánh nhãn `T-TOADO` ra bảng CAD (Table) hoặc tệp CSV/Excel (`T-TOADOXUAT` hoặc `T-TOADOTABLE`).
-  + Tận dụng XData đã được gắn trên MLeader (`TVXD_TOADO`) để trích xuất danh sách gồm: Số hiệu, Tọa độ X, Tọa độ Y, Cao độ Z.
-- **Quy chuẩn thực thi**:
-  + Tuân thủ `WORKFLOW.md`: Tạo `work-items/TASK-0017.json` từ `TASK.template.json`.
-  + Chỉ viết mã ngắn/module mới trong `products/meps/src/Toado/`.
-  + Biên dịch qua `build_v4.cmd`, kiểm thử bằng `accoreconsole`, đóng gói kế tiếp vào `D:\TuanPa_AI\OUTPUT\8. TVXD.BG V8`.
+1. **TASK-0017 (CAD Tooling Backlog)**:
+   - Phát triển lệnh `T-TOADOXUAT` (hoặc `T-TOADOTABLE`): Đọc XData `TVXD_TOADO` từ các nhãn đã gắn trong bản vẽ để xuất tự động ra bảng tọa độ CAD (Table) hoặc tệp Excel/CSV.
+2. **Khép kín hồ sơ cũ (`TASK-0011`, `TASK-0014`, `TASK-0015`)**:
+   - Hoàn tất evidence và đóng task theo quy trình `WORKFLOW.md`.
 
 ---
 
-## 3. Lệnh kiểm tra nhanh cho Codex khi nhận repo
+## 3. Lệnh kiểm tra nhanh
 ```powershell
 Set-Location 'D:\TuanPa_AI'
 # 1. Kiểm tra tính hợp lệ toàn bộ hồ sơ workflow:
