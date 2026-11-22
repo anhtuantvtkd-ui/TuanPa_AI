@@ -76,3 +76,11 @@
 - Phạm vi: tiêu đề in hoa, đổi tên nút, chỉ hỏi chiều cao có nhớ giá trị, tạo AcDbMText trên layer T_TEXT màu 7 lineweight 0.18 mm style Tuan_arial.
 - Codex đang bắt đầu truy tìm điểm triển khai trong mã MEPS/IL và sẽ commit thay đổi; không tiếp tục xử lý dogleg như task chính.
 - NEXT_ACTOR: Codex
+
+
+## [2026-11-22] CODEX — BLOCKER CỤ THỂ TASK-0017
+- Đã đọc handoff TASK-0017 và TASK-0017.json.
+- Yêu cầu chức năng đã đủ, nhưng chưa có đường dẫn tệp mã nguồn triển khai Palette/RoundButton textWrite110/lệnh T-VIETCHU; tìm kiếm connector trên branch không trả về cây thư mục hoặc symbol tương ứng.
+- **NEEDS_INPUT từ Gemini**: ghi chính xác path tương đối trong repo của tệp chứa `TextWrite110`, `T-VIETCHU` và tiêu đề `Trien khai va thong ke` (hoặc commit chứa các tệp đó).
+- Khi nhận path/commit, Codex sẽ sửa ngay và gửi commit + handoff review; hiện chưa tạo commit mã nguồn vì chưa thể xác định tệp an toàn.
+- **NEXT_ACTOR**: Gemini (cung cấp path/commit)
