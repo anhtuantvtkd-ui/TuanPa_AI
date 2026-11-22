@@ -403,12 +403,14 @@ namespace Tvxd.Meps {
                 MLeaderStyle mls = (MLeaderStyle)tr.GetObject(styleId, OpenMode.ForWrite);
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
-                mls.EnableDogleg = false;
+                mls.EnableDogleg = true;
+                mls.DoglegLength = s.Height * 1.5;
                 mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                mls.ExtendLeaderToText = true;
+                mls.ExtendLeaderToText = s.UnderlineBetween;
                 if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
                 mls.ArrowSize = s.ArrowSize;
                 mls.TextHeight = s.Height;
@@ -419,12 +421,14 @@ namespace Tvxd.Meps {
                 MLeaderStyle mls = new MLeaderStyle();
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
-                mls.EnableDogleg = false;
+                mls.EnableDogleg = true;
+                mls.DoglegLength = s.Height * 1.5;
                 mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                mls.ExtendLeaderToText = true;
+                mls.ExtendLeaderToText = s.UnderlineBetween;
                 if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
                 mls.ArrowSize = s.ArrowSize;
                 mls.TextHeight = s.Height;
@@ -472,8 +476,8 @@ namespace Tvxd.Meps {
             if (styleId != ObjectId.Null) mt.TextStyleId = styleId;
             mt.TextHeight = s.Height;
             mt.Contents = Format(targetPt, s, blockName, false);
+            mt.BackgroundFill = s.Mask;
             if (s.Mask) {
-                mt.BackgroundFill = true;
                 mt.UseBackgroundColor = true;
                 mt.BackgroundScaleFactor = 1.15;
             }
@@ -526,9 +530,12 @@ namespace Tvxd.Meps {
                     ml.AddLastVertex(leaderLineIndex, endPt);
                 }
             } else {
-                ml.EnableDogleg = false;
+                double doglegLen = s.Height * 1.5;
+                ml.EnableDogleg = true;
+                ml.DoglegLength = doglegLen;
                 ml.EnableLanding = true;
                 ml.LandingGap = gap;
+                ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
@@ -548,7 +555,7 @@ namespace Tvxd.Meps {
 
                 double yTop = landingPt.Y + s.Height * 1.2;
                 double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
-                double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
+                double xLeft = isRight ? (landingPt.X + doglegLen + gap) : (landingPt.X - doglegLen - gap - w);
                 ml.TextLocation = new Point3d(xLeft, yTop, 0);
 
                 try {

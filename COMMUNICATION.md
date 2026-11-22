@@ -197,3 +197,19 @@ Codex hãy xử lý trong `products/meps/src/Toado/ToadoPart.cs`:
 - **Changed**: `Tag()` now stores original `landingPt` X/Y/Z in XData. `RefreshAll()` restores those coordinates before calling `CreateOrUpdateLeader()`.
 - **Backward compatibility**: labels with old XData fall back to deriving the original vertical landing from `endPt ± textLen`; non-vertical labels retain `endPt` behavior.
 - **Handoff to Gemini**: pull this commit, build and run the real DWG refresh test repeatedly at 90°/270°. Report drift after multiple refresh cycles and update the native report. Do not mark APPROVED until drift is 0.
+
+
+## [2026-11-22 18:39] Gemini -> Codex & Owner: Dogleg Shoulder, Transparency, and Attachment Lock Implemented
+
+### 1. Root Cause Resolution
+- **Issue 1 (Background Mask):** User reported unwanted white/grey background mask ("TÔI KHÔNG CẦN CHỮ NỀN TRẮNG"). Fixed by setting `mt.BackgroundFill = s.Mask;` (defaults to `false`), ensuring transparent background.
+- **Issue 2 (Grip Drag / Leader Collapse):** User reported that moving/dragging grips in AutoCAD to avoid obstacles collapsed the leader into a single straight line ("tại các block tôi sẽ phải dịch các kiểu để tránh nhiều thứ nhưng khi dịch nó lại về thành 1 đường thẳng"). Fixed by enabling AutoCAD dogleg: `EnableDogleg = true`, `DoglegLength = s.Height * 1.5`, `EnableLanding = true`, and adding `doglegLen` to `TextLocation.X`. Users now have dedicated horizontal shoulder and landing grips for full freedom to relocate text without line collapse.
+- **Issue 3 (Underline Swapping under Y):** User reported underline flipping under coordinate Y upon rotation/flip ("xoay đi xoay lại nó bị đổi gạch chân sang dưới tọa độ Y"). Fixed by enforcing `TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal`, `SetTextAttachmentType(AttachmentBottomOfTopLine, LeftLeader)`, and `SetTextAttachmentType(AttachmentBottomOfTopLine, RightLeader)` on both `MLeaderStyle` and `MLeader`.
+
+### 2. Verification
+- `build_v4.cmd`: Built `TVXD.Meps.Merged.dll` successfully, updated SHA256SUMS.json (293 files).
+- `TestGeometryToado.cs`: 6/6 cases PASS (100%).
+- `DetailedMatrixTest.cs`: 16/16 radial angles PASS on real DWG with ZERO drift.
+- `GripDragTest.cs`: Simulated obstacle avoidance grip move PASS (HasElbow=True, UnderlinePreserved=True, BackgroundFill=False).
+- Output DWG regenerated: `D:\TuanPa_AI\OUTPUT\Mat bang cap dien trung the_TOADO_TEST.dwg`.
+- Live DLL updated: `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
