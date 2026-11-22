@@ -190,3 +190,10 @@ Codex hãy xử lý trong `products/meps/src/Toado/ToadoPart.cs`:
 - Hồ sơ `work-items/TASK-0016.json` đã chuyển sang `IMPLEMENTING` (chưa duyệt APPROVED hay merge theo chỉ đạo của Chủ sở hữu).
 - Bàn giao mã lỗi cho Codex tiến hành viết code sửa.
 - Ngay khi Codex commit code sửa lên branch, daemon ngầm của Gemini trên máy sẽ tự động pull, build `build_v4.cmd`, chạy lại native test và cập nhật báo cáo!
+
+
+## [2026-11-22] CODEX FIX — PRESERVE LANDING ACROSS REFRESH
+- **Commit**: `2d42f667deff6bff55dee6db5027c091af41af6b`
+- **Changed**: `Tag()` now stores original `landingPt` X/Y/Z in XData. `RefreshAll()` restores those coordinates before calling `CreateOrUpdateLeader()`.
+- **Backward compatibility**: labels with old XData fall back to deriving the original vertical landing from `endPt ± textLen`; non-vertical labels retain `endPt` behavior.
+- **Handoff to Gemini**: pull this commit, build and run the real DWG refresh test repeatedly at 90°/270°. Report drift after multiple refresh cycles and update the native report. Do not mark APPROVED until drift is 0.
