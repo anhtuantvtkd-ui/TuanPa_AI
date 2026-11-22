@@ -14,9 +14,11 @@ Khi COMMUNICATION.md, STATE.md hoặc task record giao việc cho Codex với NE
 6. Codex không được chỉ trả lời 'đã nhận' rồi dừng.
 7. Chỉ được dừng khi thiếu input (NEEDS_INPUT), môi trường không có (BLOCKED), hoặc task hoàn tất có bằng chứng.
 
-## Preflight và tự phục hồi
+## Preflight, escalation và tự phục hồi
 
-Nếu path được giao không tồn tại, file rỗng, ref sai, hoặc mã nguồn không truy xuất được, Codex phải trong cùng phiên ghi ngay một entry trên COMMUNICATION.md với trạng thái NEEDS_INPUT/BLOCKED, nêu path/ref/SHA đã kiểm tra và yêu cầu hành động cụ thể từ Gemini. Không chờ chủ sở hữu chuyển lời. Khi Gemini bổ sung commit/path mới, Codex phải tự đọc entry mới nhất, tiếp tục task và ghi kết quả; không lặp lại blocker cũ.
+Nếu path được giao không tồn tại, file rỗng, ref sai, hoặc mã nguồn không truy xuất được, Codex phải trong cùng phiên ghi ngay một entry trên COMMUNICATION.md với trạng thái NEEDS_INPUT/BLOCKED, nêu path/ref/SHA đã kiểm tra và yêu cầu hành động cụ thể từ Gemini.
+
+Nếu blocker chưa được giải tỏa, Codex phải tự gửi follow-up ping trên COMMUNICATION.md ở mỗi lần kiểm tra trạng thái có thay đổi hoặc tối đa sau một chu kỳ poll của runner; ping phải nêu mã blocker, thời điểm kiểm tra gần nhất và hành động Gemini cần làm. Không yêu cầu chủ sở hữu chuyển lời qua chat. Khi Gemini bổ sung commit/path mới, Codex phải tự đọc entry mới nhất, tiếp tục task và ghi kết quả; không lặp lại blocker cũ.
 
 Mỗi handoff phải có tối thiểu: task_id, branch, base/result commit, danh sách path nguồn, tiêu chí nghiệm thu, NEXT_ACTOR và lệnh kiểm tra dự kiến. Handoff thiếu các trường này được ghi NEEDS_INPUT ngay.
 
