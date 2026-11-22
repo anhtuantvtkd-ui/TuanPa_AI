@@ -37,11 +37,9 @@ products/meps/
 ## 2. Điểm nâng cấp trong phiên bản V4 (`T-TOADO`)
 
 1. **Khắc phục triệt để dấu gạch thừa bên trên:**
-   - Đặt `EnableDogleg = false` khi bật gạch phân cách giữa X và Y.
-   - Gán `TextAttachmentType.AttachmentBottomOfTopLine` đồng bộ, loại bỏ hoàn toàn nét gập dogleg nằm trên đỉnh chữ X khi chỉ hướng lên trên.
+   - Đồng bộ `TextAttachmentType.AttachmentBottomOfTopLine` và `TextAttachmentDirection.AttachmentHorizontal` cho toàn bộ 4 hướng (`LeftLeader`, `RightLeader`, `TopLeader`, `BottomLeader`), loại bỏ hoàn toàn nét gập thừa nằm trên đỉnh chữ X khi trỏ hướng lên trên.
 2. **Căn chữ ra chính giữa:**
-   - Định dạng từng dòng với mã `\pxqc;` của AutoCAD MText.
-   - Đặt `TextAlignmentType.CenterAlignment` và `Attachment = MiddleCenter`, giúp 2 dòng X và Y căn đều tuyệt đối so với nét gạch ngang.
+   - Đặt `TextAlignmentType.CenterAlignment` và thu gọn `DoglegLength` vừa vặn tỷ lệ chữ, giúp 2 dòng X và Y cân đối hai đầu đường gạch ngang.
 
 ---
 

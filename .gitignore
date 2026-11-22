@@ -3,3 +3,7 @@ node_modules/
 .env*
 .wrangler/
 dist/
+OUTPUT/
+INPUT/
+.artifacts/
+*.log
