@@ -123,15 +123,15 @@
   },
   "release": {
     "source_commit": "dc5ce61a719f4ac3e26b8f1afb63fa36aa7eb5d2",
-    "version": "TVXD.BG V9",
+    "version": "TVXD.BG V10",
     "artifacts": [
       {
         "path": "products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll",
-        "sha256": "14177f8f92952e9e124e8fa34382e9007db8e42c936973fadeb70e6bece178e6"
+        "sha256": "62c27811a3ee5b453187cd7f181680bcecb945d1a9e7f4d85fd01215832100b2"
       }
     ],
-    "installation_guide": "Copy toan bo thu muc D:\\TuanPa_AI\\OUTPUT\\9. TVXD.BG V9 vao thu muc cai dat AutoCAD hoac MEPS (%LOCALAPPDATA%\\TVXD\\MEPS060)",
-    "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\8. TVXD.BG V8",
-    "test_report": "DetailedMatrixTest 16/16 PASS, GripDragTest 6/6 PASS, TestRelinkLogic PASS, TestBatch45 14/14 PASS tren accoreconsole voi Mat bang cap dien trung the.dwg"
+    "installation_guide": "Copy toan bo thu muc D:\\TuanPa_AI\\OUTPUT\\10. TVXD.BG V10 vao thu muc cai dat AutoCAD hoac MEPS (%LOCALAPPDATA%\\TVXD\\MEPS060)",
+    "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\9. TVXD.BG V9",
+    "test_report": "DetailedMatrixTest 16/16 PASS, GripDragTest 6/6 PASS, TestRelinkLogic PASS, TestBatch45 14/14 PASS, TestLeftRightZeroDogleg PASS tren accoreconsole voi Mat bang cap dien trung the.dwg"
   }
 }

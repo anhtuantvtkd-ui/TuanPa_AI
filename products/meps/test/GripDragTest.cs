@@ -66,11 +66,11 @@ namespace Tvxd.Meps.Test {
                     Vector3d doglegDir = new Vector3d(gc.IsRight ? 1.0 : -1.0, 0.0, 0.0);
                     ml.SetDogleg(0, doglegDir);
 
-                    double doglegLen = s.Height * 1.5;
+                    double doglegLen = 0.0;
                     double gap = s.Height * 0.1;
                     double w = ml.MText.ActualWidth > 0 ? ml.MText.ActualWidth : (s.Height * 5.0);
                     double yTop = gc.Landing.Y + s.Height * 1.2;
-                    double xLeft = gc.IsRight ? (gc.Landing.X + doglegLen + gap) : (gc.Landing.X - doglegLen - gap - w);
+                    double xLeft = gc.IsRight ? (gc.Landing.X + gap) : (gc.Landing.X - gap - w);
                     ml.TextLocation = new Point3d(xLeft, yTop, 0);
 
                     // Explode to verify physical geometry
@@ -87,12 +87,11 @@ namespace Tvxd.Meps.Test {
                     // Check 1: BackgroundFill must be False (transparent)
                     bool bgOk = (mtext != null && !mtext.BackgroundFill);
 
-                    // Check 2: Dogleg shoulder line exists (horizontal line at Landing.Y)
+                    // Check 2: Leader line attached at Landing point (zero dogleg gap)
                     bool hasElbow = false;
                     foreach (Line ln in lines) {
                         if (Math.Abs(ln.StartPoint.Y - ln.EndPoint.Y) < 1e-3 && Math.Abs(ln.StartPoint.Y - gc.Landing.Y) < 1e-3) {
-                            double len = Math.Abs(ln.EndPoint.X - ln.StartPoint.X);
-                            if (Math.Abs(len - doglegLen) < 0.1) {
+                            if (Math.Abs(ln.StartPoint.X - gc.Landing.X) < 1e-2 || Math.Abs(ln.EndPoint.X - gc.Landing.X) < 1e-2) {
                                 hasElbow = true;
                                 break;
                             }
