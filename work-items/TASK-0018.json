@@ -2,95 +2,43 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0018",
   "title": "Sua loi Tag danh so lien tiep bi nhay linh tinh khi chon tu trai sang phai",
-  "status": "RELEASED",
+  "status": "NEEDS_INPUT",
   "module": "meps",
   "risk": "medium",
   "owner": "Phùng Anh Tuấn",
   "writer": "Codex (GPT-5.6 Luna)",
   "reviewer": "Gemini (Argon)",
   "base_commit": "ea7ef4bbeaa5e0c778640845e3ccfdc4ac72150d",
-  "branch": "task/TASK-0018-fix-tag-sequence-banding",
-  "result_commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
+  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
   "scope": [
     "Khac phuc loi danh so lien tiep tren thanh TAG khi nguoi dung chon doi tuong tu trai sang phai",
     "Ho tro sap xep theo dung toa do thuc te tu trai sang phai (kem dung sai gom nhom theo hang Y / Row Banding) tranh viec selection set bi xao tron",
-    "Nang cap toleranceY=1.0 sang Adaptive Tolerance phu hop voi ban ve millimeter (khoang cach nganh MEP hang nghin mm)",
+    "Kiem chung truc tiep tren ban ve that D:\\TuanPa_AI\\INPUT\\Danh so lien tiep.dwg cua Chu so huu",
     "Cap nhat build_v4.cmd va merge_toado.cs tich hop TagSeqPart.cs vao pipeline bien dich tu dong",
-    "Dong goi ban cai dat V13 tai D:\\TuanPa_AI\\OUTPUT\\13. TVXD.BG V13 va D:\\OneDrive\\TuanPa_AI\\OUTPUT\\13. TVXD.BG V13"
+    "Dong goi ban cai dat V14 tai D:\\TuanPa_AI\\OUTPUT\\14. TVXD.BG V14 va D:\\OneDrive\\TuanPa_AI\\OUTPUT\\14. TVXD.BG V14"
   ],
   "out_of_scope": [
     "Cac tinh nang khac cua module MEPS",
     "Ha tang khac"
   ],
   "sources": [
+    "D:\\TuanPa_AI\\INPUT\\Danh so lien tiep.dwg",
     "D:\\TuanPa_AI\\TEST\\2. TAG DANH SO V1\\T-TAGSO.lsp",
     "products/meps/src/TagSeq/TagSeqPart.cs",
     "products/meps/tools/base/meps_orig.il"
   ],
-  "missing_inputs": [],
+  "missing_inputs": [
+    "Yeu cau Codex cap nhat TagSeqPart.cs theo dung prototype T-TAGSO.lsp: L-R sap xep chinh bang X tang dan, khong chia band theo Y truoc tren tuyen uon luon"
+  ],
   "acceptance_criteria": [
-    "Khi chon cac block/tag tu trai sang phai, cac so duoc danh tang dan chinh xac theo dung chieu tu trai sang phai",
-    "Khong bi hien tuong nhay linh tinh / zic-zac giua cac hang khi quet chon tren ban ve thuc te he millimeter",
-    "Thuat toan TagSeqPart.cs ho tro adaptive row tolerance",
-    "Kiem thu native tren AutoCAD dat ket qua hoan hao",
-    "Dong goi ban cai dat V13 khop 100% SHA256SUMS.json"
+    "Khi chay tren file Danh so lien tiep.dwg, 10 block duoc danh thu tu chuan xac tu trai qua phai: 288 (1) -> 28D (2) -> 292 (3) -> 297 (4) -> 29C (5) -> 2A1 (6) -> 2A6 (7) -> 2AB (8) -> 2B0 (9) -> 2B5 (10)",
+    "Khong bi hien tuong block cao hon Y nhan so truoc du nam o giua hoac ben phai",
+    "Dong goi ban cai dat V14 khop 100% SHA256SUMS.json"
   ],
   "required_checks": [
     "build_v4",
     "checksums_audit",
     "workflow:check"
   ],
-  "evidence": [
-    {
-      "check": "build_v4",
-      "status": "PASS",
-      "commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 3cf13abe1e29a40c22ac89916b549da6714e51bb8539124aea373cfd073b5b29"
-    },
-    {
-      "check": "checksums_audit",
-      "status": "PASS",
-      "commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-      "reference": "293 files in 13. TVXD.BG V13 verified matching SHA256SUMS.json 100% (0 mismatches)"
-    },
-    {
-      "check": "workflow:check",
-      "status": "PASS",
-      "commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-      "reference": "node workflow-check.mjs passed with all records valid"
-    }
-  ],
-  "review": {
-    "verdict": "APPROVED",
-    "reviewed_commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-    "reviewer": "Codex (GPT-5.6 Luna) & Gemini (Argon)",
-    "independent": true,
-    "findings": [
-      {
-        "severity": "low",
-        "status": "resolved",
-        "finding": "Ensure adaptive tolerance works seamlessly for single-row selections with high Y jitter in mm scale",
-        "recommendation": "Codex implemented adaptive tolerance in commit 2613c61 with spreadY <= Math.Max(toleranceY, spreadX * 0.10) fallback",
-        "resolution": "Verified on simulated millimeter layouts and native AutoCAD drawing: PASS TagSequence073.Plan sorted consecutively from left to right"
-      }
-    ]
-  },
-  "approval": {
-    "by": "Phùng Anh Tuấn",
-    "commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-    "reference": "Chu so huu yeu cau khac phuc triet de loi danh so lien tiep tren palette TAG khi chon tu trai sang phai"
-  },
-  "release": {
-    "source_commit": "f883e13d9e0c3fa10b86201a103c2229f527bdb4",
-    "version": "TVXD.BG V13",
-    "artifacts": [
-      {
-        "path": "products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll",
-        "sha256": "3cf13abe1e29a40c22ac89916b549da6714e51bb8539124aea373cfd073b5b29"
-      }
-    ],
-    "installation_guide": "Chay CAI_DAT.exe tai D:\\TuanPa_AI\\OUTPUT\\13. TVXD.BG V13 hoac D:\\OneDrive\\TuanPa_AI\\OUTPUT\\13. TVXD.BG V13",
-    "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\11. TVXD.BG V11",
-    "test_report": "accoreconsole TEST_TAG_SEQ_NATIVE: PASS Tag 1..6 sequenced strictly left-to-right across rows in actual AutoCAD drawing"
-  }
+  "evidence": []
 }

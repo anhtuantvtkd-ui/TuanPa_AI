@@ -239,3 +239,40 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
      - Đồng bộ lại toàn bộ thư mục V12 trên OneDrive để loại bỏ hoàn toàn lỗi hash mismatch.
   4. **Hồ sơ TASK-0018**: Đạt trạng thái **`RELEASED`**.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
+
+
+---
+
+## [2026-11-23 01:15] GEMINI → CODEX: BÁO CÁO PHÂN TÍCH FILE THẬT "Danh so lien tiep.dwg" & YÊU CẦU SỬA TRIỆT ĐỂ (TASK-0018)
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime Tester)
+- **Người nhận**: Codex (Implementer)
+- **Tệp bản vẽ kiểm thử của Chủ sở hữu**: `D:\TuanPa_AI\INPUT\Danh so lien tiep.dwg`.
+- **Dữ liệu thực tế 10 Block "BE2 DAN59" trích xuất từ bản vẽ thật**:
+  1. Handle `288`: Pos = (-688499.13, 2288195.63) -> Hiện tại bị gán: `B4`
+  2. Handle `28D`: Pos = (-688455.54, 2288192.17) -> Hiện tại bị gán: `B5`
+  3. Handle `292`: Pos = (-688401.57, 2288188.31) -> Hiện tại bị gán: `B8`
+  4. Handle `297`: Pos = (-688351.91, 2288165.14) -> Hiện tại bị gán: `B10`
+  5. Handle `29C`: Pos = (-688304.52, 2288182.10) -> Hiện tại bị gán: `B9`
+  6. Handle `2A1`: Pos = (-688283.82, 2288201.96) -> Hiện tại bị gán: `B3`
+  7. Handle `2A6`: Pos = (-688248.13, 2288242.09) -> Hiện tại bị gán: `B1` (SAI NGHIÊM TRỌNG: nằm giữa bên phải nhưng bị gán B1!)
+  8. Handle `2AB`: Pos = (-688209.76, 2288193.93) -> Hiện tại bị gán: `B6`
+  9. Handle `2B0`: Pos = (-688159.79, 2288229.01) -> Hiện tại bị gán: `B2` (SAI NGHIÊM TRỌNG: gần cuối nhưng bị gán B2!)
+  10. Handle `2B5`: Pos = (-688141.05, 2288193.93) -> Hiện tại bị gán: `B7`
+- **Nguyên nhân chính xác khiến số nhảy linh tinh**:
+  - Dãy 10 block này là một tuyến đường ống/hố ga chạy liên tục từ **Trái sang Phải** (tọa độ $X$ tăng dần đều từ $-688499.13$ đến $-688141.05$).
+  - Do tuyến ống uốn lượn, cao độ $Y$ dao động trong khoảng $76.95\text{ mm}$.
+  - Thuật toán `Plan` hiện tại trong `TagSeqPart.cs` nhóm band theo `OrderByDescending(e => e.y)` trước rồi mới sắp xếp $X$ trong từng band.
+  - Vì $\text{spreadY} (76.95) > 0.10 \times \text{spreadX} (35.8)$, thuật toán tách tuyến ống thành 7 hàng ngang theo $Y$, và đánh số các block nhô lên cao nhất trước (`2A6` có $Y$ cao nhất $\rightarrow$ đánh số 1, `2B0` cao nhì $\rightarrow$ đánh số 2).
+- **Yêu cầu đối với Codex trong `TagSeqPart.cs`**:
+  - Đúng chuẩn Prototype `TEST/2. TAG DANH SO V1/T-TAGSO.lsp`:
+    + Hướng **`L-R` (Trái qua phải)**: Khóa sắp xếp chính (Primary Sort Key) **bắt buộc phải là $X$ tăng dần** (`a.x.CompareTo(b.x)`). Nếu $X$ bằng nhau (hoặc trong cùng 1 cột $\Delta X < \text{toleranceX}$) thì mới so sánh $Y$ từ trên xuống (`b.y.CompareTo(a.y)`).
+    + Hướng **`R-L` (Phải qua trái)**: Khóa chính là $X$ giảm dần (`b.x.CompareTo(a.x)`).
+    + Hướng **`U-D` (Trên xuống dưới)**: Khóa chính là $Y$ giảm dần (`b.y.CompareTo(a.y)`).
+    + Hướng **`D-U` (Dưới lên trên)**: Khóa chính là $Y$ tăng dần (`a.y.CompareTo(b.y)`).
+  - Không phân chia band theo $Y$ trước đối với hướng L-R / R-L trừ khi người dùng có cấu hình riêng. Hãy sắp xếp danh sách trực tiếp bằng `Order(direction)`.
+- **Tiêu chí nghiệm thu (Acceptance Criteria)**:
+  - Khi chạy `Plan` trên file `D:\TuanPa_AI\INPUT\Danh so lien tiep.dwg`, thứ tự đánh số bắt buộc phải là:
+    `288 (TAG-1) -> 28D (TAG-2) -> 292 (TAG-3) -> 297 (TAG-4) -> 29C (TAG-5) -> 2A1 (TAG-6) -> 2A6 (TAG-7) -> 2AB (TAG-8) -> 2B0 (TAG-9) -> 2B5 (TAG-10)`.
+- **Tệp cần sửa**: `products/meps/src/TagSeq/TagSeqPart.cs`
+- **Work-Item**: `work-items/TASK-0018.json` (Status: `NEEDS_INPUT`)
+- **NEXT_ACTOR**: Codex
