@@ -392,6 +392,46 @@ namespace Tvxd.Meps {
             }
         }
 
+        public static ObjectId EnsureToadoMLeaderStyle(Database db, Transaction tr, ToadoSettings s, ObjectId textStyleId, ObjectId arrowId) {
+            DBDictionary dict = (DBDictionary)tr.GetObject(db.MLeaderStyleDictionaryId, OpenMode.ForRead);
+            string name = "TVXD_TOADO";
+            if (dict.Contains(name)) {
+                ObjectId styleId = dict.GetAt(name);
+                MLeaderStyle mls = (MLeaderStyle)tr.GetObject(styleId, OpenMode.ForWrite);
+                mls.ContentType = ContentType.MTextContent;
+                mls.EnableLanding = true;
+                mls.EnableDogleg = false;
+                mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
+                mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
+                mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
+                mls.ExtendLeaderToText = true;
+                if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
+                mls.ArrowSize = s.ArrowSize;
+                mls.TextHeight = s.Height;
+                if (textStyleId != ObjectId.Null) mls.TextStyleId = textStyleId;
+                return styleId;
+            } else {
+                dict.UpgradeOpen();
+                MLeaderStyle mls = new MLeaderStyle();
+                mls.ContentType = ContentType.MTextContent;
+                mls.EnableLanding = true;
+                mls.EnableDogleg = false;
+                mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
+                mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
+                mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
+                mls.ExtendLeaderToText = true;
+                if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
+                mls.ArrowSize = s.ArrowSize;
+                mls.TextHeight = s.Height;
+                if (textStyleId != ObjectId.Null) mls.TextStyleId = textStyleId;
+                ObjectId styleId = dict.SetAt(name, mls);
+                tr.AddNewlyCreatedDBObject(mls, true);
+                return styleId;
+            }
+        }
+
         public static ObjectId CreateOrUpdateLeader(
             Database db,
             Transaction tr,
@@ -406,14 +446,19 @@ namespace Tvxd.Meps {
             ObjectId styleId,
             ObjectId dotArrowId)
         {
+            ObjectId arrowId = (s.Arrow && dotArrowId != ObjectId.Null) ? dotArrowId : ObjectId.Null;
+            ObjectId toadoStyleId = EnsureToadoMLeaderStyle(db, tr, s, styleId, arrowId);
+
             MLeader ml;
             bool isNew = (existingLeaderId == ObjectId.Null);
             if (isNew) {
                 ml = new MLeader();
                 ml.SetDatabaseDefaults(db);
+                ml.MLeaderStyle = toadoStyleId;
                 ml.ContentType = ContentType.MTextContent;
             } else {
                 ml = (MLeader)tr.GetObject(existingLeaderId, OpenMode.ForWrite);
+                ml.MLeaderStyle = toadoStyleId;
             }
 
             MText mt = new MText();
@@ -433,26 +478,34 @@ namespace Tvxd.Meps {
             ml.TextAngleType = TextAngleType.InsertAngle;
             if (layerId != ObjectId.Null) ml.LayerId = layerId;
 
-            if (s.UnderlineBetween) {
-                ml.EnableDogleg = true;
-                ml.DoglegLength = s.Height * 1.5;
-                ml.EnableLanding = true;
-                ml.LandingGap = s.Height * 0.2;
-                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
-                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                ml.ExtendLeaderToText = true;
+            ml.EnableDogleg = false;
+            ml.EnableLanding = true;
+            double gap = s.Height * 0.1;
+            ml.LandingGap = gap;
+            ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
+            ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
+            ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
+            ml.ExtendLeaderToText = s.UnderlineBetween;
+
+            if (arrowId != ObjectId.Null) {
+                ml.ArrowSymbolId = arrowId;
+                ml.ArrowSize = s.ArrowSize;
             } else {
-                ml.EnableDogleg = true;
-                ml.DoglegLength = s.Height * 1.5;
-                ml.EnableLanding = true;
-                ml.LandingGap = s.Height * 0.2;
-                ml.ExtendLeaderToText = false;
+                ml.ArrowSymbolId = ObjectId.Null;
+                ml.ArrowSize = 0.0;
             }
 
-            if (s.Arrow && dotArrowId != ObjectId.Null) {
-                ml.ArrowSymbolId = dotArrowId;
+            // Calculate precise TextLocation so the underline connects seamlessly to landingPt
+            double yTop = landingPt.Y + s.Height * 1.18;
+            double xLeft;
+            bool isRight = (landingPt.X >= targetPt.X);
+            if (isRight) {
+                xLeft = landingPt.X + gap;
+            } else {
+                double w = mt.ActualWidth;
+                xLeft = landingPt.X - gap - w;
             }
-            ml.ArrowSize = s.ArrowSize;
+            ml.TextLocation = new Point3d(xLeft, yTop, 0);
 
             if (isNew) {
                 int leaderIndex = ml.AddLeader();
@@ -675,7 +728,12 @@ namespace Tvxd.Meps {
                             } catch {}
                         }
 
-                        Point3d landingPt = ml.TextLocation;
+                        Point3d landingPt;
+                        try {
+                            landingPt = ml.GetLastVertex(0);
+                        } catch {
+                            landingPt = ml.TextLocation;
+                        }
                         CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, id, layerId, styleId, dotArrowId);
                         count++;
                     }
