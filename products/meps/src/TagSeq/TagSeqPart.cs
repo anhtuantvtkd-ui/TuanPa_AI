@@ -37,20 +37,20 @@ namespace Tvxd.Meps
 
     public sealed class TagSeqEntry073
     {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string oldText { get; set; }
-        public double x { get; set; }
-        public double y { get; set; }
+        public string id;
+        public string name;
+        public string oldText;
+        public double x;
+        public double y;
     }
 
     public sealed class TagSeqOptions073
     {
-        public string direction { get; set; }
-        public string prefix { get; set; }
-        public long start { get; set; }
-        public int width { get; set; }
-        public double toleranceY { get; set; }
+        public string direction;
+        public string prefix;
+        public long start;
+        public int width;
+        public double toleranceY;
 
         public TagSeqOptions073()
         {
@@ -64,13 +64,13 @@ namespace Tvxd.Meps
 
     public sealed class TagSeqRow073
     {
-        public int ordinal { get; set; }
-        public string id { get; set; }
-        public string name { get; set; }
-        public string oldText { get; set; }
-        public string newText { get; set; }
-        public double x { get; set; }
-        public double y { get; set; }
+        public int ordinal;
+        public string id;
+        public string name;
+        public string oldText;
+        public string newText;
+        public double x;
+        public double y;
     }
 
     public static class TagSequence073

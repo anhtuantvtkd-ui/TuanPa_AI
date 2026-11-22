@@ -1,7 +1,7 @@
 ﻿{
     "name":  "TUVANXD.BG",
     "source_commit":  "e6db2dc90aa08a0708519af816ebcf91196af3b1",
-    "dll_sha256":  "f5f9cdd09a4f47eaf9b2ce095dcd7a408b52259a430648aebc27b6e98d8c56d0",
+    "dll_sha256":  "4b83c21f8f5f1fdd83a1c8804905d6f84eddb08becf77074564b4ba7d1cd617c",
     "installer_source_commit":  "ed35da35ab71e1c69c5df998e4b3a32d579e9409",
     "installer_sha256":  "f24aaf4960c27f48b8ceb9e65f3b4a15514c73ea63b563bb78b945129a083dc8",
     "accepted":  true,
