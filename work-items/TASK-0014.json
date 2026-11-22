@@ -1,0 +1,62 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0014",
+  "title": "Sua hinh hoc Multileader lenh T-TOADO va dong goi TVXD.BG V5",
+  "status": "IMPLEMENTING",
+  "module": "meps",
+  "risk": "medium",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Gemini",
+  "reviewer": "Codex / Owner",
+  "base_commit": "2f7cdc8bb93e57e10ae983f15f53d0bdd3e3de69",
+  "branch": "task/TASK-0014-fix-toado-geometry",
+  "scope": [
+    "Khac phuc net ngang thua tren dinh chu X cua lenh T-TOADO",
+    "Chuyen duong giong ket noi truc tiep vao net gach giua dong X va Y",
+    "Dinh vi TextLocation dong nhat cho ca 2 huong tro trai va phai",
+    "Bien dich va dong goi ban V5 vao D:\\TuanPa_AI\\OUTPUT\\5. TVXD.BG V5"
+  ],
+  "out_of_scope": [
+    "Thay doi 1.295 blocks va menu MEPS khac",
+    "Thay doi co che bridge Cloudflare"
+  ],
+  "sources": [
+    "User issue description and comparison images",
+    "products/meps/src/Toado/ToadoPart.cs"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Lenh T-TOADO ve Multileader chi co duy nhat 1 net ngang phan cach giua X va Y",
+    "Duong giong noi lien mach vao net ngang giua",
+    "Tat ca 293 tap tin release khop SHA256SUMS.json",
+    "Repo workflow-check vuot qua kiem tra hop le"
+  ],
+  "required_checks": [
+    "build_v4",
+    "checksums_audit",
+    "workflow:check"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "commit": "e312665bf4639390f48014653e2cd5c393a03e22",
+      "reference": "products/meps/tools/build_v4.cmd successful assembly"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "commit": "e312665bf4639390f48014653e2cd5c393a03e22",
+      "reference": "293 files verified matching SHA256SUMS.json"
+    },
+    {
+      "check": "workflow:check",
+      "status": "PASS",
+      "commit": "e312665bf4639390f48014653e2cd5c393a03e22",
+      "reference": "node workflow-check.mjs passed"
+    }
+  ],
+  "review": null,
+  "approval": null,
+  "release": null
+}
