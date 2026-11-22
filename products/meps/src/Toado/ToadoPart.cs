@@ -501,10 +501,13 @@ namespace Tvxd.Meps {
                 ml.EnableDogleg = false;
                 ml.EnableLanding = false;
 
-                double textLen = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
+                double textLen = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 6.0);
+                double textH = mt.ActualHeight > 0 ? mt.ActualHeight : (s.Height * 2.692);
+                double shiftX = textH / 2.0;
+
                 if (dy >= 0) {
                     Point3d endPt = new Point3d(targetPt.X, landingPt.Y + textLen, 0);
-                    ml.TextLocation = landingPt;
+                    ml.TextLocation = new Point3d(landingPt.X - shiftX, landingPt.Y, 0);
 
                     int leaderIndex = ml.AddLeader();
                     int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
@@ -512,7 +515,7 @@ namespace Tvxd.Meps {
                     ml.AddLastVertex(leaderLineIndex, endPt);
                 } else {
                     Point3d endPt = new Point3d(targetPt.X, landingPt.Y - textLen, 0);
-                    ml.TextLocation = endPt;
+                    ml.TextLocation = new Point3d(endPt.X - shiftX, endPt.Y, 0);
 
                     int leaderIndex = ml.AddLeader();
                     int leaderLineIndex = ml.AddLeaderLine(leaderIndex);

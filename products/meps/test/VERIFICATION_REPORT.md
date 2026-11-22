@@ -16,8 +16,8 @@ Dành cho Independent Reviewer (Codex / Owner)
 | **Case 2** | Xiên lên - Trái (Q2) | (50, 0) | (25, 15) | Nét gạch tại $Y=15$, Text Bounds: $[11.27, 18]$ $\to$ Nét gạch nằm giữa dòng X và Y | **PASS** |
 | **Case 3** | Xiên xuống - Trái (Q3) | (100, 0) | (75, -15) | Nét gạch tại $Y=-15$, Text Bounds: $[-18.73, -12]$ $\to$ Nét gạch nằm giữa dòng X và Y | **PASS** |
 | **Case 4** | Xiên xuống - Phải (Q4) | (150, 0) | (175, -15) | Nét gạch tại $Y=-15$, Text Bounds: $[-18.73, -12]$ $\to$ Nét gạch nằm giữa dòng X và Y | **PASS** |
-| **Case 5** | Thẳng đứng 90° Lên | (200, 0) | (200, 30) | Xoay chữ 90° ($\approx 1.57$ rad), X Bounds: $[200, 206.73]$, MidX: $203.36$ $\to$ Nét gióng đứng phân cách giữa X (trái) và Y (phải) | **PASS** |
-| **Case 6** | Thẳng đứng 90° Xuống | (250, 0) | (250, -30) | Xoay chữ 90° ($\approx 1.57$ rad), X Bounds: $[250, 256.73]$, MidX: $253.36$ $\to$ Nét gióng đứng phân cách giữa X (trái) và Y (phải) | **PASS** |
+| **Case 5** | Thẳng đứng 90° Lên | (200, 0) | (200, 30) | Xoay chữ 90° ($\approx 1.57$ rad). StemX=$200$, Dòng X Max=$199.19$ (Margin=$0.81$), Dòng Y Min=$200.81$ (Margin=$0.81$) $\to$ Dòng X nằm trọn bên trái nét gióng, dòng Y nằm trọn bên phải nét gióng, nét gióng chạy thẳng giữa hai dòng với khoảng cách đối xứng tuyệt đối. | **PASS** |
+| **Case 6** | Thẳng đứng 90° Xuống | (250, 0) | (250, -30) | Xoay chữ 90° ($\approx 1.57$ rad). StemX=$250$, Dòng X Max=$249.19$ (Margin=$0.81$), Dòng Y Min=$250.81$ (Margin=$0.81$) $\to$ Dòng X nằm trọn bên trái nét gióng, dòng Y nằm trọn bên phải nét gióng, nét gióng chạy thẳng giữa hai dòng với khoảng cách đối xứng tuyệt đối. | **PASS** |
 
 **Tổng kết**: 6/6 ca kiểm thử hình học đều PASS 100%.
 
@@ -30,6 +30,6 @@ Dành cho Independent Reviewer (Codex / Owner)
 - Tệp DLL sau biên dịch: `products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll`.
 - **Mã băm SHA-256 xác thực**:
   ```
-  aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e
+  354751c01db7ff4a13b5bbb7e3c4d1a68dbb4b451b6a9b46801f6a511d1b6025
   ```
 - Gói cục bộ `D:\TuanPa_AI\OUTPUT\7. TVXD.BG V7` và tệp live `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll` đều khớp chính xác 100% với mã băm trên.

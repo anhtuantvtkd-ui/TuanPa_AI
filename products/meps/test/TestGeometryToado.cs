@@ -115,15 +115,48 @@ namespace Tvxd.Meps.Test {
                 }
             } else {
                 // Vertical 90 deg: Text rotation = 90 deg (Math.PI / 2)
-                // Text line 1 (X) must be to the left of dividing line, line 2 (Y) to the right
+                // Text line 1 (X) must be strictly to the left of stem (maxX < stemX)
+                // Text line 2 (Y) must be strictly to the right of stem (minX > stemX)
+                // Stem runs straight between Line 1 (X) and Line 2 (Y)
                 if (text != null) {
                     bool rotOk = Math.Abs(text.Rotation - Math.PI / 2) < 0.05;
-                    double minX = text.GeometricExtents.MinPoint.X;
-                    double maxX = text.GeometricExtents.MaxPoint.X;
-                    double midX = (minX + maxX) / 2.0;
-                    ed.WriteMessage(string.Format("\n  Vertical Check: Rot={0:0.#} deg, X_Bounds=[{1:0.##}, {2:0.##}], MidX={3:0.##} => VerticalStemSeparation={4}",
-                        text.Rotation * 180 / Math.PI, minX, maxX, midX, rotOk));
-                    ok = rotOk;
+                    double stemX = targetPt.X;
+
+                    DBObjectCollection textParts = new DBObjectCollection();
+                    try { text.Explode(textParts); } catch {}
+
+                    DBText dbtX = null;
+                    DBText dbtY = null;
+                    foreach (DBObject p in textParts) {
+                        if (p is DBText) {
+                            DBText dt = (DBText)p;
+                            if (dt.TextString.StartsWith("X=")) dbtX = dt;
+                            else if (dt.TextString.StartsWith("Y=")) dbtY = dt;
+                        }
+                    }
+
+                    bool lineX_left = false;
+                    bool lineY_right = false;
+                    double leftMargin = 0.0;
+                    double rightMargin = 0.0;
+
+                    if (dbtX != null && dbtY != null) {
+                        double maxX_of_X = dbtX.GeometricExtents.MaxPoint.X;
+                        double minX_of_Y = dbtY.GeometricExtents.MinPoint.X;
+                        lineX_left = (maxX_of_X < stemX);
+                        lineY_right = (minX_of_Y > stemX);
+                        leftMargin = stemX - maxX_of_X;
+                        rightMargin = minX_of_Y - stemX;
+                    }
+
+                    bool separationOk = rotOk && lineX_left && lineY_right;
+                    ed.WriteMessage(string.Format("\n  Vertical Separation Check: StemX={0:0.##}, LineX_Max={1:0.##} (LeftMargin={2:0.##}), LineY_Min={3:0.##} (RightMargin={4:0.##}) => LineX_Left={5}, LineY_Right={6}, RotOk={7} => VerticalStemSeparation={8}",
+                        stemX,
+                        (dbtX != null ? dbtX.GeometricExtents.MaxPoint.X : 0.0), leftMargin,
+                        (dbtY != null ? dbtY.GeometricExtents.MinPoint.X : 0.0), rightMargin,
+                        lineX_left, lineY_right, rotOk, separationOk));
+
+                    ok = separationOk;
                 }
             }
 
