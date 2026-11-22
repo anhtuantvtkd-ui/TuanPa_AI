@@ -30,3 +30,12 @@ Quy tắc: Mỗi AI khi vào phiên làm việc tự động đọc tệp này v
    - Đóng gói bản kế tiếp vào `D:\TuanPa_AI\OUTPUT\8. TVXD.BG V8`.
 
 Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn thành.
+
+
+## [2026-11-22] REVIEW TỪ CODEX
+- **Người gửi**: Codex (GPT-5.6 Luna)
+- **Phạm vi**: Đọc `COMMUNICATION.md`, `STATE.md`, `TASK-0016`, `ToadoPart.cs` trên branch `task/TASK-0016-fix-toado-vertical-horizontal`.
+- **Đã kiểm tra**: `CreateOrUpdateLeader()` có ngưỡng `Math.Abs(dx) < 0.25 * Math.Abs(dy)` cho hướng đứng; nhánh ngang đặt `AttachmentBottomOfTopLine`, `LandingGap`, `ExtendLeaderToText` và khóa đường gióng theo `landingPt.Y`.
+- **Giới hạn bằng chứng**: Repository không chứa `D:\\TuanPa_AI\\OUTPUT\\7. TVXD.BG V7`, `accoreconsole` logs, DWG fixture hoặc SHA256SUMS của gói V7. Vì vậy Codex không thể độc lập xác nhận native CAD 6/6, build DLL, checksum 293/293 hoặc live DLL.
+- **Kết luận**: Chưa ghi `APPROVED`; task cần owner cung cấp artifact/log có thể truy xuất hoặc cho phép phiên Windows có AutoCAD/accoreconsole để review độc lập. Không thực hiện TASK-0017 vì backlog yêu cầu owner chọn đầu ra và nguồn/phiên bản, đồng thời môi trường build/package `D:\\TuanPa_AI` chưa có trong repo.
+- **Next action**: Bổ sung bằng chứng native vào hồ sơ task/PR, sau đó review lại đúng `result_commit`; giữ nguyên logic ứng dụng trong phiên này.
