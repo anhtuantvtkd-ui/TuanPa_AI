@@ -184,3 +184,28 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
 
 
+
+
+---
+
+## [2026-11-23 00:53] GEMINI → CODEX: BÁO CÁO NGUYÊN NHÂN GỐC RỄ & YÊU CẦU REFACTOR THUẬT TOÁN SẮP XẾP TAGSEQ (TASK-0018)
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime Tester)
+- **Người nhận**: Codex (Implementer)
+- **Vấn đề thực tế từ Chủ sở hữu Phùng Anh Tuấn**:
+  - Khi người dùng chọn các block từ trái sang phải (hướng L-R), số thứ tự vẫn bị nhảy lung tung, không đi theo thứ tự trực quan mong muốn.
+- **Phân tích nguyên nhân gốc rễ (Root Cause Analysis)**:
+  1. **Lỗi Dung sai cố định `toleranceY = 1.0`**:
+     - Bản vẽ AutoCAD cơ điện (MEP) vẽ theo đơn vị **Millimet (mm)**. Khoảng cách giữa các thiết bị là hàng nghìn mm (1500mm, 3000mm,...).
+     - Khi các block nằm trên "cùng một hàng" theo mắt người nhìn, tọa độ Y thực tế của điểm chèn (Insertion Point) có thể lệch nhau từ 5mm, 10mm đến 50mm - 200mm (do tim ống, độ dốc, hoặc kích thước block khác nhau).
+     - Với `toleranceY = 1.0`, mọi khoảng cách $\Delta Y > 1.0\text{ mm}$ đều bị thuật toán coi là **2 hàng hoàn toàn khác nhau**!
+     - Hệ quả: Thay vì gom thành 1 hàng rồi sắp xếp từ trái qua phải theo X, thuật toán tách mỗi block thành 1 band riêng, rồi sắp xếp các band theo `OrderByDescending(e => e.y)`. Kết quả là block nào có Y nhỉnh hơn vài mm (ở phía trên) sẽ bị đánh số trước, dù nó nằm tít phía bên phải, gây ra hiện tượng nhảy số zíc-zắc hỗn loạn!
+  2. **Yêu cầu đối với Codex**:
+     - Cần refactor lại thuật toán gom nhóm/phân hàng trong `products/meps/src/TagSeq/TagSeqPart.cs`:
+       + **Dung sai thích ứng (Adaptive Tolerance)**: Không dùng cố định `1.0`. Cần tính toán `adaptiveToleranceY` dựa trên dữ liệu các block được chọn. Ví dụ:
+         * Nếu dải Y tổng thể ($\max(Y) - \min(Y)$) nhỏ hơn đáng kể so với dải X ($\max(X) - \min(X)$) thì coi toàn bộ là 1 hàng ngang duy nhất (sắp xếp thuần túy theo $X$ tăng dần cho L-R, $X$ giảm dần cho R-L).
+         * Hoặc tính dải phân nhóm thích ứng: gom các block có $Y$ gần nhau với ngưỡng động (dynamic threshold, ví dụ $0.3 \times \text{khoảng cách Y trung bình}$ hoặc dựa trên độ phân tán của Y, hoặc ít nhất một ngưỡng thực tế tối thiểu cho bản vẽ mm).
+       + Đối với các hướng U-D / D-U cũng cần xử lý đối xứng cho `toleranceX`.
+- **Tệp cần cập nhật**:
+  - `products/meps/src/TagSeq/TagSeqPart.cs`
+- **Work-Item**: `work-items/TASK-0018.json` (Status: `IN_PROGRESS`)
+- **NEXT_ACTOR**: Codex

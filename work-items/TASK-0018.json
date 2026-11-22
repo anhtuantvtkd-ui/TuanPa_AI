@@ -2,7 +2,7 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0018",
   "title": "Sua loi Tag danh so lien tiep bi nhay linh tinh khi chon tu trai sang phai",
-  "status": "RELEASED",
+  "status": "NEEDS_INPUT",
   "module": "meps",
   "risk": "medium",
   "owner": "Phùng Anh Tuấn",
@@ -10,13 +10,12 @@
   "reviewer": "Gemini (Argon)",
   "base_commit": "ea7ef4bbeaa5e0c778640845e3ccfdc4ac72150d",
   "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
-  "result_commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
   "scope": [
     "Khac phuc loi danh so lien tiep tren thanh TAG khi nguoi dung chon doi tuong tu trai sang phai",
     "Ho tro sap xep theo dung toa do thuc te tu trai sang phai (kem dung sai gom nhom theo hang Y / Row Banding) tranh viec selection set bi xao tron",
+    "Nang cap toleranceY=1.0 sang Adaptive Tolerance phu hop voi ban ve millimeter (khoang cach nganh MEP hang nghin mm)",
     "Cap nhat build_v4.cmd va merge_toado.cs tich hop TagSeqPart.cs vao pipeline bien dich tu dong",
-    "Bien dich qua build_v4.cmd va kiem thu row banding dat 100% PASS",
-    "Dong goi ban cai dat V12 vao OUTPUT/12. TVXD.BG V12"
+    "Dong goi ban cai dat V13 sau khi Codex cap nhat TagSeqPart.cs"
   ],
   "out_of_scope": [
     "Cac tinh nang khac cua module MEPS",
@@ -27,36 +26,19 @@
     "products/meps/src/TagSeq/TagSeqPart.cs",
     "products/meps/tools/base/meps_orig.il"
   ],
-  "missing_inputs": [],
+  "missing_inputs": [
+    "Yeu cau Codex refactor TagSeqPart.cs ho tro Adaptive Tolerance cho he mm theo chi tiet trong COMMUNICATION.md"
+  ],
   "acceptance_criteria": [
-    "Khi chon cac block/tag tu trai sang phai, cac so duoc danh tang dan chinh xac theo dung chieu tu trai sang phai theo tung hang",
-    "Khong bi hien tuong nhay linh tinh / zic-zac giua cac hang khi quet chon",
-    "Kiem thu don vi row banding dat 100% PASS",
-    "Dong goi ban cai dat V12 tai D:\\TuanPa_AI\\OUTPUT\\12. TVXD.BG V12 khop 100% SHA256SUMS.json"
+    "Khi chon cac block/tag tu trai sang phai, cac so duoc danh tang dan chinh xac theo dung chieu tu trai sang phai",
+    "Khong bi hien tuong nhay linh tinh / zic-zac giua cac hang khi quet chon tren ban ve thuc te he millimeter",
+    "Thuat toan TagSeqPart.cs ho tro adaptive row tolerance",
+    "Kiem thu native tren AutoCAD dat ket qua hoan hao"
   ],
   "required_checks": [
     "build_v4",
     "checksums_audit",
     "workflow:check"
   ],
-  "evidence": [
-    {
-      "check": "build_v4",
-      "status": "PASS",
-      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
-      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 f5f9cdd09a4f47eaf9b2ce095dcd7a408b52259a430648aebc27b6e98d8c56d0"
-    },
-    {
-      "check": "checksums_audit",
-      "status": "PASS",
-      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
-      "reference": "SHA256SUMS.json khop 293 tap tin"
-    },
-    {
-      "check": "unit_test_row_banding",
-      "status": "PASS",
-      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
-      "reference": "TestTagSeqBanding.cs PASS: 6 block 2 hang khong deu Y duoc sap xep hoan hao tu trai qua phai theo tung hang tu tren xuong"
-    }
-  ]
+  "evidence": []
 }
