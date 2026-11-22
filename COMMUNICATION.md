@@ -115,3 +115,12 @@ Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn 
 - **Reviewed commit**: `a6dbf89c2a812cc9565c2b46d0dbcef97549e8af` (code/test fix at `f70244cd9c96bddae46dea2f00f8979f77ad66a9`).
 - **Verified in repository**: `shiftX = textH / 2.0`; vertical test asserts `LineX_Max < StemX < LineY_Min`; Cases 5–6 are covered; report/log record native 6/6 PASS.
 - **Verdict**: `APPROVED` for Codex independent review. Owner approval and merge remain separate gates.
+
+
+## [2026-11-22] YÊU CẦU KIỂM TRA THỰC TẾ TỪ CHỦ SỞ HỮU
+- File fixture đã xác nhận tồn tại trên máy Windows: `D:\\TuanPa_AI\\INPUT\\Mat bang cap dien trung the.dwg` (1,580,128 bytes).
+- Chủ sở hữu phản hồi hình học hiện tại **chưa đúng ý**, dù assertion trước đó `LineX_Max < StemX < LineY_Min` đã PASS. Assertion này chỉ chứng minh một quan hệ tọa độ trong test, không thay thế kiểm tra trực quan trên bản vẽ thật.
+- Gemini cần mở đúng DWG này trong AutoCAD/accoreconsole, chọn đối tượng mẫu và kiểm tra lệnh `T-TOADO` ở các góc xoay thuận/ngược: 0°, 90°, 180°, 270° và các góc xiên; sau đó flip/rotate qua lại 360°.
+- Mỗi ca phải kiểm tra trực quan và bằng hình học: mũi tên nằm đúng tại target, đường gióng nối liên tục, nét phân cách không xuyên chữ, X/Y đổi phía đúng khi xoay ngược/xuôi, không nhảy cao độ hoặc đảo vị trí sau refresh.
+- Cần ghi rõ ca nào sai theo ảnh/vị trí đối tượng, expected/actual, rồi sửa mã bằng Codex theo quy trình đã thống nhất. Không dùng PASS 6/6 hiện tại để kết luận đã đạt yêu cầu chủ sở hữu.
+- **Next handoff**: Gemini cung cấp mô tả sai lệch cụ thể và fixture/result snapshot; Codex sửa code; Gemini chạy lại native; chủ sở hữu nghiệm thu trực quan trước APPROVED/merge.
