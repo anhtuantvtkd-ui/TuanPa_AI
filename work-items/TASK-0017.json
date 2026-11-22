@@ -1,0 +1,56 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0017",
+  "title": "Nang cap GHI CHU MTEXT: In hoa tieu de nhom, doi ten nut, don gian hoa prompt chi hoi chieu cao chu, xuat MText layer T_TEXT 0.18mm",
+  "status": "IN_PROGRESS",
+  "module": "meps",
+  "risk": "low",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex (GPT-5.6 Luna)",
+  "reviewer": "Gemini (Argon)",
+  "base_commit": "1db7d7593c788647c2e35a09e07f6f5773172089",
+  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "scope": [
+    "Doi tieu de nhom tren Palette tu 'Trien khai va thong ke' thanh in hoa: 'TRIEN KHAI VA THONG KE'",
+    "Doi ten nut 'VIET CHU' thanh 'GHI CHU MTEXT' (RoundButton textWrite110)",
+    "Dieu chinh lenh T-VIETCHU / TextWrite110: Khong hoi nhieu thiet lap phuc tap, CHI HOI DUY NHAT chieu cao chu (co nho gia tri lan truoc)",
+    "Mac dinh Layer la T_TEXT, Lineweight 0.18 mm, Color 7 (Trang), Text Style Tuan_arial (Arial.ttf)",
+    "Doi tuong xuat ra phai la MText (Multiline Text), khong dung DBText",
+    "Cap nhat ban cai dat moi TVXD.BG V11 tai D:\\TuanPa_AI\\OUTPUT\\11. TVXD.BG V11 va D:\\OneDrive\\TuanPa_AI\\OUTPUT\\11. TVXD.BG V11"
+  ],
+  "out_of_scope": [
+    "Cac tinh nang khac cua module MEPS",
+    "Ha tang Cloudflare bridge"
+  ],
+  "sources": [
+    "D:\\TuanPa_AI\\TEST\\1. VIET CHU V1\\T-VIETCHU.lsp",
+    "products/meps/tools/base/meps_orig.il"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Tieu de tren Palette hien thi dung chu in hoa 'TRIEN KHAI VA THONG KE'",
+    "Nut bam hien thi dung ten moi 'GHI CHU MTEXT'",
+    "Khi goi lenh T-VIETCHU / click nut tren Palette: chi hoi duy nhat Chieu cao chu, enter la chon diem chen va go chu",
+    "Doi tuong sinh ra tren AutoCAD la AcDbMText thuoc Layer T_TEXT, net 0.18, mau 7",
+    "Bien dich thanh cong qua build_v4.cmd ra TVXD.Meps.Merged.dll",
+    "Dong goi ban V11 tai D:\\TuanPa_AI\\OUTPUT\\11. TVXD.BG V11 khop 100% SHA256SUMS.json"
+  ],
+  "required_checks": [
+    "build_v4",
+    "checksums_audit",
+    "workflow:check"
+  ],
+  "evidence": [],
+  "review": {
+    "verdict": "PENDING",
+    "reviewed_commit": "",
+    "reviewer": "Gemini (Argon)",
+    "independent": true,
+    "findings": []
+  },
+  "approval": {
+    "by": "Phùng Anh Tuấn",
+    "commit": "1db7d7593c788647c2e35a09e07f6f5773172089",
+    "reference": "Yeu cau cai tien thanh GHI CHU MTEXT: in hoa TRIEN KHAI VA THONG KE, chi hoi chieu cao chu, xuat MText layer T_TEXT 0.18mm mau trang"
+  }
+}

@@ -45,3 +45,26 @@
 
 - **NEXT_ACTOR**: Codex
 
+
+
+## [2026-11-22 22:50] GEMINI TO CODEX: GIAO VIEC TASK-0017 - NANG CAP GHI CHU MTEXT TREN PALETTE VA LENH T-VIETCHU
+- **Nguoi gui**: Gemini (Coordinator / Native Tester)
+- **Nguoi nhan**: Codex (Implementer / Writer)
+- **Yeu cau tu Chu so huu Phung Anh Tuan**:
+  1. **Tieu de nhom tren Palette**: Doi tu `'Trien khai va thong ke'` thanh IN HOA: **`'TRIEN KHAI VA THONG KE'`**.
+  2. **Doi ten nut tren Palette**: Doi tu `'VIET CHU'` thanh **`'GHI CHU MTEXT'`** (RoundButton `textWrite110`).
+  3. **Don gian hoa prompt lenh T-VIETCHU / TextWrite110**:
+     - Khong hoi nhieu cau hoi setup (Style, Weight, Rotation).
+     - **CHI HOI DUY NHAT chieu cao chu** co ghi nho gia tri da nhap lan truoc.
+     - Sau do cho phep nguoi dung chon diem chen va nhap text lien tuc.
+  4. **Quy cach Layer va Entity**:
+     - Layer mac dinh: **`T_TEXT`**, mau trang (Color 7), Net (Lineweight): **`0.18 mm`**, Style: **`Tuan_arial`** (Arial.ttf).
+     - Kieu thuc the xuat ra: **MText** (Multiline Text), KHONG dung DBText.
+  5. **Tham chieu Prototype**:
+     - Gemini da viet va kiem thu AutoLISP mau thanh cong tai `D:\TuanPa_AI\TEST\1. VIET CHU V1\T-VIETCHU.lsp`.
+  6. **Dau ra can ban giao**:
+     - Cap nhat code/IL cua MEPS.
+     - Bien dich thanh cong bang `build_v4.cmd`.
+     - Dong goi ban cai dat TVXD.BG V11 vao `D:\TuanPa_AI\OUTPUT\11. TVXD.BG V11` va cap nhat `SHA256SUMS.json`.
+- **Work-Item**: `work-items/TASK-0017.json`
+- **NEXT_ACTOR**: Codex
