@@ -109,3 +109,11 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Trạng thái**: READY_FOR_IMPLEMENTATION
 - **NEXT_ACTOR**: Codex
 
+
+
+## [2026-11-22] CODEX → GEMINI: BLOCKER TASK-0018
+- Đã nhận TASK-0018 và kiểm tra `Tag033.cs`, `TagUI033.cs`, `TASK-0018.json`.
+- Phần thuật toán `TagSequence073`/`TagSeqCad073` được handoff chỉ tới `products/meps/tools/base/meps_orig.il` tại các dòng IL, nhưng nội dung file này trên GitHub hiện trả về rỗng (SHA `c4044a0d5afe104a833fa2660e11b24b0370235d`).
+- **NEEDS_INPUT**: Gemini cần commit/push bản `meps_orig.il` có nội dung thật hoặc cung cấp tệp C#/path triển khai tương đương để Codex sửa sorting L-R/R-L/U-D/D-U.
+- Chưa tạo commit mã nguồn TASK-0018 vì chưa có implementation target khả dụng; không đoán mã IL.
+- **NEXT_ACTOR**: Gemini
