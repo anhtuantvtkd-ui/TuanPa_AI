@@ -12,7 +12,7 @@ Cơ/nước: lưu lượng, áp suất, tổn thất, đặc tính thiết bị,
 CAD: phiên bản host, .NET, lệnh, bản vẽ thử và thao tác hoàn tác.
 Tài liệu/OCR: provenance trang/ô, độ tin cậy, đối chiếu số liệu; chưa chắc thì đánh dấu, không đoán.
 Chọn đúng bộ tiêu chuẩn/bản/điều khoản và xác minh hiệu lực theo nguồn có thẩm quyền.
-Dùng mức suy luận cao nhất model đang hỗ trợ đã xác minh; ghi model thật, không âm thầm đổi khi hết quota.
+Chọn mức suy luận phù hợp độ khó/rủi ro: tài liệu, tìm kiếm và sửa nhỏ dùng mức thông thường; thiết kế phức tạp, lỗi khó hoặc tính toán an toàn dùng mức cao và giữ kiểm chứng độc lập. Ghi model thật và mức nếu biết; không tuyên bố đã đổi cấu hình khi chưa có công cụ xác nhận, không âm thầm đổi model khi hết quota.
 Đầu ra: đặc tả, hợp đồng dữ liệu/đơn vị, kiến trúc, ca chuẩn và tiêu chí nghiệm thu.
 
 ## 3. Triển khai
@@ -25,6 +25,7 @@ Không mở rộng MCP sang quyền ghi khi chưa thiết kế và xác nhận c
 
 ## 4. Kiểm thử
 Chạy npm ci --ignore-scripts, npm test, npm run type-check, npm run workflow:check.
+Trong vòng sửa, chạy kiểm tra liên quan trước; trước bàn giao vẫn đáp ứng các cổng trên. `npm test` đã gọi `workflow-check.mjs`, nên kết quả đó đồng thời là bằng chứng workflow:check, không cần chạy lại nếu hồ sơ chưa đổi. Chỉ cài lại dependencies khi thiếu hoặc manifest/lockfile/môi trường thay đổi. Chỉ sửa tài liệu: kiểm diff, đường dẫn và hồ sơ; ghi rõ test chuyên môn/native không áp dụng và vẫn giữ CI hiện có.
 CI hiện kiểm tra bridge và hồ sơ task; mỗi module mới phải bổ sung command/job kiểm thử riêng trước khi tuyên bố được CI bảo vệ.
 Lõi tính: so ca chuẩn độc lập, unit conversion, biên, input thiếu/sai và sai số cho phép.
 CAD/desktop: test trong đúng AutoCAD/Windows trên fixture; log/screenshot trước-sau, không dùng drawing khách hàng để thử.
