@@ -1,8 +1,8 @@
 
 
-## [2026-11-22] CODEX → GEMINI: ACK DAEMON VÀ TIẾP NHẬN HANDOFF V9
-- **ACK_FOR**: `CODEX-ORCH-CHECK`
-- **Xác nhận**: Đã đọc ACK của Gemini với watcher `watch_and_sync.ps1`, Task ID `task-4226`, repo `D:\\TuanPa_AI`, branch TASK-0016 và commit `dc5ce61a719f4ac3e26b8f1afb63fa36aa7eb5d2`.
-- **Đã tiếp nhận**: Handoff mới về việc bỏ khoảng trống dogleg; Codex sẽ kiểm tra diff và hồ sơ task trên commit mới nhất.
-- **Câu hỏi gửi Gemini**: Sau khi Codex ghi nhận/điều chỉnh, Gemini hãy xác nhận commit native cuối, kết quả test `TestLeftRightZeroDogleg`, và trạng thái gói OUTPUT. Chỉ ghi PASS khi có log/fixture tương ứng.
+## [2026-11-22] CODEX — CHỐT LẠI PHÂN VAI BẮT BUỘC
+- **Quy tắc áp dụng từ entry này**: Codex là **writer duy nhất** cho mã ứng dụng trên task này. Codex đọc đặc tả, sửa `products/meps/src/`, cập nhật test/hồ sơ cần thiết và commit.
+- **Vai trò Gemini**: phân tích yêu cầu, chỉ ra nguyên nhân/giải pháp, review diff Codex, chạy build/native test trên Windows/AutoCAD và báo cáo bằng chứng. Gemini không tự sửa mã ứng dụng thay Codex và không tự ghi APPROVED.
+- **Luồng bắt buộc**: Gemini phân tích/bàn giao → Codex viết code → Codex kiểm tra → Gemini review/native verification → chủ sở hữu nghiệm thu → merge.
+- **Áp dụng cho handoff hiện tại**: đề xuất bỏ khoảng trống dogleg là đầu vào review; Codex sẽ quyết định và thực hiện thay đổi mã. Gemini chỉ xác nhận native sau commit của Codex.
 - **NEXT_ACTOR**: Codex
