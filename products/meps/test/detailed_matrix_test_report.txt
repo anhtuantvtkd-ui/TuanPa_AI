@@ -1,0 +1,163 @@
+﻿Redirect stdout (file: C:\Users\ADMIN\AppData\Local\Temp\accc20282).
+AcCoreConsole: StdOutConsoleMode: processed-output: disabled,auto
+AutoCAD Core Engine Console - Copyright 2020 Autodesk, Inc.  All rights reserved. (R.47.0.0)
+
+Execution Path:
+C:\Program Files\Autodesk\AutoCAD 2021\accoreconsole.exe
+
+Version Number: R.47.0.0 (UNICODE)
+CoreHeartBeat
+Loading AEC Base...
+Loading AEC Base Extended...
+Loading AEC Core...
+Loading AEC Project Base...
+Loading AEC Architectural Base...
+Loading AEC Schedule...
+Substituting [simplex.shx] for [uv-abc.shx].
+
+Resolve Xref "Xref. Hien trang": .\Xref. Hien trang.dwg
+"Xref. Hien trang.dwg" cannot be found.
+
+Resolve Xref "Xref. Lien Son": .\Xref. Lien Son.dwg
+"Xref. Lien Son.dwg" cannot be found.
+
+Xref "A0 - Dien Lien Son": .\A0 - Dien Lien Son.dwg
+"A0 - Dien Lien Son" is unreferenced and has been purged.
+Regenerating model.
+
+**** System Variable Changed ****
+2 of the monitored system variables have changed from the preferred value. Use SYSVARMONITOR command to view changes.
+
+
+Command:
+Command: Enter BACKSPACE to interrupt script.
+
+
+Command:
+Command: SECURELOAD
+Enter new value for SECURELOAD <0>: 0
+
+Command: NETLOAD Assembly file name: "D:/TuanPa_AI/products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll"
+
+Command: NETLOAD Assembly file name: "D:/TuanPa_AI/products/meps/test/DetailedMatrixTest.dll"
+
+Command: DETAILED_MATRIX_TEST
+
+================================================================================
+   COMPREHENSIVE CAD MATRIX TEST ON REAL DWG: Mat bang cap dien trung the.dwg
+================================================================================
+
+----------------------------------------------------------------
+[CASE 01] ANGLE = 0° | Type = HORIZONTAL/SLANTED | dx=30, dy=0
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369223.4, LineX_MinY=2369223.85, LineY_MaxY=2369222.22 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 02] ANGLE = 15° | Type = HORIZONTAL/SLANTED | dx=28.98, dy=7.76
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369231.16, LineX_MinY=2369231.61, LineY_MaxY=2369229.99 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 03] ANGLE = 45° | Type = HORIZONTAL/SLANTED | dx=21.21, dy=21.21
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369244.61, LineX_MinY=2369245.06, LineY_MaxY=2369243.44 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 04] ANGLE = 75° | Type = HORIZONTAL/SLANTED | dx=7.76, dy=28.98
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369252.38, LineX_MinY=2369252.82, LineY_MaxY=2369251.2 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 05] ANGLE = 90° | Type = VERTICAL | dx=0, dy=30
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : StemX=406831.99, LineX_Max=406831.18 (gap=0.81), LineY_Min=406832.8 (gap=0.81) => X_Left=True, Y_Right=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 06] ANGLE = 105° | Type = HORIZONTAL/SLANTED | dx=-7.76, dy=28.98
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369252.38, LineX_MinY=2369252.82, LineY_MaxY=2369251.2 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 07] ANGLE = 135° | Type = HORIZONTAL/SLANTED | dx=-21.21, dy=21.21
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369244.61, LineX_MinY=2369245.06, LineY_MaxY=2369243.44 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 08] ANGLE = 165° | Type = HORIZONTAL/SLANTED | dx=-28.98, dy=7.76
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369231.16, LineX_MinY=2369231.61, LineY_MaxY=2369229.99 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 09] ANGLE = 180° | Type = HORIZONTAL/SLANTED | dx=-30, dy=0
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369223.4, LineX_MinY=2369223.85, LineY_MaxY=2369222.22 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 10] ANGLE = 195° | Type = HORIZONTAL/SLANTED | dx=-28.98, dy=-7.76
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369215.64, LineX_MinY=2369216.08, LineY_MaxY=2369214.46 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 11] ANGLE = 225° | Type = HORIZONTAL/SLANTED | dx=-21.21, dy=-21.21
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369202.19, LineX_MinY=2369202.63, LineY_MaxY=2369201.01 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 12] ANGLE = 255° | Type = HORIZONTAL/SLANTED | dx=-7.76, dy=-28.98
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369194.42, LineX_MinY=2369194.87, LineY_MaxY=2369193.25 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 13] ANGLE = 270° | Type = VERTICAL | dx=0, dy=-30
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : StemX=406831.99, LineX_Max=406831.18 (gap=0.81), LineY_Min=406832.8 (gap=0.81) => X_Left=True, Y_Right=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 14] ANGLE = 285° | Type = HORIZONTAL/SLANTED | dx=7.76, dy=-28.98
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369194.42, LineX_MinY=2369194.87, LineY_MaxY=2369193.25 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 15] ANGLE = 315° | Type = HORIZONTAL/SLANTED | dx=21.21, dy=-21.21
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369202.19, LineX_MinY=2369202.63, LineY_MaxY=2369201.01 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+
+----------------------------------------------------------------
+[CASE 16] ANGLE = 345° | Type = HORIZONTAL/SLANTED | dx=28.98, dy=-7.76
+  Arrow Attachment: dist=0 => PASS (Symbol=DOT)
+  Geometry Layout : LandingY=2369215.64, LineX_MinY=2369216.08, LineY_MaxY=2369214.46 => UnderlineBetween=True => PASS
+  Refresh Drift   : drift=0 => STABLE
+  ==> VERDICT: PASS
+Command: _.QUIT _Y
+Really want to discard all changes to drawing? <N> _Y
+

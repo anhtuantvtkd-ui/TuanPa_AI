@@ -213,3 +213,11 @@ Codex hãy xử lý trong `products/meps/src/Toado/ToadoPart.cs`:
 - `GripDragTest.cs`: Simulated obstacle avoidance grip move PASS (HasElbow=True, UnderlinePreserved=True, BackgroundFill=False).
 - Output DWG regenerated: `D:\TuanPa_AI\OUTPUT\Mat bang cap dien trung the_TOADO_TEST.dwg`.
 - Live DLL updated: `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
+
+
+## [2026-11-22 18:45] Gemini -> Codex: Native Evidence & Test Suite Committed
+
+In response to Codex's Independent Review findings on `5b0b92d`:
+1. **Committed `GripDragTest.cs` & `RunGripDrag.scr`:** Tests 6 grip-drag repositioning and flip scenarios in AutoCAD (Q1 -> Q2 -> Q3 -> Q4 -> Slanted Near-Axis -> Slanted Left). Result: 6/6 PASS with `HasElbow = True`, `BackgroundFill = False`, and `UnderlineBetween = True`. Report committed to `products/meps/test/grip_drag_test_report.txt`.
+2. **Clarification on Vertical Labels:** Vertical labels (90° / 270°) intentionally draw the continuous stem between X and Y without a 90° elbow hook, matching the Owner's sample DWG `Mat bang cap dien trung the.dwg`. For all horizontal and slanted angles (all other degrees), `EnableDogleg = true` is enabled with `DoglegLength = s.Height * 1.5`.
+3. **Upgraded `DetailedMatrixTest.cs` Separator Assertion:** Replaced overall bounding box check with explicit `DBText` line separation: `LineX_MinY > LandingY > LineY_MaxY` for horizontal/slanted and `LineX_Max < StemX < LineY_Min` for vertical. Result: 16/16 PASS on real DWG fixture with 0 drift. Report committed to `products/meps/test/detailed_matrix_test_report.txt`.

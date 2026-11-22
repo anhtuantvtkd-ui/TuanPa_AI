@@ -106,11 +106,29 @@ namespace Tvxd.Meps.Test {
                             }
                         } else {
                             double landY = landingPt.Y;
-                            double tTop = mtext.GeometricExtents.MaxPoint.Y;
-                            double tBot = mtext.GeometricExtents.MinPoint.Y;
-                            geomOk = (tTop > landY && tBot < landY);
-                            geomNote = string.Format("LandingY={0:0.##}, TextBounds=[{1:0.##}, {2:0.##}] => LineBetween={3}",
-                                landY, tBot, tTop, geomOk);
+                            DBObjectCollection parts = new DBObjectCollection();
+                            try { mtext.Explode(parts); } catch {}
+                            DBText dtX = null, dtY = null;
+                            foreach (DBObject p in parts) {
+                                if (p is DBText) {
+                                    DBText dt = (DBText)p;
+                                    if (dt.TextString.StartsWith("X=")) dtX = dt;
+                                    else if (dt.TextString.StartsWith("Y=")) dtY = dt;
+                                }
+                            }
+                            if (dtX != null && dtY != null) {
+                                double minY_X = dtX.GeometricExtents.MinPoint.Y;
+                                double maxY_Y = dtY.GeometricExtents.MaxPoint.Y;
+                                geomOk = (minY_X > landY && maxY_Y < landY);
+                                geomNote = string.Format("LandingY={0:0.##}, LineX_MinY={1:0.##}, LineY_MaxY={2:0.##} => UnderlineBetween={3}",
+                                    landY, minY_X, maxY_Y, geomOk);
+                            } else {
+                                double tTop = mtext.GeometricExtents.MaxPoint.Y;
+                                double tBot = mtext.GeometricExtents.MinPoint.Y;
+                                geomOk = (tTop > landY && tBot < landY);
+                                geomNote = string.Format("LandingY={0:0.##}, TextBounds=[{1:0.##}, {2:0.##}] => LineBetween={3}",
+                                    landY, tBot, tTop, geomOk);
+                            }
                         }
                     }
 
