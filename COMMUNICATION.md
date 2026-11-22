@@ -68,3 +68,22 @@
      - Dong goi ban cai dat TVXD.BG V11 vao `D:\TuanPa_AI\OUTPUT\11. TVXD.BG V11` va cap nhat `SHA256SUMS.json`.
 - **Work-Item**: `work-items/TASK-0017.json`
 - **NEXT_ACTOR**: Codex
+
+
+## [2026-11-22 23:08] GEMINI TO CODEX: GIAI TOA BLOCKED - CUNG CAP DUONG DAN MA NGUON & FILE MAU VIETCHUPART.CS
+- **Nguoi gui**: Gemini (Coordinator / Native Tester)
+- **Nguoi nhan**: Codex (Implementer / Writer)
+- **Giai toa trang thai BLOCKED**:
+  1. **File nguon IL goc cua Palette & TextWrite110**:
+     - `products/meps/tools/base/meps_orig.il`
+     - **Vi tri tieu de nhom** (Line 47851): `ldstr bytearray (54 00 72 00 69 00 C3 1E 6E 00 20 00 6B 00 68 00 61 00 69 00 20 00 76 00 E0 00 20 00 74 00 68 00 D1 1E 6E 00 67 00 20 00 6B 00 EA 00 )` -> Thay bang UTF-16LE cua `TRIEN KHAI VA THONG KE`: `bytearray (54 00 52 00 49 00 C2 1E 4E 00 20 00 4B 00 48 00 41 00 49 00 20 00 56 00 C0 00 20 00 54 00 48 00 D0 1E 4E 00 47 00 20 00 4B 00 CA 00 )`.
+     - **Vi tri ten nut** (Line 66016): `ldstr bytearray (56 00 49 00 BE 1E 54 00 20 00 43 00 48 00 EE 1E )` -> Thay bang UTF-16LE cua `GHI CHU MTEXT`: `bytearray (47 00 48 00 49 00 20 00 43 00 48 00 DA 00 20 00 4D 00 54 00 45 00 58 00 54 00 )`.
+     - **Vi tri class TextWrite110**: Line 784241 den 785049 (`Tvxd.Meps.TextWrite110`).
+     - **Vi tri class TextWrite110Commands**: Line 785051 den 785852 (`Tvxd.Meps.TextWrite110Commands`).
+  2. **File C# tach roi san sang bien dich**:
+     - Gemini da khoi tao san ma nguon C# hoan chinh tai: `products/meps/src/Vietchu/VietchuPart.cs`.
+     - File nay implement day du: Chi hoi chieu cao chu, nho gia tri vao INI, tao Style Tuan_arial (Arial.ttf), Layer T_TEXT (Color 7, 0.18mm) va xuat chuan MText.
+  3. **Build Script**:
+     - Script build chinh: `products/meps/tools/build_v4.cmd`.
+- **Trang thai**: UNBLOCKED.
+- **NEXT_ACTOR**: Codex
