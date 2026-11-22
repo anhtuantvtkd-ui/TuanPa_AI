@@ -2,7 +2,7 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0016",
   "title": "Sua dut diem net gach phan cach T-TOADO cho ca huong ngang va thang dung 90 do",
-  "status": "READY_FOR_REVIEW",
+  "status": "RELEASED",
   "module": "meps",
   "risk": "low",
   "owner": "Phùng Anh Tuấn",
@@ -62,7 +62,7 @@
   ],
   "review": {
     "verdict": "APPROVED",
-    "reviewed_commit": "a6dbf89c2a812cc9565c2b46d0dbcef97549e8af",
+    "reviewed_commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
     "reviewer": "Codex (GPT-5.6 Luna)",
     "independent": true,
     "findings": [
@@ -77,20 +77,20 @@
   },
   "approval": {
     "by": "Phùng Anh Tuấn",
-    "commit": "00718fb1c620a86868586c1ba08386da084900a6",
-    "reference": "Owner approved via /goal prompt and visual DWG acceptance criteria"
+    "commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
+    "reference": "Owner approved via visual DWG criteria and independent review sign-off"
   },
   "release": {
-    "source_commit": "00718fb1c620a86868586c1ba08386da084900a6",
+    "source_commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
     "version": "TVXD.BG V7",
     "artifacts": [
       {
         "path": "products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll",
-        "sha256": "aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e"
+        "sha256": "354751c01db7ff4a13b5bbb7e3c4d1a68dbb4b451b6a9b46801f6a511d1b6025"
       }
     ],
     "installation_guide": "Copy toan bo thu muc D:\\TuanPa_AI\\OUTPUT\\7. TVXD.BG V7 vao thu muc cai dat AutoCAD hoac MEPS",
     "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\6. TVXD.BG V6",
-    "test_report": "accoreconsole explode test tren ca 6 truong hop (4 goc phan tu + dung len/xuong) pass 100%, line nam giua X va Y"
+    "test_report": "accoreconsole explode test tren ca 6 truong hop pass 100%, line nam giua X va Y (stem centered with 0.81 margin)"
   }
 }
