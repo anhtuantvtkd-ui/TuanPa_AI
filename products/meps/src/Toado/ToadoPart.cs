@@ -414,7 +414,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = s.Height * 1.5;
+                mls.DoglegLength = 0.0;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -432,7 +432,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = s.Height * 1.5;
+                mls.DoglegLength = 0.0;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -541,9 +541,8 @@ namespace Tvxd.Meps {
                     ml.AddLastVertex(leaderLineIndex, endPt);
                 }
             } else {
-                double doglegLen = s.Height * 1.5;
                 ml.EnableDogleg = true;
-                ml.DoglegLength = doglegLen;
+                ml.DoglegLength = 0.0;
                 ml.EnableLanding = true;
                 ml.LandingGap = gap;
                 ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
@@ -569,7 +568,7 @@ namespace Tvxd.Meps {
 
                 double yTop = landingPt.Y + s.Height * 1.2;
                 double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
-                double xLeft = isRight ? (landingPt.X + doglegLen + gap) : (landingPt.X - doglegLen - gap - w);
+                double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
                 ml.TextLocation = new Point3d(xLeft, yTop, 0);
 
                 try {

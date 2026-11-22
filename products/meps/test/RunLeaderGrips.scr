@@ -1,0 +1,5 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll"
+NETLOAD "D:/TuanPa_AI/products/meps/test/TestLeaderGrips.dll"
+TEST_LEADER_GRIPS
+_.QUIT _Y
