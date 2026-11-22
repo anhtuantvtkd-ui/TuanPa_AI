@@ -244,3 +244,47 @@ In response to Codex's Independent Review findings on `5b0b92d`:
    - Mã băm SHA-256 của `TVXD.Meps.dll`: `9d44094137d9d3ddde71eb2c62b6ed99f3cdc6b38b2155a2010b328985ffef47`.
    - Kiểm toán toàn vẹn 293/293 files trong `SHA256SUMS.json` đạt 100% khớp tuyệt đối (0 sai lệch).
    - Đã đồng bộ DLL live tại `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
+
+
+## [2026-11-22 20:15] Gemini -> Codex & Owner: Handoff Đặc Tả & Mã Lỗi Cho Codex
+
+### 1. BỐI CẢNH & PHẢN HỒI TỪ CHỦ SỞ HỮU
+Chủ sở hữu phản ánh 2 vấn đề mới khi sử dụng thực tế trên AutoCAD:
+1. **Lỗi Copy Nhãn Tọa Độ (Re-linking):** Khi copy (`CO`/`COPY`) nhãn tọa độ MLeader từ Block A sang Block B và di chuyển mũi tên đến Block B, khi bấm "CẬP NHẬT TẤT CẢ" (`RefreshAll`/`T-TOADOREFRESH`), nhãn tự động bị kéo lôi ngược về vị trí Block A cũ và hiển thị tọa độ Block A cũ (chồng đè 2 nhãn lên Block A). Mong muốn: nhãn giữ nguyên vị trí mới tại Block B, tự động phát hiện Block B, cập nhật nhãn và tọa độ theo Block B.
+2. **Lỗi Đặt 45° Quét Xong Ra 90°:** Khi chọn "Tự động lệch góc cố định 45°" rồi quét chọn block, nhãn lại ra góc đứng 90° hoặc chữ bị xoay đứng 90°, và khoảng cách mũi tên quá ngắn.
+
+---
+
+### 2. PHÂN TÍCH NGUYÊN NHÂN GỐC RỄ (ĐÃ KIỂM CHỨNG BẰNG NATIVE ACCORECONSOLE)
+
+#### Lỗi 1: Cơ chế Refresh phục hồi theo XData cũ thay vì vị trí thực tế
+- Trong `RefreshAll()` (`ToadoPart.cs:760-805`), mã nguồn đọc `handleStr = vals[1]` từ `XData`.
+- Dù người dùng đã di chuyển `ml.GetFirstVertex(0)` sang Block B, `XData` của nhãn copy vẫn giữ `handle` của Block A.
+- Dòng 799 ép `targetPt = Tip(br, s.Center)` với `br` là Block A.
+- Dòng 808-812 ép `landingPt` theo `tagValues[5..7]` lưu tọa độ cũ của Block A.
+- Dẫn đến cả 2 nhãn bị kéo đè về Block A.
+- **Giải pháp:** Trong `RefreshAll()` và `ScanExistingLeaders()`:
+  - Lấy `currentArrow = ml.GetFirstVertex(0)` và `currentLanding = ml.GetLastVertex(0)`.
+  - Quét tìm `BlockReference` trong ModelSpace có khoảng cách tới `currentArrow` gần nhất.
+  - Nếu tìm thấy block gần nhất (trong bán kính `s.Height * 15.0` hoặc `5000.0`):
+    - Nếu handle khác `handleStr`: nhãn đã được COPY hoặc gán sang block mới -> gán lại `handleStr = closestBlock.Handle`, `blockName = NameOf(closestBlock)`, `targetPt = Tip(closestBlock)`, giữ nguyên vị trí đặt nhãn người dùng `landingPt = currentLanding`.
+    - Nếu cùng handle: kiểm tra nếu người dùng đã grip-drag/move (`landingMoved > 1.0`) thì giữ `currentLanding`, ngược lại giữ `storedLanding` để chống trôi.
+  - Cập nhật lại `Tag(handleStr, targetPt, landingPt)` vào XData.
+
+#### Lỗi 2: Xoay chữ MText và tỷ lệ Distance
+- **Xoay chữ:** Khi cập nhật nhãn từ 90° (thẳng đứng) sang 45°, trong nhánh `!isVertical` của `CreateOrUpdateLeader()` chưa gán rõ `mt.Rotation = 0.0;` và `mt.Direction = new Vector3d(1, 0, 0);`. AutoCAD MLeader giữ nguyên góc quay 90° cũ của MText.
+- **Khoảng cách:** Trong `toado.ini`, `Distance=15` là giá trị cũ quá nhỏ so với `Height=250` (chỉ bằng 6% chiều cao chữ). Cần auto-scale `Distance = Math.Max(s.Distance, s.Height * 3.5)` và bổ sung ô nhập `Khoảng cách (Distance)` trên Form.
+- **Công thức 45°:** Khi batch quét, tính `offset = dist * 0.70710678` để tọa độ `landingPt = (targetPt.X + offset, targetPt.Y + offset)` tạo góc nghiêng chính xác 45°.
+
+---
+
+### 3. CÁC TỆP TEST KIỂM THỬ SẴN CÓ TRÊN REPO
+- `products/meps/test/TestCopyLeader.cs`: Tái hiện lỗi clone nhãn bị kéo về block cũ.
+- `products/meps/test/TestRelinkLogic.cs`: Kiểm tra tái liên kết (re-link) tự động sau khi copy.
+- `products/meps/test/TestExistingTo45.cs` & `TestTextRotation.cs`: Tái hiện lỗi xoay chữ 90°.
+
+---
+
+### 4. TRẠNG THÁI BÀN GIAO
+- **Người thực hiện tiếp theo**: Codex (phiên làm việc của Codex) sẽ tiếp nhận mã nguồn tại `products/meps/src/Toado/ToadoPart.cs` để hoàn thiện và commit.
+- **Hỗ trợ song song**: Gemini đã chuẩn bị sẵn bộ mã mẫu, test case và lệnh build `build_v4.cmd`. Nếu Chủ sở hữu muốn xuất bản nhanh không qua phiên Codex, Gemini sẵn sàng đóng gói trực tiếp bản V9.
