@@ -10,7 +10,7 @@
   "reviewer": "Codex (GPT-5.6 Luna)",
   "base_commit": "e312665bf4639390f48014653e2cd5c393a03e22",
   "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
-  "result_commit": "00718fb1c620a86868586c1ba08386da084900a6",
+  "result_commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
   "scope": [
     "Duy nhat file products/meps/src/Toado/ToadoPart.cs tai ham CreateOrUpdateLeader",
     "Huong ngang/xien: Duong gach phan cach nam xen giua dong X va Y, khong gach xuyen qua chu X",
@@ -44,19 +44,19 @@
     {
       "check": "build_v4",
       "status": "PASS",
-      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
-      "reference": "products/meps/tools/build_v4.cmd compiled TVXD.Meps.dll with SHA256 aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e"
+      "commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
+      "reference": "products/meps/tools/build_v4.cmd compiled TVXD.Meps.dll with SHA256 354751c01db7ff4a13b5bbb7e3c4d1a68dbb4b451b6a9b46801f6a511d1b6025"
     },
     {
       "check": "checksums_audit",
       "status": "PASS",
-      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+      "commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
       "reference": "293 files in 7. TVXD.BG V7 verified matching SHA256SUMS.json 100% (0 mismatches)"
     },
     {
       "check": "workflow:check",
       "status": "PASS",
-      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+      "commit": "f70244cd9c96bddae46dea2f00f8979f77ad66a9",
       "reference": "node workflow-check.mjs passed with all records valid"
     }
   ],
@@ -68,9 +68,10 @@
     "findings": [
       {
         "severity": "medium",
-        "status": "open",
+        "status": "resolved",
         "finding": "products/meps/test/TestGeometryToado.cs kiểm tra hướng đứng chỉ xác nhận text.Rotation gần PI/2; không assert vị trí tương đối của dòng X, dòng Y và đường gióng. Log ghi VerticalStemSeparation nhưng biến này thực chất là rotOk.",
-        "recommendation": "Bổ sung assertion hình học sau Explode: xác định hai dòng text X/Y, kiểm tra X ở một phía và Y ở phía đối diện của stem, stem nằm giữa; chạy lại cả Case 5 và 6."
+        "recommendation": "Bổ sung assertion hình học sau Explode: xác định hai dòng text X/Y, kiểm tra X ở một phía và Y ở phía đối diện của stem, stem nằm giữa; chạy lại cả Case 5 và 6.",
+        "resolution": "Đã thêm shiftX = textH / 2.0 vào ToadoPart.cs để stem nằm đúng tâm khe X và Y; bổ sung explode DBText và assertion LineX_Max < StemX < LineY_Min vào TestGeometryToado.cs; accoreconsole 6/6 PASS 100% trong commit f70244cd9c96bddae46dea2f00f8979f77ad66a9."
       }
     ]
   },
