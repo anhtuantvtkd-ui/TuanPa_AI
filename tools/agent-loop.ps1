@@ -34,9 +34,14 @@ try {
       $check | Add-Content -LiteralPath $log
       $state = if (Test-Path 'STATE.md') { Get-Content 'STATE.md' -Raw } else { 'STATE.md missing' }
       $comm = if (Test-Path 'COMMUNICATION.md') { Get-Content 'COMMUNICATION.md' -Raw } else { 'COMMUNICATION.md missing' }
-      if ($comm -match 'NEXT_ACTOR:\s*Gemini') { Log "ACTION=GEMINI_REVIEW_REQUIRED sha=$head" }
-      elseif ($comm -match 'NEXT_ACTOR:\s*Codex') { Log "ACTION=CODEX_IMPLEMENTATION_REQUIRED sha=$head" }
+      
+      # Match the last occurrence of NEXT_ACTOR in COMMUNICATION.md
+      $allMatches = [regex]::Matches($comm, '(?i)(?:\*\*)?NEXT_ACTOR(?:\*\*)?[:=]\s*(\w+)')
+      $actor = if ($allMatches.Count -gt 0) { $allMatches[$allMatches.Count - 1].Groups[1].Value } else { '' }
+      if ($actor -match '(?i)Gemini') { Log "ACTION=GEMINI_REVIEW_REQUIRED sha=$head" }
+      elseif ($actor -match '(?i)Codex') { Log "ACTION=CODEX_IMPLEMENTATION_REQUIRED sha=$head" }
       else { Log "ACTION=OWNER_OR_MANUAL_REVIEW sha=$head" }
+      
       $last = $head
     }
     if ($Once) { break }
