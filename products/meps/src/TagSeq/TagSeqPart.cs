@@ -50,6 +50,7 @@ namespace Tvxd.Meps
         public string prefix { get; set; } = "";
         public long start { get; set; } = 1;
         public int width { get; set; } = 1;
+        public double toleranceY { get; set; } = 1.0;
     }
 
     public sealed class TagSeqRow073
@@ -124,7 +125,30 @@ namespace Tvxd.Meps
         {
             if (entries == null) return new List<TagSeqRow073>();
             var list = entries.ToList();
-            list.Sort(Order(o != null ? o.direction : "L-R"));
+            string direction = TagSeqDir073.Check(o != null ? o.direction : "L-R");
+            double toleranceY = o != null && o.toleranceY > 0 && !double.IsNaN(o.toleranceY) && !double.IsInfinity(o.toleranceY) ? o.toleranceY : 1.0;
+            if (direction == TagSeqDir073.LR || direction == TagSeqDir073.RL)
+            {
+                var bands = new List<List<TagSeqEntry073>>();
+                foreach (var entry in list.OrderByDescending(e => e.y).ThenBy(e => e.x).ThenBy(e => e.id, StringComparer.Ordinal))
+                {
+                    List<TagSeqEntry073> band = null;
+                    foreach (var candidate in bands)
+                    {
+                        double meanY = candidate.Average(e => e.y);
+                        if (Math.Abs(entry.y - meanY) <= toleranceY) { band = candidate; break; }
+                    }
+                    if (band == null) { band = new List<TagSeqEntry073>(); bands.Add(band); }
+                    band.Add(entry);
+                }
+                list = bands.SelectMany(b => (direction == TagSeqDir073.LR
+                    ? b.OrderBy(e => e.x).ThenBy(e => e.id, StringComparer.Ordinal)
+                    : b.OrderByDescending(e => e.x).ThenBy(e => e.id, StringComparer.Ordinal))).ToList();
+            }
+            else
+            {
+                list.Sort(Order(direction));
+            }
 
             var rows = new List<TagSeqRow073>();
             long cur = o != null ? o.start : 1;
