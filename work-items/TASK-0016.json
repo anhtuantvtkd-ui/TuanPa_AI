@@ -1,0 +1,88 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0016",
+  "title": "Sua dut diem net gach phan cach T-TOADO cho ca huong ngang va thang dung 90 do",
+  "status": "RELEASED",
+  "module": "meps",
+  "risk": "low",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex",
+  "reviewer": "Gemini",
+  "base_commit": "e312665bf4639390f48014653e2cd5c393a03e22",
+  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "result_commit": "00718fb1c620a86868586c1ba08386da084900a6",
+  "scope": [
+    "Duy nhat file products/meps/src/Toado/ToadoPart.cs tai ham CreateOrUpdateLeader",
+    "Huong ngang/xien: Duong gach phan cach nam xen giua dong X va Y, khong gach xuyen qua chu X",
+    "Huong thang dung (dx gan 0): Xoay chu 90 do doc theo duong giong, X ben trai duong giong, Y ben phai duong giong (khop mau Mat bang cap dien trung the.dwg va anh media_1795321591323_25784349)",
+    "Khoa on dinh net gach khi flip 360 do",
+    "Tuyet doi khong thay doi bat ky ham hoac file nao khac"
+  ],
+  "out_of_scope": [
+    "1.295 blocks va menu MEPS khac",
+    "Ha tang Cloudflare bridge"
+  ],
+  "sources": [
+    "D:\\TuanPa_AI\\INPUT\\Mat bang cap dien trung the.dwg",
+    "media_1795321591323_25784349.png",
+    "media_1795315382976_f3fc4e9e.png",
+    "products/meps/src/Toado/ToadoPart.cs"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Duong gach ngang/doc luon phan chia dung khe giua dong X va dong Y",
+    "Kiem thu accoreconsole tren ca 2 huong ngang va dung 90 do deu PASS",
+    "build_v4.cmd bien dich thanh cong ra TVXD.Meps.Merged.dll",
+    "Dong goi ban V7 tai D:\\TuanPa_AI\\OUTPUT\\7. TVXD.BG V7 khop 100% SHA256SUMS.json"
+  ],
+  "required_checks": [
+    "build_v4",
+    "checksums_audit",
+    "workflow:check"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+      "reference": "products/meps/tools/build_v4.cmd compiled TVXD.Meps.dll with SHA256 aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+      "reference": "293 files in 7. TVXD.BG V7 verified matching SHA256SUMS.json 100% (0 mismatches)"
+    },
+    {
+      "check": "workflow:check",
+      "status": "PASS",
+      "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+      "reference": "node workflow-check.mjs passed with all records valid"
+    }
+  ],
+  "review": {
+    "verdict": "APPROVED",
+    "reviewed_commit": "00718fb1c620a86868586c1ba08386da084900a6",
+    "reviewer": "Gemini",
+    "independent": false,
+    "findings": []
+  },
+  "approval": {
+    "by": "Phùng Anh Tuấn",
+    "commit": "00718fb1c620a86868586c1ba08386da084900a6",
+    "reference": "Owner approved via /goal prompt and visual DWG acceptance criteria"
+  },
+  "release": {
+    "source_commit": "00718fb1c620a86868586c1ba08386da084900a6",
+    "version": "TVXD.BG V7",
+    "artifacts": [
+      {
+        "path": "products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll",
+        "sha256": "aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e"
+      }
+    ],
+    "installation_guide": "Copy toan bo thu muc D:\\TuanPa_AI\\OUTPUT\\7. TVXD.BG V7 vao thu muc cai dat AutoCAD hoac MEPS",
+    "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\6. TVXD.BG V6",
+    "test_report": "accoreconsole explode test tren ca 6 truong hop (4 goc phan tu + dung len/xuong) pass 100%, line nam giua X va Y"
+  }
+}

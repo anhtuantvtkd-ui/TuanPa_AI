@@ -1,0 +1,63 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0015",
+  "title": "On dinh duong gach ngang T-TOADO khi flip 360 do theo mau DWG va dong goi TVXD.BG V6",
+  "status": "IMPLEMENTING",
+  "module": "meps",
+  "risk": "medium",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Gemini",
+  "reviewer": "Codex / Owner",
+  "base_commit": "e312665bf4639390f48014653e2cd5c393a03e22",
+  "branch": "task/TASK-0015-stabilize-toado-flip",
+  "scope": [
+    "Khao sat file mau INPUT\\Mat bang cap dien trung the.dwg va block AUTOCRDS1",
+    "Khac phuc hien tuong duong gach ngang bi nhay len xuong khi lon nguoc lon xuoi (flip) 360 do",
+    "Thiet lap Dogleg vector dong bo theo huong tro (Right/Left) va tai tao leader cluster khi cap nhat MLeader",
+    "Kiem tra tu dong bang accoreconsole tren 4 goc phan tu Q1, Q2, Q3, Q4 va flip lien tuc (PASS 100%)",
+    "Bien dich va dong goi ban V6 vao D:\\TuanPa_AI\\OUTPUT\\6. TVXD.BG V6"
+  ],
+  "out_of_scope": [
+    "Thay doi 1.295 blocks va menu MEPS khac",
+    "Thay doi co che bridge Cloudflare"
+  ],
+  "sources": [
+    "D:\\TuanPa_AI\\INPUT\\Mat bang cap dien trung the.dwg",
+    "products/meps/src/Toado/ToadoPart.cs"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Duong gach ngang tach X va Y on dinh tai dung cao do landingPt.Y khi flip 360 do",
+    "Tat ca 293 tap tin release khop SHA256SUMS.json 100%",
+    "Cap nhat live DLL tai %LOCALAPPDATA%\\TVXD\\MEPS060\\TVXD.Meps.dll",
+    "Repo workflow-check vuot qua kiem tra hop le"
+  ],
+  "required_checks": [
+    "build_v4",
+    "checksums_audit",
+    "workflow:check"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "commit": "HEAD",
+      "reference": "products/meps/tools/build_v4.cmd successful assembly with DLL SHA256 6d693c70e2e32349076e4488711cbf42f90d53bc99eaa818638f5b33f3fdba7b"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "commit": "HEAD",
+      "reference": "293 files in 6. TVXD.BG V6 verified matching SHA256SUMS.json 100%"
+    },
+    {
+      "check": "workflow:check",
+      "status": "PASS",
+      "commit": "HEAD",
+      "reference": "node workflow-check.mjs passed"
+    }
+  ],
+  "review": null,
+  "approval": null,
+  "release": null
+}

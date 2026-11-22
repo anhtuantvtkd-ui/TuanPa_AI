@@ -459,6 +459,9 @@ namespace Tvxd.Meps {
             } else {
                 ml = (MLeader)tr.GetObject(existingLeaderId, OpenMode.ForWrite);
                 ml.MLeaderStyle = toadoStyleId;
+                while (ml.LeaderCount > 0) {
+                    try { ml.RemoveLeader(0); } catch { break; }
+                }
             }
 
             MText mt = new MText();
@@ -478,15 +481,6 @@ namespace Tvxd.Meps {
             ml.TextAngleType = TextAngleType.InsertAngle;
             if (layerId != ObjectId.Null) ml.LayerId = layerId;
 
-            ml.EnableDogleg = false;
-            ml.EnableLanding = true;
-            double gap = s.Height * 0.1;
-            ml.LandingGap = gap;
-            ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
-            ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
-            ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-            ml.ExtendLeaderToText = s.UnderlineBetween;
-
             if (arrowId != ObjectId.Null) {
                 ml.ArrowSymbolId = arrowId;
                 ml.ArrowSize = s.ArrowSize;
@@ -495,31 +489,70 @@ namespace Tvxd.Meps {
                 ml.ArrowSize = 0.0;
             }
 
-            // Calculate precise TextLocation so the underline connects seamlessly to landingPt
-            double yTop = landingPt.Y + s.Height * 1.18;
-            double xLeft;
-            bool isRight = (landingPt.X >= targetPt.X);
-            if (isRight) {
-                xLeft = landingPt.X + gap;
-            } else {
-                double w = mt.ActualWidth;
-                xLeft = landingPt.X - gap - w;
-            }
-            ml.TextLocation = new Point3d(xLeft, yTop, 0);
+            double dx = landingPt.X - targetPt.X;
+            double dy = landingPt.Y - targetPt.Y;
+            bool isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
+            bool isRight = (dx >= 0);
+            double gap = s.Height * 0.1;
 
-            if (isNew) {
+            if (isVertical) {
+                mt.Rotation = Math.PI / 2;
+                ml.MText = mt;
+                ml.EnableDogleg = false;
+                ml.EnableLanding = false;
+
+                double textLen = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
+                if (dy >= 0) {
+                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y + textLen, 0);
+                    ml.TextLocation = landingPt;
+
+                    int leaderIndex = ml.AddLeader();
+                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
+                    ml.AddFirstVertex(leaderLineIndex, targetPt);
+                    ml.AddLastVertex(leaderLineIndex, endPt);
+                } else {
+                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y - textLen, 0);
+                    ml.TextLocation = endPt;
+
+                    int leaderIndex = ml.AddLeader();
+                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
+                    ml.AddFirstVertex(leaderLineIndex, targetPt);
+                    ml.AddLastVertex(leaderLineIndex, endPt);
+                }
+            } else {
+                ml.EnableDogleg = false;
+                ml.EnableLanding = true;
+                ml.LandingGap = gap;
+                ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
+                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
+                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
+                ml.ExtendLeaderToText = s.UnderlineBetween;
+
+                ml.MText = mt;
+
                 int leaderIndex = ml.AddLeader();
                 int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
                 ml.AddFirstVertex(leaderLineIndex, targetPt);
                 ml.AddLastVertex(leaderLineIndex, landingPt);
 
+                Vector3d doglegDir = new Vector3d(isRight ? 1.0 : -1.0, 0.0, 0.0);
+                try {
+                    ml.SetDogleg(leaderIndex, doglegDir);
+                } catch {}
+
+                double yTop = landingPt.Y + s.Height * 1.2;
+                double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
+                double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
+                ml.TextLocation = new Point3d(xLeft, yTop, 0);
+
+                try {
+                    ml.SetLastVertex(leaderLineIndex, landingPt);
+                } catch {}
+            }
+
+            if (isNew) {
                 ms.AppendEntity(ml);
                 tr.AddNewlyCreatedDBObject(ml, true);
-            } else {
-                try {
-                    ml.SetFirstVertex(0, targetPt);
-                    ml.SetLastVertex(0, landingPt);
-                } catch {}
             }
 
             ml.XData = Tag(blockHandle, targetPt);
