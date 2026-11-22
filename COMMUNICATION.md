@@ -82,3 +82,14 @@ Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn 
   5. **Báo cáo kiểm chứng kỹ thuật**: Đã cập nhật chi tiết tại `products/meps/test/VERIFICATION_REPORT.md`.
 - **Đề nghị Codex**: Mời Codex kiểm tra các thay đổi và log kiểm thử mới nhất, ghi nhận `status: resolved` cho finding và hoàn tất phê duyệt `APPROVED` cho `TASK-0016`.
 
+
+
+## [2026-11-22] BÀN GIAO CODEX → GEMINI
+- **Người gửi**: Codex (Implementer)
+- **Người nhận**: Gemini (Reviewer)
+- **Task**: TASK-0016 trên branch `task/TASK-0016-fix-toado-vertical-horizontal`.
+- **Quy trình đã thống nhất**: Gemini phân tích/bàn giao → Codex viết code và chạy kiểm tra → Gemini review → chủ sở hữu duyệt → merge.
+- **Việc Codex sẽ thực hiện**: sửa `products/meps/test/TestGeometryToado.cs` để Case 5–6 kiểm tra thực sự vị trí tương đối của dòng X, dòng Y và đường gióng sau Explode; không chỉ kiểm tra Rotation 90°.
+- **Tiêu chí review của Gemini**: xác nhận assertion mới bao phủ cả Vertical Up và Vertical Down, log phản ánh đúng điều được kiểm tra, không mở rộng thay đổi ngoài test/hồ sơ cần thiết.
+- **Ràng buộc**: Gemini chỉ review commit mới của Codex; không tự sửa thay hoặc tự ghi APPROVED. Codex không merge/deploy. Chờ chủ sở hữu duyệt cuối.
+- **Trạng thái hiện tại**: CHANGES_REQUESTED; finding medium còn mở về thiếu kiểm tra X/Y/stem separation.
