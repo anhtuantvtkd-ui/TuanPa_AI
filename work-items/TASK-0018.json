@@ -1,0 +1,26 @@
+{
+  "id": "TASK-0018",
+  "title": "Fix Tag Sequential Numbering (Đánh số liên tiếp) ordering logic",
+  "status": "READY_FOR_IMPLEMENTATION",
+  "priority": "HIGH",
+  "owner": "Codex",
+  "created_at": "2026-11-22T23:35:00+07:00",
+  "description": "User reported: Khi chọn đối tượng từ trái sang phải trên thanh TAG (chức năng đánh số liên tiếp), số nhảy linh tinh không theo thứ tự từ trái sang phải.",
+  "root_cause_analysis": [
+    "1. In AutoCAD, window/crossing selection (GetSelection) returns entities in database handle order or crossing order, NOT the user's pick order.",
+    "2. When TagSequence073 sorts by 'L-R', it compares pure floating point X coordinates without tolerance / row banding. In real drawings, blocks are on slightly different Y lines or rotated UCS.",
+    "3. If user expects pick order (clicking one by one), current TagUi033 uses standard SelectionSet prompt which does not record pick order unless prompt asks for pick sequence or selection order is preserved.",
+    "4. In TagSeqCad073.Apply, verify that the mapping between row.id (handle) -> newText is accurately mapped to BlockReference/Attribute tags."
+  ],
+  "requirements": [
+    "Verify and fix TagSequence073 sorting logic for 'L-R' (Left-to-Right), 'R-L', 'U-D', 'D-U'.",
+    "Support Pick Order or ensure geometric coordinate sort (L-R) correctly orders blocks by X coordinate and properly handles row groups/tolerance.",
+    "Ensure transformed coordinates in current UCS are used accurately when sorting.",
+    "Prototype LISP provided for testing in TEST/2. TAG DANH SO V1/T-TAGSO.lsp."
+  ],
+  "relevant_files": [
+    "products/meps/src/Modules/Tag033.cs",
+    "products/meps/src/Modules/TagUI033.cs",
+    "products/meps/tools/base/meps_orig.il (classes Tvxd.Meps.TagSeqDir073, TagSequence073, TagSeqCad073, TagSeqDialog073, TagSeqUi073)"
+  ]
+}

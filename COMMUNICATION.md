@@ -85,3 +85,27 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
   4. **Runtime hien hanh**: Da cap nhat `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
   5. **Ho so TASK-0017**: Dat trang thai `RELEASED`, `workflow:check` hop le 100%.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW (Cho Chu so huu nghiem thu thuc te)
+
+---
+
+## [2026-11-22 23:35] GEMINI TO CODEX: GIAO VIỆC TASK-0018 - SỬA LỖI ĐÁNH SỐ LIÊN TIẾP BỊ NHẢY SỐ (TAG TAB)
+- **Người gửi**: Gemini (Coordinator / Native QA)
+- **Người nhận**: Codex (Implementer / Independent Reviewer)
+- **Yêu cầu từ Chủ sở hữu Phùng Anh Tuấn**:
+  "XEM TẠI THANH TAG PHẦN TAG ĐÁNH SỐ LIÊN TIẾP BỊ LỖI KHI TÔI CHỌN TỪ TRÁI SANG PHẢI NHƯNG SỐ NHẢY LINH TÍNH"
+- **Phân tích nguyên nhân gốc (Root Cause)**:
+  1. Khi người dùng chọn đối tượng (quét chuột hoặc pick), AutoCAD trả về tập chọn trong SelectionSet theo thứ tự Handle/Cơ sở dữ liệu chứ không bảo lưu thứ tự click (Pick Order).
+  2. Trong hàm sắp xếp `TagSequence073::Order("L-R")`, thuật toán so sánh tọa độ X tuyệt đối `a.x.CompareTo(b.x)`. Nếu các block hơi lệch nhau về cao độ Y hoặc nằm trên nhiều hàng ngang, việc sort thuần theo X làm số nhảy zíc-zắc giữa các hàng thay vì thành từng hàng hoặc theo thứ tự người dùng chọn.
+  3. Thiếu hỗ trợ **Pick Order** (thứ tự click từng block từ trái sang phải) hoặc thiếu nhóm dung sai theo hàng (Row Banding / Y tolerance) khi người dùng quét chọn.
+- **Tài liệu & Mã nguồn liên quan**:
+  - **Mã IL gốc**: `products/meps/tools/base/meps_orig.il` (Các class: `Tvxd.Meps.TagSequence073`, `Tvxd.Meps.TagSeqCad073`, `Tvxd.Meps.TagSeqDir073`, `Tvxd.Meps.TagSeqDialog073`, `Tvxd.Meps.TagSeqUi073`).
+  - **Mã C# liên quan**: `products/meps/src/Modules/Tag033.cs`, `TagUI033.cs`.
+  - **Prototype mẫu AutoLISP**: `TEST/2. TAG DANH SO V1/T-TAGSO.lsp` (đã kiểm tra và đồng bộ trên OneDrive).
+- **Work-Item**: `work-items/TASK-0018.json`
+- **Yêu cầu hành động đối với Codex**:
+  - Triển khai phương án xử lý trong C# / IL:
+    + Bổ sung cơ chế sắp xếp chuẩn xác từ trái sang phải (kèm gom nhóm hàng theo dung sai Y nếu quét vùng) hoặc hỗ trợ đánh số tuần tự theo thứ tự click chọn (Pick Order).
+    + Đảm bảo sau khi đánh số, thứ tự số tăng dần chính xác từ trái qua phải theo đúng kỳ vọng của người dùng.
+- **Trạng thái**: READY_FOR_IMPLEMENTATION
+- **NEXT_ACTOR**: Codex
+
