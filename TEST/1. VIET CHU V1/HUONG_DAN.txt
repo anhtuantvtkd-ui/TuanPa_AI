@@ -1,0 +1,23 @@
+================================================================================
+                    HUONG DAN SU DUNG LISP VIET CHU (MTEXT) V1
+================================================================================
+
+1. THONG TIN LISP:
+   - File lisp: T-VIETCHU.lsp
+   - Lenh goi: T-VIETCHU hoac VC (viet tat)
+   - Thu muc luu tru: D:\TuanPa_AI\TEST\1. VIET CHU V1\
+   - Dong bo truc tiep tren OneDrive: D:\OneDrive\TuanPa_AI\TEST\1. VIET CHU V1\
+
+2. CAC TINH NANG CAI TIEN THEO YEU CAU CUA CHU SO HUU:
+   - Don gian hoa thao tac: Chi hoi 1 thong so duy nhat la "Chieu cao chu".
+   - Tu dong ghi nho gia tri chieu cao chu vua nhap cho cac lan sau (bam Enter de dung lai).
+   - Layer mac dinh: "T_TEXT", mau 7 (Trang), do day net: 0.18 mm.
+   - Text Style mac dinh: "Tuan_arial" (Font Arial.ttf chuan).
+   - Loai chu xuat ra: MText (Multi-line Text) chuyen nghiep, khong dung Text don dong cu.
+
+3. CACH NAP VA TEST TRONG AUTOCAD:
+   - Buoc 1: Trong AutoCAD, go lenh: APPLOAD
+   - Buoc 2: Chon file "D:\TuanPa_AI\TEST\1. VIET CHU V1\T-VIETCHU.lsp" va bam "Load".
+   - Buoc 3: Go lenh VC hoac T-VIETCHU tren dong Command.
+   - Buoc 4: Nhap chieu cao chu (vi du: 250 hoac 2.5) -> Bam diem tren ban ve -> Go noi dung chu.
+   - Buoc 5: Bấm Enter de ket thuc lenh.
