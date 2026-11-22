@@ -3,20 +3,20 @@ $ErrorActionPreference = "Continue"
 
 $git = "C:\Users\ADMIN\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\cmd\git.exe"
 $repoDir = "D:\TuanPa_AI"
-$branch = "task/TASK-0016-fix-toado-vertical-horizontal"
 $logFile = "$repoDir\products\meps\tools\watcher.log"
 
-Write-Host "Starting TuanPa Git Watcher on branch '$branch'..."
-"Watcher started at $(Get-Date)" | Out-File -FilePath $logFile -Encoding utf8
+Write-Host "Starting TuanPa Git Watcher on repository '$repoDir'..."
+"Watcher daemon started at $(Get-Date)" | Out-File -FilePath $logFile -Encoding utf8
 
 while ($true) {
     try {
-        & $git -C $repoDir fetch origin $branch 2>$null
+        $branch = (& $git -C $repoDir rev-parse --abbrev-ref HEAD).Trim()
+        & $git -C $repoDir fetch origin 2>$null
         $localSha = (& $git -C $repoDir rev-parse HEAD).Trim()
         $remoteSha = (& $git -C $repoDir rev-parse "origin/$branch").Trim()
 
         if ($localSha -ne $remoteSha) {
-            $msg = "Detected new commit from Codex on remote: $remoteSha (Local: $localSha)"
+            $msg = "Detected new commit from Codex on remote '$branch': $remoteSha (Local: $localSha)"
             Write-Host $msg
             "$msg at $(Get-Date)" | Out-File -FilePath $logFile -Append -Encoding utf8
 
@@ -48,10 +48,21 @@ while ($true) {
                 & $git -C $repoDir push origin $branch
                 Write-Host "Auto-build and verification pushed to GitHub!"
             }
+
+            # Check if Codex approved TASK-0016
+            $taskFile = "$repoDir\work-items\TASK-0016.json"
+            if (Test-Path $taskFile) {
+                $taskContent = Get-Content $taskFile -Raw | ConvertFrom-Json
+                if ($taskContent.review.verdict -eq "APPROVED") {
+                    $appMsg = "[ALERT] TASK-0016 has been APPROVED by Codex (Independent Reviewer) at $(Get-Date)!"
+                    Write-Host $appMsg
+                    $appMsg | Out-File -FilePath $logFile -Append -Encoding utf8
+                }
+            }
         }
     } catch {
         Write-Host "Watcher iteration error: $_"
     }
 
-    Start-Sleep -Seconds 20
+    Start-Sleep -Seconds 15
 }
