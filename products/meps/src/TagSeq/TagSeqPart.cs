@@ -46,11 +46,20 @@ namespace Tvxd.Meps
 
     public sealed class TagSeqOptions073
     {
-        public string direction { get; set; } = "L-R";
-        public string prefix { get; set; } = "";
-        public long start { get; set; } = 1;
-        public int width { get; set; } = 1;
-        public double toleranceY { get; set; } = 1.0;
+        public string direction { get; set; }
+        public string prefix { get; set; }
+        public long start { get; set; }
+        public int width { get; set; }
+        public double toleranceY { get; set; }
+
+        public TagSeqOptions073()
+        {
+            direction = "L-R";
+            prefix = "";
+            start = 1;
+            width = 1;
+            toleranceY = 1.0;
+        }
     }
 
     public sealed class TagSeqRow073

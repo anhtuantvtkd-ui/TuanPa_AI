@@ -7,6 +7,7 @@ class MergeMeps {
         string baseDir = AppDomain.CurrentDomain.BaseDirectory;
         string toadoPartPath = Path.Combine(baseDir, "ToadoPart.il");
         string vietchuPartPath = Path.Combine(baseDir, "VietchuPart.il");
+        string tagSeqPartPath = Path.Combine(baseDir, "TagSeqPart.il");
         string mepsOrigPath = Path.Combine(baseDir, @"base\meps_orig.il");
         if (!File.Exists(mepsOrigPath)) mepsOrigPath = Path.Combine(baseDir, "meps_orig.il");
         string mepsFinalPath = Path.Combine(baseDir, "meps_final.il");
@@ -45,6 +46,23 @@ class MergeMeps {
             Console.WriteLine("Vietchu section extracted: " + (vietchuLines.Length - startVietchu) + " lines.");
         }
 
+        Console.WriteLine("Reading TagSeqPart.il from: " + tagSeqPartPath);
+        var tagSeqLines = File.ReadAllLines(tagSeqPartPath);
+        int startTagSeq = -1;
+        for (int i = 0; i < tagSeqLines.Length; i++) {
+            if (tagSeqLines[i].StartsWith(".class ") && tagSeqLines[i].Contains("Tvxd.Meps.TagSeqDir073")) {
+                startTagSeq = i;
+                break;
+            }
+        }
+        var newTagSeqSection = new StringBuilder();
+        if (startTagSeq >= 0) {
+            for (int i = startTagSeq; i < tagSeqLines.Length; i++) {
+                newTagSeqSection.AppendLine(tagSeqLines[i]);
+            }
+            Console.WriteLine("TagSeq section extracted: " + (tagSeqLines.Length - startTagSeq) + " lines.");
+        }
+
         // Byte replacements for Palette uppercase title and button name
         // 1. "Triển khai và thống kê" -> "TRIỂN KHAI VÀ THỐNG KÊ"
         string origTitle1 = "54 00 72 00 69 00 C3 1E 6E 00 20 00 6B 00 68 00";
@@ -61,6 +79,7 @@ class MergeMeps {
         Console.WriteLine("Merging into base IL: " + mepsOrigPath);
         int replacedToado = 0;
         int replacedVietchu = 0;
+        int replacedTagSeq = 0;
         int replacedTitles = 0;
         int replacedButtons = 0;
         int nanCount = 0;
@@ -71,6 +90,7 @@ class MergeMeps {
             string line;
             bool skippingToado = false;
             bool skippingVietchu = false;
+            bool skippingTagSeq = false;
 
             while ((line = reader.ReadLine()) != null) {
                 // Fix nan and inf
@@ -101,8 +121,8 @@ class MergeMeps {
                     replacedButtons++;
                 }
 
-                // Toado replacement
-                if (!skippingToado && !skippingVietchu) {
+                // Section replacements
+                if (!skippingToado && !skippingVietchu && !skippingTagSeq) {
                     if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
                         skippingToado = true;
                         writer.Write(newToadoSection.ToString());
@@ -115,6 +135,12 @@ class MergeMeps {
                         replacedVietchu++;
                         continue;
                     }
+                    if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                        skippingTagSeq = true;
+                        writer.Write(newTagSeqSection.ToString());
+                        replacedTagSeq++;
+                        continue;
+                    }
                     writer.WriteLine(line);
                 } else if (skippingToado) {
                     if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.Toado")) {
@@ -123,6 +149,12 @@ class MergeMeps {
                             skippingVietchu = true;
                             writer.Write(newVietchuSection.ToString());
                             replacedVietchu++;
+                            continue;
+                        }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                            skippingTagSeq = true;
+                            writer.Write(newTagSeqSection.ToString());
+                            replacedTagSeq++;
                             continue;
                         }
                         writer.WriteLine(line);
@@ -136,13 +168,41 @@ class MergeMeps {
                             replacedToado++;
                             continue;
                         }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                            skippingTagSeq = true;
+                            writer.Write(newTagSeqSection.ToString());
+                            replacedTagSeq++;
+                            continue;
+                        }
+                        writer.WriteLine(line);
+                    }
+                } else if (skippingTagSeq) {
+                    // TagSeq ends after TagSequence073
+                    if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.TagSeqDir073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqEntry073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqOptions073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqRow073") &&
+                        !line.Contains("Tvxd.Meps.TagSequence073")) {
+                        skippingTagSeq = false;
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
+                            skippingToado = true;
+                            writer.Write(newToadoSection.ToString());
+                            replacedToado++;
+                            continue;
+                        }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TextWrite110")) {
+                            skippingVietchu = true;
+                            writer.Write(newVietchuSection.ToString());
+                            replacedVietchu++;
+                            continue;
+                        }
                         writer.WriteLine(line);
                     }
                 }
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), Titles ({2}), Buttons ({3}), Fixed nan ({4}), inf ({5}).",
-            replacedToado, replacedVietchu, replacedTitles, replacedButtons, nanCount, infCount));
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Titles ({3}), Buttons ({4}), Fixed nan ({5}), inf ({6}).",
+            replacedToado, replacedVietchu, replacedTagSeq, replacedTitles, replacedButtons, nanCount, infCount));
     }
 }

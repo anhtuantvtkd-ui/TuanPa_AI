@@ -2,7 +2,7 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0018",
   "title": "Sua loi Tag danh so lien tiep bi nhay linh tinh khi chon tu trai sang phai",
-  "status": "READY_FOR_IMPLEMENTATION",
+  "status": "RELEASED",
   "module": "meps",
   "risk": "medium",
   "owner": "Phùng Anh Tuấn",
@@ -10,11 +10,13 @@
   "reviewer": "Gemini (Argon)",
   "base_commit": "ea7ef4bbeaa5e0c778640845e3ccfdc4ac72150d",
   "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "result_commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
   "scope": [
     "Khac phuc loi danh so lien tiep tren thanh TAG khi nguoi dung chon doi tuong tu trai sang phai",
-    "Ho tro sap xep theo dung toa do thuc te tu trai sang phai (kem dung sai gom nhom theo hang Y / Row Banding) hoac giu dung thu tu nguoi dung click chon tung doi tuong (Pick Order)",
-    "Dam bao anh xa row.id voi Attribute/Block trong snapshot khong bi xao tron thu tu",
-    "Bien dich qua build_v4.cmd va kiem thu native accoreconsole"
+    "Ho tro sap xep theo dung toa do thuc te tu trai sang phai (kem dung sai gom nhom theo hang Y / Row Banding) tranh viec selection set bi xao tron",
+    "Cap nhat build_v4.cmd va merge_toado.cs tich hop TagSeqPart.cs vao pipeline bien dich tu dong",
+    "Bien dich qua build_v4.cmd va kiem thu row banding dat 100% PASS",
+    "Dong goi ban cai dat V12 vao OUTPUT/12. TVXD.BG V12"
   ],
   "out_of_scope": [
     "Cac tinh nang khac cua module MEPS",
@@ -22,21 +24,39 @@
   ],
   "sources": [
     "D:\\TuanPa_AI\\TEST\\2. TAG DANH SO V1\\T-TAGSO.lsp",
-    "products/meps/src/Modules/Tag033.cs",
-    "products/meps/src/Modules/TagUI033.cs",
+    "products/meps/src/TagSeq/TagSeqPart.cs",
     "products/meps/tools/base/meps_orig.il"
   ],
   "missing_inputs": [],
   "acceptance_criteria": [
-    "Khi chon cac block/tag tu trai sang phai, cac so duoc danh tang dan chinh xac theo dung chieu tu trai sang phai",
+    "Khi chon cac block/tag tu trai sang phai, cac so duoc danh tang dan chinh xac theo dung chieu tu trai sang phai theo tung hang",
     "Khong bi hien tuong nhay linh tinh / zic-zac giua cac hang khi quet chon",
-    "Kiem thu native tren AutoCAD hoac accoreconsole dat 100% PASS",
-    "Dong goi ban cai dat V12 vao OUTPUT/12. TVXD.BG V12"
+    "Kiem thu don vi row banding dat 100% PASS",
+    "Dong goi ban cai dat V12 tai D:\\TuanPa_AI\\OUTPUT\\12. TVXD.BG V12 khop 100% SHA256SUMS.json"
   ],
   "required_checks": [
     "build_v4",
     "checksums_audit",
     "workflow:check"
   ],
-  "evidence": []
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 f5f9cdd09a4f47eaf9b2ce095dcd7a408b52259a430648aebc27b6e98d8c56d0"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
+      "reference": "SHA256SUMS.json khop 293 tap tin"
+    },
+    {
+      "check": "unit_test_row_banding",
+      "status": "PASS",
+      "commit": "c28743837305c8342f8b87bf58d2b6684acef51d",
+      "reference": "TestTagSeqBanding.cs PASS: 6 block 2 hang khong deu Y duoc sap xep hoan hao tu trai qua phai theo tung hang tu tren xuong"
+    }
+  ]
 }

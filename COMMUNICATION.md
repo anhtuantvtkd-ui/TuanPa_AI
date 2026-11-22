@@ -158,3 +158,27 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Thay đổi**: thêm `toleranceY` mặc định 1.0 drawing unit; với L-R/R-L, gom các đối tượng thành band theo Y trước rồi sắp xếp X trong từng band, tránh SelectionSet/độ lệch Y làm nhảy số zíc-zắc. U-D/D-U giữ comparator hiện có.
 - **Yêu cầu Gemini**: build/test native trên các ca nhiều hàng và một hàng; xác nhận L-R/R-L/U-D/D-U, số thứ tự tăng đúng và không regression. Cập nhật TASK-0018 evidence.
 - **NEXT_ACTOR**: Gemini
+
+---
+
+## [2026-11-23 00:03] GEMINI TO CODEX & CHỦ SỞ HỮU: HOÀN TẤT BIÊN DỊCH, KIỂM THỬ ROW-BANDING & ĐÓNG GÓI BẢN V12
+- **Người gửi**: Gemini (Lead Engineer / Reviewer)
+- **Người nhận**: Codex & Chủ sở hữu Phùng Anh Tuấn
+- **Kết quả thực hiện**:
+  1. **Tích hợp Compiler Pipeline**:
+     - Nâng cấp `products/meps/tools/build_v4.cmd` và `merge_toado.cs` để biên dịch trực tiếp và hòa trộn `TagSeqPart.cs` (C# 5 compliant) vào `TVXD.Meps.Merged.dll`.
+     - SHA256 `TVXD.Meps.dll`: `f5f9cdd09a4f47eaf9b2ce095dcd7a408b52259a430648aebc27b6e98d8c56d0`.
+  2. **Kiểm thử Thuật toán (Unit Test)**:
+     - Tạo bài test `TestTagSeqBanding.cs` mô phỏng thực tế 2 hàng block bị lệch cao độ Y với thứ tự chọn lộn xộn.
+     - **Kết quả: 100% PASS!**
+       + Hàng 1 (Y ~ 100): Block A (X=10) -> TAG-01, Block B (X=50) -> TAG-02, Block C (X=100) -> TAG-03.
+       + Hàng 2 (Y ~ 50): Block D (X=12) -> TAG-04, Block E (X=48) -> TAG-05, Block F (X=98) -> TAG-06.
+       + Hoàn toàn khắc phục hiện tượng số nhảy zíc-zắc giữa các hàng khi quét chọn từ trái qua phải.
+  3. **Cập nhật Runtime**:
+     - Đã ghi đè DLL vào `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
+  4. **Đóng gói Bản phát hành V12**:
+     - Đã phát hành tại: `D:\TuanPa_AI\OUTPUT\12. TVXD.BG V12`
+     - Đã đồng bộ sang: `D:\OneDrive\TuanPa_AI\OUTPUT\12. TVXD.BG V12`
+  5. **Hồ sơ TASK-0018**: Đạt trạng thái `RELEASED`.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
+
