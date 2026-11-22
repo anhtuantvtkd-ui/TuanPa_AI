@@ -12,25 +12,38 @@ set "ACAD_DIR=C:\Program Files\Autodesk\AutoCAD 2021"
 
 set "TOOLS_DIR=%~dp0"
 set "SRC_TOADO=%TOOLS_DIR%..\src\Toado\ToadoPart.cs"
+set "SRC_VIETCHU=%TOOLS_DIR%..\src\Vietchu\VietchuPart.cs"
 set "BASE_IL=%TOOLS_DIR%base\meps_orig.il"
 set "BASE_RES=%TOOLS_DIR%base\meps_orig.res"
 set "RELEASE_DLL=%TOOLS_DIR%..\release\TVXD.BG_V4\MEPS060\TVXD.Meps.dll"
 
-echo [1/5] Compiling ToadoPart.cs...
+echo [1/6] Compiling ToadoPart.cs...
 "%CSC%" /target:library /out:"%TOOLS_DIR%ToadoPart.dll" /r:"%ACAD_DIR%\acdbmgd.dll" /r:"%ACAD_DIR%\acmgd.dll" /r:"%ACAD_DIR%\accoremgd.dll" /r:System.Windows.Forms.dll /r:System.Drawing.dll "%SRC_TOADO%"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to compile ToadoPart.cs
     exit /b 1
 )
 
-echo [2/5] Disassembling ToadoPart.dll...
+echo [2/6] Compiling VietchuPart.cs...
+"%CSC%" /target:library /out:"%TOOLS_DIR%VietchuPart.dll" /r:"%ACAD_DIR%\acdbmgd.dll" /r:"%ACAD_DIR%\acmgd.dll" /r:"%ACAD_DIR%\accoremgd.dll" /r:System.Windows.Forms.dll /r:System.Drawing.dll "%SRC_VIETCHU%"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to compile VietchuPart.cs
+    exit /b 1
+)
+
+echo [3/6] Disassembling ToadoPart.dll and VietchuPart.dll...
 "%ILDASM%" /out:"%TOOLS_DIR%ToadoPart.il" "%TOOLS_DIR%ToadoPart.dll"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to disassemble ToadoPart.dll
     exit /b 1
 )
+"%ILDASM%" /out:"%TOOLS_DIR%VietchuPart.il" "%TOOLS_DIR%VietchuPart.dll"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to disassemble VietchuPart.dll
+    exit /b 1
+)
 
-echo [3/5] Merging Toado into Base IL...
+echo [4/6] Merging Toado and Vietchu into Base IL...
 "%CSC%" /out:"%TOOLS_DIR%merge_toado.exe" "%TOOLS_DIR%merge_toado.cs"
 "%TOOLS_DIR%merge_toado.exe"
 if %errorlevel% neq 0 (
@@ -38,7 +51,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo [4/5] Assembling final TVXD.Meps.dll...
+echo [5/6] Assembling final TVXD.Meps.dll...
 "%ILASM%" /dll /quiet /res:"%BASE_RES%" /out:"%TOOLS_DIR%TVXD.Meps.Merged.dll" "%TOOLS_DIR%meps_final.il"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to assemble TVXD.Meps.Merged.dll
@@ -47,12 +60,13 @@ if %errorlevel% neq 0 (
 
 copy /y "%TOOLS_DIR%TVXD.Meps.Merged.dll" "%RELEASE_DLL%" >nul
 
-echo [5/5] Updating release SHA256 checksums...
+echo [6/6] Updating release SHA256 checksums...
 "%CSC%" /out:"%TOOLS_DIR%update_v4.exe" "%TOOLS_DIR%update_v4.cs"
 "%TOOLS_DIR%update_v4.exe"
 
 REM Cleanup temporary files
 del /q "%TOOLS_DIR%ToadoPart.dll" "%TOOLS_DIR%ToadoPart.il" "%TOOLS_DIR%ToadoPart.res" 2>nul
+del /q "%TOOLS_DIR%VietchuPart.dll" "%TOOLS_DIR%VietchuPart.il" "%TOOLS_DIR%VietchuPart.res" 2>nul
 del /q "%TOOLS_DIR%merge_toado.exe" "%TOOLS_DIR%update_v4.exe" 2>nul
 del /q "%TOOLS_DIR%TVXD.Meps.Merged.dll" "%TOOLS_DIR%meps_final.il" 2>nul
 

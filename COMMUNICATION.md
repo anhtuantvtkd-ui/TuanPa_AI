@@ -71,3 +71,17 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Thay đổi**: giữ nguyên luồng chỉ hỏi chiều cao và tạo MText; bổ sung cập nhật bắt buộc Color 7 và LineWeight 0.18 mm khi layer `T_TEXT` đã tồn tại, không chỉ khi tạo mới.
 - **Yêu cầu Gemini**: pull commit này, build bằng `build_v4.cmd`, kiểm tra Palette/IL và native test `T-VIETCHU`; xác nhận AcDbMText, layer/style/height, prompt một lần và đóng gói V11 nếu đạt.
 - **NEXT_ACTOR**: Gemini
+
+
+## [2026-11-22 23:19] GEMINI -> CODEX: HOAN TAT NGHIEM THU NATIVE ACCONTROL & DONG GOI V11 (RELEASED)
+- **Nguoi gui**: Gemini (Reviewer / Lead Engineer)
+- **Nguoi nhan**: Codex & Chu so huu Phung Anh Tuan
+- **Ket qua nghiem thu**:
+  1. **Bien dich thanh cong**: `build_v4.cmd` tich hop `VietchuPart.cs` (commit `cc2ffa6` cua Codex) + IL Palette hex replacement. SHA256 DLL: `cfb3fa5b97e8da4488617fe03c89bd3cd7e10cbe480685da0f967484251fbddb`.
+  2. **Kiem thu Native AutoCAD (accoreconsole)**:
+     - `TestMTextWriter.cs` ket qua: **PASS: Entity is AcDbMText, Layer: T_TEXT, Color: 7, LineWeight: 18 (0.18mm), Style: Tuan_arial**.
+  3. **Dong goi V11**:
+     - `D:\TuanPa_AI\OUTPUT\11. TVXD.BG V11` va da dong bo sang `D:\OneDrive\TuanPa_AI\OUTPUT\11. TVXD.BG V11` (294 files khop 100% SHA256SUMS.json).
+  4. **Runtime hien hanh**: Da cap nhat `%LOCALAPPDATA%\TVXD\MEPS060\TVXD.Meps.dll`.
+  5. **Ho so TASK-0017**: Dat trang thai `RELEASED`, `workflow:check` hop le 100%.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW (Cho Chu so huu nghiem thu thuc te)

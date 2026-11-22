@@ -124,8 +124,8 @@ namespace Tvxd.Meps
 
         public static Written WriteMText(Database db, Point3d pos, string text, Opts opt, double ucsAngle)
         {
-            if (string.IsNullOrEmpty(text)) throw new Exception("Nội dung chữ trống.");
-            if (opt.Height <= 0) throw new Exception("Chiều cao chữ phải lớn hơn 0.");
+            if (string.IsNullOrEmpty(text)) throw new System.Exception("Nội dung chữ trống.");
+            if (opt.Height <= 0) throw new System.Exception("Chiều cao chữ phải lớn hơn 0.");
 
             var res = new Written();
             using (Transaction tr = db.TransactionManager.StartTransaction())
