@@ -1,0 +1,28 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0012",
+  "title": "Giảm đọc lặp và chi phí ngữ cảnh cho AI",
+  "status": "IMPLEMENTING",
+  "module": "tooling-docs",
+  "risk": "low",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex (GPT-6)",
+  "reviewer": "Owner checklist pending; no independent review claimed",
+  "base_commit": "2f7cdc8bb93e57e10ae983f15f53d0bdd3e3de69",
+  "branch": "task/TASK-0012-context-efficiency",
+  "scope": ["AGENTS.md", "README.md", "WORKFLOW.md", "GEMINI.md", "work-items/TASK-0012.json"],
+  "out_of_scope": ["Application logic, dependencies, CI and deployment configuration", "Merge, release, native CAD acceptance", "Guaranteed token or quota savings"],
+  "sources": ["https://github.com/anhtuantvtkd-ui/TuanPa_AI/issues/14", "Repository at base_commit; user request to reduce repeated reading"],
+  "missing_inputs": [],
+  "acceptance_criteria": ["Existing documents contain scoped reading and repository map", "Reasoning guidance is consistent and risk-based", "No application files changed", "Required checks pass"],
+  "required_checks": ["docs_diff", "unit", "type-check", "workflow:check"],
+  "evidence": [],
+  "review": null,
+  "approval": null,
+  "release": null,
+  "checkpoint": {
+    "decisions": ["Reuse README and work-items instead of duplicate architecture/status documents", "Retain technical validation and owner merge gates"],
+    "excluded_checks": "Technical reference and native CAD checks do not apply to documentation-only changes.",
+    "next_action": "Run repository checks, inspect diff and submit branch for owner review."
+  }
+}

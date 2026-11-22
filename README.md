@@ -10,6 +10,22 @@ CI chạy kiểm tra bridge và hồ sơ task qua npm test; không chứng nhậ
 
 ---
 
+## Bản đồ đọc nhanh
+| Việc cần làm | Điểm vào |
+|---|---|
+| Tiếp tục task | `work-items/TASK-xxxx.json`; kiểm branch/commit và bằng chứng hiện tại, không suy trạng thái từ README |
+| Quy trình / phân vai | [WORKFLOW.md](WORKFLOW.md), [ROLES.md](ROLES.md); template chỉ đọc khi tạo/sửa hồ sơ |
+| Bridge MCP / gọi Llama / đọc GitHub | `index.ts`, `services.mjs`, `services.test.mjs` |
+| Đăng nhập OAuth | `github-handler.ts`, `utils.ts`, `workers-oauth-utils.ts` |
+| Kiểm tra hồ sơ task | `workflow-check.mjs`, `workflow-check.test.mjs`, `TASK.template.json` |
+| MEPS / AutoCAD | [README module](products/meps/README.md); `src/Toado/ToadoPart.cs` cho tọa độ; tìm đúng nhóm Room/Route/Wire/Tag trong `products/meps/src/Modules/` |
+| Build MEPS | `products/meps/tools/build_v4.cmd`, `build.mjs`, `compare-v4.mjs`; đọc script trước khi chạy |
+| Kiểm tra bridge | `package.json`, `.github/workflows/ci.yml`; không thay thế kiểm thử CAD |
+
+Ví dụ tìm hẹp: `rg -n "EnableDogleg" products/meps/src/Toado`.
+Không tìm toàn repo ngay từ đầu: `products/meps/tools/base/meps_orig.il` khoảng 40 MB; `products/meps/release/` chứa gói cài, thư viện và dữ liệu. Chỉ mở khi task yêu cầu.
+Kiến trúc module đã có trong README MEPS; trạng thái và bàn giao dùng work-items, không tạo thêm bản sao ARCHITECTURE/PROJECT_STATUS chỉ để lặp nội dung.
+
 # TuanPa AI Bridge
 Gemini có thể gọi Meta Llama qua MCP và đọc repo anhtuantvtkd-ui/TuanPa_AI.
 

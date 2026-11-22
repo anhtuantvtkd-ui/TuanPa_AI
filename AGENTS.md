@@ -10,7 +10,17 @@ Quy trình duy nhất của repo này: WORKFLOW.md, revision TUANPA-ENG-1.
 - Một người/AI ghi cho một task tại một thời điểm. Người dùng quyết định ưu tiên, nghiệm thu chuyên môn, merge và phát hành.
 - Không tự nâng gói, auto-merge, thay quyền, deploy sản phẩm kỹ thuật hay cài đè AutoCAD. Cloudflare bridge đang tự deploy main; thay đổi main có tác động thật.
 
-## Kỹ thuật
+## Đọc đúng phạm vi, tránh làm lại
+- Đầu phiên xác định repo/branch/commit và task; dùng bản đồ trong README.md để chọn vùng đọc. Đọc hướng dẫn áp dụng trong thư mục đích trước khi sửa.
+- Chỉ đọc WORKFLOW.md một lần trong context hiện tại nếu chưa có; mở ROLES.md và template khi cần phân vai/tạo hồ sơ. Không tải toàn bộ tài liệu cho mỗi câu hỏi.
+- Tìm tên tệp trước (`rg --files <thư-mục>`), rồi tìm symbol với `rg -n` trong vùng liên quan; đọc đoạn quanh kết quả trước khi mở cả tệp. Mở rộng khi có dependency hoặc lỗi chưa giải thích được.
+- Không mặc định đọc/quét products/meps/release/, products/meps/tools/base/, bản vẽ, binary, lockfile, node_modules, build output hoặc log lớn. Đây là giới hạn tìm kiếm ban đầu, không cấm đọc khi nhiệm vụ cần; không xóa hoặc thêm chúng vào .gitignore để tiết kiệm context.
+- Giữ kết quả tìm kiếm/log có giới hạn; nếu bị cắt, thu hẹp truy vấn. Không in cả cây repo hoặc toàn bộ diff lớn.
+- Tái dùng nội dung đã đọc khi commit/blob chưa đổi; sau sửa hoặc đổi nhánh phải kiểm lại phần bị ảnh hưởng. Khi dùng connector, chỉ định ref/SHA; MCP chỉ đọc main không đại diện cho nhánh task.
+- Checkpoint ngắn trong work-items/TASK-xxxx.json: commit, tệp đã đổi, quyết định, lệnh+kết quả, giới hạn, việc tiếp theo. Không chép transcript hoặc tạo PROJECT_STATUS.md trùng hồ sơ task.
+- Chạy kiểm tra liên quan trước; giữ các cổng bắt buộc trong WORKFLOW.md/CI. Không chạy lại trên cùng mã và môi trường nếu đã có bằng chứng phù hợp, trừ khi có thay đổi/failure mới.
+
+## Kiểm chứng kỹ thuật
 - Thiếu input thì báo thiếu; không thay bằng 0. Giữ nguyên input gốc, đơn vị và nguồn.
 - Mỗi công thức phải có nguồn, giả thiết, giới hạn áp dụng; không suy hiệu lực tiêu chuẩn từ tên file.
 - Kiểm chứng bằng ca chuẩn/đối chiếu độc lập và điều kiện biên, không chỉ viết test chép lại code.
