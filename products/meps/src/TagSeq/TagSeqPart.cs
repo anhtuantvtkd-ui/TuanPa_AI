@@ -136,7 +136,6 @@ namespace Tvxd.Meps
             var list = entries.ToList();
             string direction = TagSeqDir073.Check(o != null ? o.direction : "L-R");
             // For a continuous route, X is the primary key. Y is only a tie-breaker.
-            var list = entries.ToList();
             list.Sort(Order(direction));
 
             var rows = new List<TagSeqRow073>();
