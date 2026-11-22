@@ -2,7 +2,7 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0016",
   "title": "Sua dut diem net gach phan cach T-TOADO cho ca huong ngang va thang dung 90 do",
-  "status": "RELEASED",
+  "status": "IMPLEMENTING",
   "module": "meps",
   "risk": "low",
   "owner": "Phùng Anh Tuấn",

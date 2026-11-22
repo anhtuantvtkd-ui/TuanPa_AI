@@ -1,0 +1,5 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll"
+NETLOAD "D:/TuanPa_AI/products/meps/test/LabelAndSaveInputDwg.dll"
+LABEL_AND_SAVE_INPUT
+_.QUIT _Y

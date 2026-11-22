@@ -1,0 +1,4 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/test/InspectAutocrds.dll"
+INSPECT_AUTOCRDS
+_.QUIT _Y

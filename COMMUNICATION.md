@@ -124,3 +124,69 @@ Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn 
 - Mỗi ca phải kiểm tra trực quan và bằng hình học: mũi tên nằm đúng tại target, đường gióng nối liên tục, nét phân cách không xuyên chữ, X/Y đổi phía đúng khi xoay ngược/xuôi, không nhảy cao độ hoặc đảo vị trí sau refresh.
 - Cần ghi rõ ca nào sai theo ảnh/vị trí đối tượng, expected/actual, rồi sửa mã bằng Codex theo quy trình đã thống nhất. Không dùng PASS 6/6 hiện tại để kết luận đã đạt yêu cầu chủ sở hữu.
 - **Next handoff**: Gemini cung cấp mô tả sai lệch cụ thể và fixture/result snapshot; Codex sửa code; Gemini chạy lại native; chủ sở hữu nghiệm thu trực quan trước APPROVED/merge.
+
+
+## [2026-11-22 17:45] BÀN GIAO KẾT QUẢ KIỂM THỬ DWG THẬT & BÁO CÁO LỖI DRIFT KHI REFRESH (GEMINI → CODEX)
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime)
+- **Người nhận**: Codex (Implementer) & Chủ sở hữu (Phùng Anh Tuấn)
+- **Mục tiêu**: Báo cáo kiểm thử 360° xoay thuận/ngược trên bản vẽ thực tế `D:\TuanPa_AI\INPUT\Mat bang cap dien trung the.dwg` và bàn giao lỗi cụ thể cần sửa cho Codex.
+
+### 1. KẾT QUẢ KIỂM THỬ TRÊN BẢN VẼ CAD THẬT (16 GÓC XOAY 360°)
+Đã nạp bản vẽ `INPUT\Mat bang cap dien trung the.dwg` vào `accoreconsole.exe`, gán nhãn cho toàn bộ 11 block `DPT` thực tế và tạo cụm benchmark kiểm thử 16 góc xoay 360° tỏa tròn quanh tâm kiểm chuẩn (bán kính R = 30m - 40m). Bản vẽ kết quả lưu tại:
+[Mat bang cap dien trung the_TOADO_TEST.dwg](file:///D:/TuanPa_AI/OUTPUT/Mat%20bang%20cap%20dien%20trung%20the_TOADO_TEST.dwg).
+
+| STT | Góc xoay | Phân loại | Mũi tên (TargetPt) | Nét gạch phân cách & Text | Độ ổn định Refresh (`T-TOADOREFRESH`) | Kết luận |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 01 | 0° | Ngang phải | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 02 | 15° | Xiên Q1 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 03 | 45° | Xiên Q1 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 04 | 75° | Xiên Q1 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 05 | **90°** | **Đứng lên** | PASS (Circle dot) | PASS (Nét đứng chạy giữa, X bên trái, Y bên phải, margin 0.81) | **FAIL (DRIFT +17.21)** | **FAIL** |
+| 06 | 105° | Xiên Q2 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 07 | 135° | Xiên Q2 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 08 | 165° | Xiên Q2 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 09 | 180° | Ngang trái | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 10 | 195° | Xiên Q3 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 11 | 225° | Xiên Q3 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 12 | 255° | Xiên Q3 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 13 | **270°** | **Đứng xuống** | PASS (Circle dot) | PASS (Nét đứng chạy giữa, X bên trái, Y bên phải, margin 0.81) | **FAIL (DRIFT -17.21)** | **FAIL** |
+| 14 | 285° | Xiên Q4 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 15 | 315° | Xiên Q4 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+| 16 | 345° | Xiên Q4 | PASS (Circle dot) | PASS (Gạch ngang phân chia Line 1 X và Line 2 Y) | PASS (Trôi = 0) | **PASS** |
+
+---
+
+### 2. PHÁT HIỆN LỖI CỤ THỂ BÀN GIAO CHO CODEX (BUG REPORT)
+- **Triệu chứng lỗi (Bug Description)**:
+  - Khi người dùng chạy lệnh `T-TOADOREFRESH` hoặc ấn nút "Làm mới (Refresh)", các nhãn tọa độ đứng (90° và 270°) bị **nhảy giật/trôi cao độ (Vertical Drift)**:
+    + Góc 90°: Tọa độ `Y` của đỉnh và text bị đẩy cao lên `+17.21` đơn vị sau mỗi lần Refresh!
+    + Góc 270°: Tọa độ `Y` của đỉnh và text bị kéo thụt xuống `-17.21` đơn vị sau mỗi lần Refresh!
+  - Trong khi đó, các nhãn hướng ngang/xiên (0°, 45°, 180°,...) giữ nguyên vị trí hoàn toàn ổn định (Drift = 0).
+- **Phân tích nguyên nhân gốc (Root Cause)**:
+  - Trong tệp `products/meps/src/Toado/ToadoPart.cs` tại hàm `CreateOrUpdateLeader`:
+    + Với nhãn đứng (dòng 508–524), do `EnableLanding = false`, code tính toán `endPt = landingPt.Y ± textLen` và tạo nét gióng từ `targetPt` tới `endPt`.
+    + Đỉnh cuối cùng của MLeader (`LastVertex`) chính là `endPt` (chứ không phải `landingPt`).
+    + Hàm `Tag(blockHandle, targetPt)` ghi vào `XData` chỉ lưu `targetPt`, không lưu `landingPt`.
+  - Khi hàm `RefreshAll` chạy (dòng 769):
+    ```csharp
+    Point3d landingPt;
+    try {
+        landingPt = ml.GetLastVertex(0);
+    } catch {
+        landingPt = ml.TextLocation;
+    }
+    ```
+    Hàm đọc `ml.GetLastVertex(0)` và coi đó là `landingPt`.
+    Khi truyền `endPt` vào làm `landingPt` mới, `CreateOrUpdateLeader` lại cộng/trừ thêm một đoạn `textLen` nữa! Càng bấm Refresh, nhãn đứng càng nhảy trôi xa dần khỏi đối tượng.
+
+### 3. ĐỀ XUẤT GIẢI PHÁP CHO CODEX (FIX RECOMMENDATION)
+Codex hãy xử lý trong `products/meps/src/Toado/ToadoPart.cs`:
+- **Cách 1 (Khuyến nghị gọn nhất)**: Trong `RefreshAll`, khi kiểm tra nhãn đứng (`isVertical`), khôi phục lại điểm `landingPt` gốc trước khi gọi `CreateOrUpdateLeader`:
+  Nếu `isVertical`, lấy `landingPt.Y = endPt.Y - (dy >= 0 ? textLen : -textLen)` (hoặc lấy `TextLocation.Y`).
+- **Cách 2**: Trong `CreateOrUpdateLeader`, tạo leader line với 3 đỉnh: đỉnh 0 = `targetPt`, đỉnh 1 = `landingPt`, đỉnh 2 = `endPt`. Khi đó đỉnh 1 luôn là `landingPt` thực sự được cố định.
+- **Cách 3**: Lưu tọa độ `landingPt` gốc vào `XData` cùng với `targetPt` trong `Tag()`: `Tag(blockHandle, targetPt, landingPt)`.
+
+### 4. TRẠNG THÁI TASK & QUY TRÌNH TIẾP THEO
+- Hồ sơ `work-items/TASK-0016.json` đã chuyển sang `IMPLEMENTING` (chưa duyệt APPROVED hay merge theo chỉ đạo của Chủ sở hữu).
+- Bàn giao mã lỗi cho Codex tiến hành viết code sửa.
+- Ngay khi Codex commit code sửa lên branch, daemon ngầm của Gemini trên máy sẽ tự động pull, build `build_v4.cmd`, chạy lại native test và cập nhật báo cáo!

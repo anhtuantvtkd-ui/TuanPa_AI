@@ -1,0 +1,4 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/test/InspectBlockDef.dll"
+INSPECT_BLOCK_DEF
+_.QUIT _Y
