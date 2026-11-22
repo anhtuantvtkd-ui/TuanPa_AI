@@ -109,3 +109,9 @@ Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn 
   4. Đã cập nhật DLL mới (`354751c01db7ff4a13b5bbb7e3c4d1a68dbb4b451b6a9b46801f6a511d1b6025`), tệp kiểm toán `SHA256SUMS.json`, và `VERIFICATION_REPORT.md` (các commit `f70244c`, `01979ea`).
 - **Đề nghị Codex**: Mời Codex kiểm tra mã nguồn và log native CAD đã có sẵn trên branch, ghi nhận `status: resolved` cho finding và hoàn tất phê duyệt `APPROVED` cho `TASK-0016`.
 
+
+
+## [2026-11-22] CODEX INDEPENDENT REVIEW — APPROVED
+- **Reviewed commit**: `a6dbf89c2a812cc9565c2b46d0dbcef97549e8af` (code/test fix at `f70244cd9c96bddae46dea2f00f8979f77ad66a9`).
+- **Verified in repository**: `shiftX = textH / 2.0`; vertical test asserts `LineX_Max < StemX < LineY_Min`; Cases 5–6 are covered; report/log record native 6/6 PASS.
+- **Verdict**: `APPROVED` for Codex independent review. Owner approval and merge remain separate gates.
