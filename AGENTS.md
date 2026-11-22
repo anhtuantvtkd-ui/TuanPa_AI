@@ -32,3 +32,10 @@ Quy trình duy nhất của repo này: WORKFLOW.md, revision TUANPA-ENG-1.
 - Không bịa review, log, SHA hay phản hồi AI. Reviewer độc lập với người triển khai cho task rủi ro cao; nếu thiếu thì BLOCKED.
 - **Thư mục bàn giao bắt buộc**: Cả Gemini và Codex khi bàn giao bản cài đặt thương phẩm phải đưa vào thư mục `OUTPUT/` với tên đánh số thứ tự tuần tự: `1. TVXD.BG V1`, `2. TVXD.BG V2`, `3. TVXD.BG V3`, `4. TVXD.BG V4`, `5. TVXD.BG V5`... Thư mục này nằm trên ổ D tại `D:\TuanPa_AI\OUTPUT\`.
 - Xem ROLES.md, TASK.template.json, REVIEW.template.json, RELEASE.template.json, WORKFLOW.md.
+
+
+## Bộ nhớ dự án
+- Đọc `KNOWLEDGE.md` trước khi sửa các vùng đã có bài học.
+- Sau mỗi task, ghi bài học đã được kiểm chứng, bằng chứng và test hồi quy; không ghi phỏng đoán.
+- Quyết định kiến trúc hoặc quy trình quan trọng lưu trong `docs/decisions/`.
+- Dùng `RETROSPECTIVE.template.md` để tổng kết; liên kết task và commit cụ thể.
