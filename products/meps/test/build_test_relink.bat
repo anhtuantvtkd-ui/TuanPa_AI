@@ -1,0 +1,2 @@
+@echo off
+"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /target:library /out:"D:\TuanPa_AI\products\meps\test\TestRelinkLogic.dll" /r:"C:\Program Files\Autodesk\AutoCAD 2021\acdbmgd.dll" /r:"C:\Program Files\Autodesk\AutoCAD 2021\acmgd.dll" /r:"C:\Program Files\Autodesk\AutoCAD 2021\accoremgd.dll" /r:"D:\TuanPa_AI\products\meps\release\TVXD.BG_V4\MEPS060\TVXD.Meps.dll" "D:\TuanPa_AI\products\meps\test\TestRelinkLogic.cs"
