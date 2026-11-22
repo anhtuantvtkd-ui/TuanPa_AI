@@ -435,16 +435,11 @@ namespace Tvxd.Meps {
 
             if (s.UnderlineBetween) {
                 ml.EnableDogleg = true;
-                ml.DoglegLength = s.Height * 0.8;
+                ml.DoglegLength = s.Height * 1.5;
                 ml.EnableLanding = true;
                 ml.LandingGap = s.Height * 0.2;
-                ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
-                ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.TopLeader);
-                ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.BottomLeader);
-                ml.TextAlignmentType = TextAlignmentType.CenterAlignment;
                 ml.ExtendLeaderToText = true;
             } else {
                 ml.EnableDogleg = true;
