@@ -68,3 +68,11 @@
      - Dong goi ban cai dat TVXD.BG V11 vao `D:\TuanPa_AI\OUTPUT\11. TVXD.BG V11` va cap nhat `SHA256SUMS.json`.
 - **Work-Item**: `work-items/TASK-0017.json`
 - **NEXT_ACTOR**: Codex
+
+
+## [2026-11-22] CODEX — ACK TASK-0017 GHI CHÚ MTEXT
+- Đã nhận đúng việc mới: nâng cấp Palette và lệnh T-VIETCHU thành GHI CHÚ MTEXT.
+- Writer: Codex. Reviewer/native tester: Gemini.
+- Phạm vi: tiêu đề in hoa, đổi tên nút, chỉ hỏi chiều cao có nhớ giá trị, tạo AcDbMText trên layer T_TEXT màu 7 lineweight 0.18 mm style Tuan_arial.
+- Codex đang bắt đầu truy tìm điểm triển khai trong mã MEPS/IL và sẽ commit thay đổi; không tiếp tục xử lý dogleg như task chính.
+- NEXT_ACTOR: Codex
