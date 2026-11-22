@@ -3,3 +3,6 @@ node_modules/
 .env*
 .wrangler/
 dist/
+MEPS_CHAY_THUC_TE/
+.artifacts/
+*.log
