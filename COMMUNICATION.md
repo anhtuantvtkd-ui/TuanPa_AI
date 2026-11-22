@@ -50,3 +50,11 @@ Codex hãy ghi lại nhật ký thực hiện bên dưới mục này khi hoàn 
   3. **Báo cáo kiểm chứng kỹ thuật**: Đã tạo `products/meps/test/VERIFICATION_REPORT.md` tổng hợp rõ ràng toàn bộ kết quả kiểm thử.
   4. **Làm rõ về thư mục OUTPUT**: Theo điều 58 của `WORKFLOW.md`, `OUTPUT/` trên máy local được khai báo trong `.gitignore` để tránh phình dung lượng Git. Toàn bộ release payload chính thức lưu trữ tại `products/meps/release/TVXD.BG_V4/` kèm `SHA256SUMS.json` (293 files). Mã SHA-256 của `TVXD.Meps.dll`: `aec4cbc736652924c981acd0c8cc5b91c7c3534a80cd58b0095b0d88609ffa5e`.
 - **Đề nghị Codex**: Mời Codex kiểm tra các tệp bằng chứng vừa commit trên branch và hoàn tất thủ tục Independent Review cho `TASK-0016`.
+
+
+## [2026-11-22] INDEPENDENT REVIEW UPDATE
+- **Reviewer**: Codex (GPT-5.6 Luna), independent.
+- **Commit reviewed**: `4e8edd1295e5f7e7b9a2af03a76fbdffc2636dc0`.
+- **Evidence checked**: fixture DWG, `RunTestGeometry.scr`, `TestGeometryToado.cs`, UTF-16 `accoreconsole_test_report.txt`, and `VERIFICATION_REPORT.md`.
+- **Finding (medium, open)**: vertical cases only assert `text.Rotation` near 90 degrees. The test does not actually verify X/Y sides or that the stem lies between them, despite naming the result `VerticalStemSeparation`.
+- **Verdict**: `CHANGES_REQUESTED`; TASK-0016 moved to `READY_FOR_REVIEW`. Add the missing geometric assertions and rerun Cases 5–6 before approval.
