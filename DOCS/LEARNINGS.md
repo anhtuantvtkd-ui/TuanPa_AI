@@ -25,3 +25,13 @@
   3. Leader scan phải đối chiếu cả `tipPt` thực tế và `br.Position` để tránh tạo nhãn trùng lặp.
 - **Test Fixture bảo vệ:** Kịch bản `TestToadoFix.cs` trên block `BE2 DAN59`.
 - **Tiêu chuẩn nghiệm thu:** MLeader tạo chính xác tại tọa độ hiển thị thực $(651.831, 19.213)$, nội dung chứa đúng định danh block (ví dụ $B1$).
+
+---
+
+## BÀI HỌC 03: BẢO TOÀN DỮ LIỆU NGƯỜI DÙNG KHI CẬP NHẬT BỘ CÀI (INSTALLER SAFETY)
+- **Phạm vi:** Trình cài đặt `CAI_DAT.exe` và các bản phát hành `OUTPUT/TVXD.BG`.
+- **Nguyên tắc an toàn:**
+  1. **Bảo tồn thư viện riêng:** Quá trình cài mới hay nâng cấp tuyệt đối không ghi đè hoặc xóa các thư mục `DATA/`, thư viện `HTKT/`, và các file cấu hình `.ini` đã có của người dùng.
+  2. **AutoCAD Guard:** Luôn kiểm tra xem AutoCAD (`acad.exe`, `accoreconsole.exe`) có đang mở và khóa file DLL không; từ chối cài đè khi tiến trình đang chạy để tránh lỗi hỏng file.
+  3. **Rollback an toàn:** Lưu vết trạng thái cũ để có thể hoàn nguyên nguyên trạng byte-for-byte khi cài đặt gặp sự cố.
+
