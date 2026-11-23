@@ -394,6 +394,39 @@ namespace Tvxd.Meps {
             );
         }
 
+        public static bool GetStoredPoints(MLeader ml, out Point3d targetPt, out Point3d landingPt) {
+            targetPt = Point3d.Origin;
+            landingPt = Point3d.Origin;
+            if (ml == null || ml.LeaderCount == 0) return false;
+            try {
+                ResultBuffer xdata = ml.GetXDataForApplication(Reg);
+                if (xdata != null) {
+                    TypedValue[] vals = xdata.AsArray();
+                    if (vals.Length >= 8) {
+                        Point3d st = new Point3d(
+                            Convert.ToDouble(vals[2].Value, Inv),
+                            Convert.ToDouble(vals[3].Value, Inv),
+                            Convert.ToDouble(vals[4].Value, Inv));
+                        Point3d sl = new Point3d(
+                            Convert.ToDouble(vals[5].Value, Inv),
+                            Convert.ToDouble(vals[6].Value, Inv),
+                            Convert.ToDouble(vals[7].Value, Inv));
+                        Point3d curArrow = ml.GetFirstVertex(0);
+                        Vector3d moveVec = curArrow - st;
+                        targetPt = curArrow;
+                        landingPt = sl + moveVec;
+                        return true;
+                    }
+                }
+            } catch {}
+            if (ml.LeaderCount > 0) {
+                targetPt = ml.GetFirstVertex(0);
+                landingPt = ml.GetLastVertex(0);
+                return true;
+            }
+            return false;
+        }
+
         public static ObjectId EnsureDotArrow(Database db) {
             using (Transaction tr = db.TransactionManager.StartTransaction()) {
                 BlockTable bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
@@ -514,19 +547,6 @@ namespace Tvxd.Meps {
             if (s.Mask) {
                 mt.UseBackgroundColor = true;
                 mt.BackgroundScaleFactor = 1.15;
-            }
-
-            if (!isNew && ml.LeaderCount > 0) {
-                double vdx = landingPt.X - targetPt.X;
-                double vdy = landingPt.Y - targetPt.Y;
-                bool wasVertical = Math.Abs(vdx) < 0.25 * Math.Abs(vdy) && Math.Abs(vdy) > 1.0;
-                if (wasVertical) {
-                    mt.Rotation = Math.PI / 2;
-                    mt.Direction = new Vector3d(0.0, 1.0, 0.0);
-                }
-                ml.MText = mt;
-                ml.XData = Tag(blockHandle, targetPt, landingPt);
-                return ml.ObjectId;
             }
 
             while (ml.LeaderCount > 0) {
@@ -754,8 +774,7 @@ namespace Tvxd.Meps {
                                     var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
                                     if (oldObj != null && oldObj.LeaderCount > 0) {
                                         // User requirement: When updating an existing/copied label, arrow tip & landing stay put ("đứng yên")
-                                        targetPt = oldObj.GetFirstVertex(0);
-                                        landingPt = oldObj.GetLastVertex(0);
+                                        GetStoredPoints(oldObj, out targetPt, out landingPt);
                                     }
                                 } catch {}
                             }
@@ -876,8 +895,12 @@ namespace Tvxd.Meps {
                         }
 
                         // User explicitly demands: Arrow and Landing STAY PUT ("đứng yên"), only X, Y and block name update!
-                        Point3d targetPt = currentArrow;
-                        Point3d landingPt = currentLanding;
+                        Point3d targetPt;
+                        Point3d landingPt;
+                        if (!GetStoredPoints(ml, out targetPt, out landingPt)) {
+                            targetPt = currentArrow;
+                            landingPt = currentLanding;
+                        }
 
                         CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, id, layerId, styleId, dotArrowId);
                         count++;
@@ -935,8 +958,7 @@ namespace Tvxd.Meps {
                             var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
                             if (oldObj != null && oldObj.LeaderCount > 0) {
                                 // Preserved: Arrow tip & landing stay put ("đứng yên") on update
-                                targetPt = oldObj.GetFirstVertex(0);
-                                landingPt = oldObj.GetLastVertex(0);
+                                GetStoredPoints(oldObj, out targetPt, out landingPt);
                             }
                         } catch {}
                     }
