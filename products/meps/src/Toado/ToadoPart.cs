@@ -503,7 +503,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = 0.0;
+                mls.DoglegLength = s.Height;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -521,7 +521,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = 0.0;
+                mls.DoglegLength = s.Height;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -623,7 +623,7 @@ namespace Tvxd.Meps {
                 ml.AddLastVertex(leaderLineIndex, landingPt);
             } else {
                 ml.EnableDogleg = true;
-                ml.DoglegLength = 0.0;
+                ml.DoglegLength = s.Height;
                 ml.EnableLanding = true;
                 ml.LandingGap = gap;
                 ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
@@ -634,6 +634,8 @@ namespace Tvxd.Meps {
 
                 mt.Rotation = s.ReverseText ? Math.PI : 0.0;
                 mt.Direction = new Vector3d(s.ReverseText ? -1.0 : 1.0, 0.0, 0.0);
+                bool alignLeft = isRight ^ s.ReverseText;
+                mt.Attachment = alignLeft ? AttachmentPoint.MiddleLeft : AttachmentPoint.MiddleRight;
                 ml.MText = mt;
                 ml.TextAngleType = TextAngleType.InsertAngle;
 
@@ -647,14 +649,7 @@ namespace Tvxd.Meps {
                     ml.SetDogleg(leaderIndex, doglegDir);
                 } catch {}
 
-                double yTop = landingPt.Y + s.Height * 1.2;
-                double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
-                double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
-                double textH = mt.ActualHeight > 0 ? mt.ActualHeight : s.Height;
-                ml.TextLocation = new Point3d(
-                    xLeft + (s.ReverseText ? w : 0.0),
-                    yTop - (s.ReverseText ? textH : 0.0),
-                    landingPt.Z);
+                ml.TextLocation = landingPt;
                 ml.SetLastVertex(leaderLineIndex, landingPt);
             }
 
