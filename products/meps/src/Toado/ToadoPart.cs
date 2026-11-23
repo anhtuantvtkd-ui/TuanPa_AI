@@ -503,9 +503,6 @@ namespace Tvxd.Meps {
             } else {
                 ml = (MLeader)tr.GetObject(existingLeaderId, OpenMode.ForWrite);
                 ml.MLeaderStyle = toadoStyleId;
-                while (ml.LeaderCount > 0) {
-                    try { ml.RemoveLeader(0); } catch { break; }
-                }
             }
 
             MText mt = new MText();
@@ -518,7 +515,23 @@ namespace Tvxd.Meps {
                 mt.UseBackgroundColor = true;
                 mt.BackgroundScaleFactor = 1.15;
             }
-            ml.MText = mt;
+
+            if (!isNew && ml.LeaderCount > 0) {
+                double vdx = landingPt.X - targetPt.X;
+                double vdy = landingPt.Y - targetPt.Y;
+                bool wasVertical = Math.Abs(vdx) < 0.25 * Math.Abs(vdy) && Math.Abs(vdy) > 1.0;
+                if (wasVertical) {
+                    mt.Rotation = Math.PI / 2;
+                    mt.Direction = new Vector3d(0.0, 1.0, 0.0);
+                }
+                ml.MText = mt;
+                ml.XData = Tag(blockHandle, targetPt, landingPt);
+                return ml.ObjectId;
+            }
+
+            while (ml.LeaderCount > 0) {
+                try { ml.RemoveLeader(0); } catch { break; }
+            }
 
             if (styleId != ObjectId.Null) ml.TextStyleId = styleId;
             ml.TextHeight = s.Height;

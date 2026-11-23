@@ -36,12 +36,12 @@
     {
       "check": "build_v4",
       "status": "PASS",
-      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 54138bad48bc48be9a5aa56c51d00b307239a5b183f1dbbb699c1a78e7b79be8"
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 e8192eeab1764fdadcf00283476352bca47e88493deb47cc9b066cfe86eb9b5b"
     },
     {
       "check": "accoreconsole test",
       "status": "PASS",
-      "reference": "TEST_TOADO_STAYPUT chay tren Danh so lien tiep.dwg: Pass 1 tao 2 leader tai tam hinh hoc, Pass 2 cap nhat ca 2 leader voi Arrow delta=0 va Landing delta=0 (giu nguyen vi tri dung yen 100%)"
+      "reference": "TEST_TOADO_STAYPUT chay tren Danh so lien tiep.dwg: Pass 1 tao leader horizontal va vertical tai tam hinh hoc, Pass 2, 3, 4 cap nhat 3 lan lien tiep deu cho Arrow delta=0 va Landing delta=0 (giu nguyen vi tri dung yen 100% cho ca leader ngang va doc)"
     },
     {
       "check": "checksums_audit",
