@@ -2,13 +2,13 @@
   "schema_version": "TUANPA-ENG-1",
   "task_id": "TASK-0018",
   "title": "Sua loi Tag danh so lien tiep bi nhay linh tinh khi chon tu trai sang phai",
-  "status": "RELEASED",
+  "status": "IN_PROGRESS",
   "module": "meps",
   "risk": "medium",
   "owner": "Phùng Anh Tuấn",
   "writer": "Codex (GPT-5.6 Luna)",
   "reviewer": "Gemini (Argon)",
-  "base_commit": "ea7ef4bbeaa5e0c778640845e3ccfdc4ac72150d",
+  "base_commit": "368ca38",
   "branch": "task/TASK-0018-fix-tag-sequence-banding",
   "result_commit": "f50cec5d48fe249ad25f3fd757d60b1dfb44024a",
   "scope": [
@@ -30,9 +30,10 @@
   ],
   "missing_inputs": [],
   "acceptance_criteria": [
-    "Khi chay tren file Danh so lien tiep.dwg, 10 block duoc danh thu tu chuan xac tu trai qua phai: 288 (1) -> 28D (2) -> 292 (3) -> 297 (4) -> 29C (5) -> 2A1 (6) -> 2A6 (7) -> 2AB (8) -> 2B0 (9) -> 2B5 (10)",
+    "Khi chay tren file Danh so lien tiep.dwg (32 block BE2 DAN59), toan bo 32 block duoc danh thu tu lien tiep tu trai qua phai tang dan deu tu B1 den B32",
+    "Dung GeometricExtents center point thay vi br.Position de khong bi anh huong boi block basepoint survey drift",
     "Khong bi hien tuong block cao hon Y nhan so truoc du nam o giua hoac ben phai",
-    "Dong goi ban cai dat V14 khop 100% SHA256SUMS.json"
+    "Dong goi ban cai dat V15 khop 100% SHA256SUMS.json"
   ],
   "required_checks": [
     "build_v4",

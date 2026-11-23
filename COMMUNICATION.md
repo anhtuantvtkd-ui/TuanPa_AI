@@ -313,3 +313,74 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
   - Đồng bộ lại V12 và V13 trên OneDrive để đảm bảo không file nào bị lỗi hash.
 - **Hồ sơ TASK-0018**: Đạt trạng thái **`RELEASED`**.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
+
+---
+
+## [2026-11-23 07:15] GEMINI TO CODEX: YÊU CẦU KHẨN CẤP TASK-0018 - BẢN VẼ THẬT 32 BLOCK VÀ NGUYÊN NHÂN GỐC TỌA ĐỘ BLOCK BASEPOINT
+- **Người gửi**: Gemini (Lead Engineer / Native AutoCAD Runtime Tester)
+- **Người nhận**: Codex (Implementer / Source Writer) & Chủ sở hữu Phùng Anh Tuấn
+- **Tình trạng phản ánh từ Chủ sở hữu**:
+  - Chủ sở hữu vừa gửi bản vẽ thực tế đầy đủ: `D:\TuanPa_AI\INPUT\Danh so lien tiep.dwg` gồm **32 block hố ga `BE2 DAN59`**.
+  - Kết quả chạy thực tế: Đánh số bị nhảy số lung tung, không tịnh tiến dần từ số bắt đầu (ví dụ $B1 \rightarrow B2 \dots \rightarrow B32$) mà nhảy cóc và đảo lộn thứ tự.
+  - Ngoài ra bộ cài đặt gặp lỗi: `CHUA CAI XONG: Payload hash mismatch: MEPS060/TVXD.Meps.dll`.
+- **KẾT QUẢ ĐIỀU TRA NATIVE AUTOCAD CỦA GEMINI (THE SMOKING GUN)**:
+  1. Gemini đã viết các công cụ kiểm tra trực tiếp Database DWG thật (`InspectRealDrawing.cs`, `DetailedBlockInspect.cs`) chạy qua `accoreconsole.exe`.
+  2. Phát hiện nguyên nhân cốt lõi gây ra toàn bộ lỗi đánh số:
+     - Trong bản vẽ hạ tầng MEP / giao thông, block `BE2 DAN59` được người vẽ tạo với điểm chuẩn chèn gốc (Base Point) bị lệch trong hệ tọa độ khảo sát lên tới hơn 688,500 đơn vị!
+     - Khi block được đặt vào bình đồ/trắc dọc trên màn hình:
+       * **Vị trí hình học hiển thị trên màn hình người dùng nhìn thấy (`GeometricExtents.MinPoint` hoặc Center)**:
+         - Block 1: $X \approx 18.03$
+         - Block 2: $X \approx 117.49$
+         - Block 3: $X \approx 193.09$
+         - Block 4: $X \approx 272.76$
+         - Block 5: $X \approx 347.88$
+         - ...
+         - Block 32: $X \approx 2289.27$
+         $\rightarrow$ Trên màn hình CAD, 32 block nằm xếp hàng **TĂNG DẦN TUYỆT ĐỐI VÀ LIÊN TỤC** từ $X=18$ đến $X=2289$ từ Trái qua Phải!
+       * **Điểm chèn `BlockReference.Position`**:
+         - Block 1 (trên màn hình $X=18$): `Position.X = -688491`
+         - Block 2 (trên màn hình $X=117$): `Position.X = -486087`
+         - Block 3 (trên màn hình $X=193$): `Position.X = +1261935`!
+         - Block 8 (trên màn hình $X=597$): `Position.X = +44399`!
+         - Block 9 (trên màn hình $X=669$): `Position.X = -264852`!
+         - Block 32 (trên màn hình $X=2289$): `Position.X = +340037`!
+     - Trong mã nguồn gốc `Tvxd.Meps.TagSeqCad073.Entries` (trong `meps_orig.il` lines 77-83):
+       ```il
+       IL_0068: ldloc.3
+       IL_0069: callvirt instance Point3d BlockReference::get_Position()
+       IL_0073: call instance Point3d Point3d::TransformBy(Matrix3d)
+       IL_0055: call instance float64 Point3d::get_X()
+       IL_005a: stfld float64 TagSeqEntry073::x
+       ```
+       Hệ thống đang lấy tọa độ `br.Position` để gán vào `entry.x` và `entry.y`!
+     - Vì mỗi block có base point survey trôi dạt từ $-688,000$ tới $+1,261,000$, việc sắp xếp theo `br.Position.X` khiến thứ tự block bị xáo trộn hoàn toàn so với những gì người dùng nhìn thấy trên màn hình (ví dụ Block 32 có $X$ màn hình là 2289 nhưng `Position.X` là 340,037 lại bị xếp trước Block 3 có `Position.X` là 1,261,935)!
+- **GIẢI PHÁP CẦN CODEX TRIỂN KHAI TRONG SOURCE C#**:
+  1. Đưa `TagSeqCad073` vào `products/meps/src/TagSeq/TagSeqPart.cs` (chuyển đổi từ `tagseqcad_orig.il` đã có sẵn trong `products/meps/tools/tagseqcad_orig.il`).
+  2. Trong `TagSeqCad073.Entries`: Thay thế việc lấy `br.Position` bằng việc lấy tâm hình học `GeometricExtents` (fallback về `br.Position` nếu block lỗi extents):
+     ```csharp
+     Point3d pt;
+     try
+     {
+         var ext = br.GeometricExtents;
+         pt = new Point3d(
+             (ext.MinPoint.X + ext.MaxPoint.X) * 0.5,
+             (ext.MinPoint.Y + ext.MaxPoint.Y) * 0.5,
+             (ext.MinPoint.Z + ext.MaxPoint.Z) * 0.5
+         );
+     }
+     catch
+     {
+         pt = br.Position;
+     }
+     var transformed = pt.TransformBy(wcsToUcs);
+     ```
+  3. Cập nhật `products/meps/tools/merge_toado.cs`:
+     - Trong `skippingTagSeq`, thêm `!line.Contains("Tvxd.Meps.TagSeqCad073")` vào điều kiện dừng, để `TagSeqCad073` cũ trong IL được thay thế hoàn toàn bằng `TagSeqCad073` mới từ `TagSeqPart.cs`.
+- **TIÊU CHÍ NGHIỆM THU (ACCEPTANCE CRITERIA)**:
+  - Khi chạy trên file thực tế `D:\TuanPa_AI\INPUT\Danh so lien tiep.dwg`, toàn bộ **32 block hố ga `BE2 DAN59`** phải được đánh số liên tiếp từ trái qua phải tăng dần đều từ $B1$ đến $B32$ không sót và không nhảy cóc số nào.
+- **Tệp cần cập nhật**:
+  - `products/meps/src/TagSeq/TagSeqPart.cs`
+  - `products/meps/tools/merge_toado.cs`
+- **Work-Item**: `work-items/TASK-0018.json` (Status: `IN_PROGRESS`)
+- **NEXT_ACTOR**: Codex
+
