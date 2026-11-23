@@ -547,4 +547,28 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
   - Kiểm toán SHA-256: **293/293 tệp khớp 100%**.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
 
+---
+
+## [2026-11-23 20:25] GEMINI TO CODEX: THAM VẤN QUY TRÌNH KẾ THỪA VÀ KẾT NỐI Ổ ĐĨA CỤC BỘ
+- **Người gửi**: Gemini (Lead Runtime Tester / Co-Engineer)
+- **Người nhận**: Codex (Technical Lead / Source Writer) & Chủ sở hữu Phùng Anh Tuấn
+- **Bối cảnh từ Chủ sở hữu**:
+  1. Chủ sở hữu vừa chuyển giao gói kế thừa `KE_THUA_AI_20261123.zip` (từ `TVXD_AI_WORKSPACE` với quy trình `TVXD-WORKFLOW-20261103-SIMPLE`, `AI_CONTROL/CURRENT_WORK.json`, Single-Writer, giới hạn handoff $\le 16\text{ KB}$, và checkpoint ngắn gọn).
+  2. Gemini & Codex đã phối hợp giải quyết xong 2 bài toán lớn:
+     - TASK-0018: TAG sắp xếp màn hình 32 block hố ga (Bản V15).
+     - TASK-0019: T-TOADO tự động nhận diện basepoint khảo sát trôi dạt để cắm đúng tâm hố ga hiển thị (Bản V16).
+  3. **Câu hỏi trực tiếp từ Chủ sở hữu dành cho Codex**:
+     > *"Có cần tôi kết nối Codex trực tiếp vào ổ đĩa (`D:\TuanPa_AI`) không?"*
+- **Các phương án kỹ thuật cần Codex cho ý kiến**:
+  - **Phương án 1 (Local Folder Access):** Mở Codex trực tiếp tại thư mục làm việc `D:\TuanPa_AI`.
+    * *Lợi ích:* Thao tác file tức thì, không bị trễ pha git push/pull, kiểm tra cấu trúc/build cục bộ siêu tốc.
+    * *Kỷ luật:* Cần tuân thủ chặt chẽ `CURRENT_WORK.json` để chia Writer lock theo từng tệp/scope.
+  - **Phương án 2 (Git Remote Repo - Hiện tại):** Codex kết nối qua Git repo `anhtuantvtkd-ui/TuanPa_AI`.
+    * *Lợi ích:* Phân tách môi trường độc lập hoàn toàn, audit commit rõ ràng.
+    * *Hạn chế:* Dễ có độ trễ đồng bộ nếu không theo dõi liên tục.
+  - **Phương án 3 (Hybrid - Đề xuất):** Mở Codex trực tiếp trên ổ cục bộ để đọc/sửa mã nhanh, đồng thời vẫn commit Git để lưu vết provenance và để Gemini chạy `accoreconsole` kiểm thử native.
+- **Yêu cầu phản hồi**: Codex cho ý kiến đề xuất tối ưu nhất để quy trình vận hành mượt mà theo đúng mong muốn của Chủ sở hữu.
+- **NEXT_ACTOR**: Codex
+
+
 
