@@ -518,3 +518,33 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Trạng thái TASK-0018**: **RELEASED**.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
 
+---
+
+## [2026-11-23 20:15] GEMINI TO CODEX & CHỦ SỞ HỮU: SỬA LỖI T-TOADO GẮN NHÃN TỌA ĐỘ TRÊN BLOCK CÓ BASEPOINT KHẢO SÁT
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime Tester)
+- **Người nhận**: Codex & Chủ sở hữu Phùng Anh Tuấn
+- **Vấn đề phản ánh từ Chủ sở hữu**:
+  - Khi chạy `T-TOADO` gắn nhãn tọa độ trên block `BE2 DAN59` (bản vẽ `Danh so lien tiep.dwg`), CAD báo: `[T-TOADO] Hoàn tất: Tạo mới 0, Cập nhật 1 nhãn tọa độ`, nhưng trên màn hình không thấy nhãn tọa độ đâu.
+  - Chủ sở hữu quan sát thấy: các block khác gắn bình thường, chỉ riêng block `BE2 DAN59` bị lỗi.
+- **Nguyên nhân cốt lõi phát hiện qua native inspect**:
+  - `ToadoPart.cs` hàm `Tip(br, center)` chỉ lấy `br.Position`.
+  - Với block `BE2 DAN59`, `br.Position` là $(-688491.78, 2288802.70)$ (cách tâm hiển thị của block trên màn hình $2.389.494$ đơn vị). Mũi tên cắm ra ngoài không gian xa xôi cách xa màn hình người dùng.
+- **Giải pháp triển khai trong `ToadoPart.cs`**:
+  1. Nâng cấp hàm `Tip(br, center)`:
+     - Tính tâm `GeometricExtents.Center`.
+     - Nếu khoảng cách từ `br.Position` tới tâm hình học vượt quá $5 \times$ đường chéo extents hoặc $> 500$ đơn vị (base point khảo sát trôi dạt), tự động fallback về `centerPt`.
+  2. Nâng cấp hàm `NameOf(tr, br)`: Ưu tiên lấy thuộc tính số hiệu `TAG`, `SO_HIEU`, `TEN` nếu block có attribute.
+  3. Cập nhật `ScanExistingLeaders`: Nhận diện cả MLeader cắm tại `tipPt` lẫn `br.Position`.
+- **Kết quả kiểm thử Native AutoCAD (`accoreconsole`) trên file `Danh so lien tiep.dwg`**:
+  - Lệnh `TEST_APPLY_TOADO`: `Apply Result: Created=3, Updated=0, Skipped=0`.
+  - MLeader #1: Arrow = $(19.21, 651.83)$, Landing = $(29.82, 662.44)$, Text = `BE2 DAN59\PX=651.831\PY=19.213`.
+  - MLeader #2: Arrow = $(118.57, 693.76)$, Landing = $(129.17, 704.37)$, Text = `BE2 DAN59\PX=693.765\PY=118.565`.
+  - MLeader #3: Arrow = $(194.13, 696.96)$, Landing = $(204.73, 707.57)$, Text = `BE2 DAN59\PX=696.963\PY=194.126`.
+  - **Trạng thái**: **PASS 100%**. Mũi tên và nhãn tọa độ cắm chuẩn xác ngay tại hố ga trên màn hình!
+- **Đóng gói Bản phát hành TVXD.BG V16**:
+  - Local: `D:\TuanPa_AI\OUTPUT\16. TVXD.BG V16`
+  - OneDrive: `D:\OneDrive\TuanPa_AI\OUTPUT\16. TVXD.BG V16`
+  - Kiểm toán SHA-256: **293/293 tệp khớp 100%**.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
+
+

@@ -280,6 +280,22 @@ namespace Tvxd.Meps {
         public static string NameOf(Transaction tr, BlockReference br) {
             if (br == null) return "";
             try {
+                // If block has a tag/identifier attribute (e.g. TAG, SO_HIEU, TEN), prioritize it
+                if (br.AttributeCollection != null && br.AttributeCollection.Count > 0) {
+                    foreach (ObjectId attId in br.AttributeCollection) {
+                        if (!attId.IsErased) {
+                            var ar = tr.GetObject(attId, OpenMode.ForRead) as AttributeReference;
+                            if (ar != null && (ar.Tag.Equals("TAG", StringComparison.OrdinalIgnoreCase) ||
+                                               ar.Tag.Equals("SO_HIEU", StringComparison.OrdinalIgnoreCase) ||
+                                               ar.Tag.Equals("TEN", StringComparison.OrdinalIgnoreCase))) {
+                                if (!string.IsNullOrEmpty(ar.TextString)) {
+                                    return ar.TextString.Trim();
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (br.IsDynamicBlock) {
                     var btr = (BlockTableRecord)tr.GetObject(br.DynamicBlockTableRecord, OpenMode.ForRead);
                     return btr.Name;
@@ -292,7 +308,30 @@ namespace Tvxd.Meps {
 
         public static Point3d Tip(BlockReference br, bool center) {
             if (br == null) return Point3d.Origin;
-            return br.Position;
+            try {
+                var ext = br.GeometricExtents;
+                Point3d centerPt = new Point3d(
+                    (ext.MinPoint.X + ext.MaxPoint.X) * 0.5,
+                    (ext.MinPoint.Y + ext.MaxPoint.Y) * 0.5,
+                    (ext.MinPoint.Z + ext.MaxPoint.Z) * 0.5
+                );
+                if (center) {
+                    return centerPt;
+                }
+                // If center option is false (insertion point), check if br.Position is near the visible block.
+                // In infrastructure/civil drawings, blocks (e.g. BE2 DAN59) often have their base point
+                // placed at survey origin millions of units away from the profile view on screen.
+                // If distance between br.Position and visual center exceeds 5x diagonal or 500 units,
+                // fallback to centerPt so leader arrow points directly to the visible block on screen!
+                double diag = (ext.MaxPoint - ext.MinPoint).Length;
+                double dist = (br.Position - centerPt).Length;
+                if (dist > Math.Max(diag * 5.0, 500.0)) {
+                    return centerPt;
+                }
+                return br.Position;
+            } catch {
+                return br.Position;
+            }
         }
 
         public static ObjectId EnsureLayer(Transaction tr, Database db, string layerName) {
@@ -604,7 +643,8 @@ namespace Tvxd.Meps {
                                         if (br != null) {
                                             MLeader ml = (MLeader)obj;
                                             Point3d v0 = ml.GetFirstVertex(0);
-                                            if ((v0 - br.Position).Length < 50.0) {
+                                            Point3d tipPt = Tip(br, false);
+                                            if ((v0 - tipPt).Length < 100.0 || (v0 - br.Position).Length < 100.0) {
                                                 dict[h] = id;
                                             }
                                         }

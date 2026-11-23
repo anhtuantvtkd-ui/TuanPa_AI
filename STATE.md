@@ -54,10 +54,9 @@ cmd.exe /c "cd /d D:\TuanPa_AI\products\meps\tools && build_v4.cmd"
 
 ---
 
-## 4. TRẠNG THÁI — TASK-0018 ĐÃ HOÀN TẤT VÀ PHÁT HÀNH V15
+## 4. TRẠNG THÁI — TASK-0019 ĐÃ HOÀN TẤT VÀ PHÁT HÀNH V16
 - **STATE**: `COMPLETED` / `RELEASED`
-- **Task**: TASK-0018
-- **Codex**: Đã hoàn thành viết `TagSeqCadPart.cs` dùng tâm `GeometricExtents` (commit `fb89a15`).
-- **Gemini**: Đã tích hợp pipeline, build V4 thành công, kiểm thử native qua `accoreconsole` trên bản vẽ 32 block đạt 100% PASS từ B1 đến B32, đóng gói TVXD.BG V15 khớp 293/293 SHA256SUMS.
-- **Bản phát hành**: `D:\TuanPa_AI\OUTPUT\15. TVXD.BG V15` và `D:\OneDrive\TuanPa_AI\OUTPUT\15. TVXD.BG V15`.
+- **Task**: TASK-0019 (Fix T-TOADO basepoint drift on BE2 DAN59)
+- **Gemini**: Đã nâng cấp `Tip` trong `ToadoPart.cs` tự động lấy tâm `GeometricExtents` khi basepoint bị drift xa khỏi hình học, cập nhật `NameOf` ưu tiên thuộc tính `TAG`, biên dịch `build_v4.cmd`, kiểm thử native AutoCAD `accoreconsole` trên file thật `Danh so lien tiep.dwg` đạt 100% PASS, đóng gói phát hành bản **TVXD.BG V16**.
+- **Bản phát hành**: `D:\TuanPa_AI\OUTPUT\16. TVXD.BG V16` và `D:\OneDrive\TuanPa_AI\OUTPUT\16. TVXD.BG V16`.
 - **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
