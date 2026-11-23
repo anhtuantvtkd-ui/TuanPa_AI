@@ -567,8 +567,12 @@ namespace Tvxd.Meps {
 
             double dx = landingPt.X - targetPt.X;
             double dy = landingPt.Y - targetPt.Y;
-            bool wasVertical = !isNew && ((ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.1) || (!ml.EnableDogleg && !ml.EnableLanding));
-            bool isVertical = wasVertical || (Math.Abs(dx) < 0.5 * Math.Abs(dy) && Math.Abs(dy) > 1.0);
+            bool isVertical;
+            if (!isNew) {
+                isVertical = (ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.1) || (!ml.EnableDogleg && !ml.EnableLanding);
+            } else {
+                isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
+            }
             bool isRight = (dx >= 0);
             double gap = s.Height * 0.1;
 

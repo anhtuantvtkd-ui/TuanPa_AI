@@ -1,14 +1,17 @@
 === TOADO COMPREHENSIVE STAY-PUT & GRIP EDIT REGRESSION SUITE ===
-DLL SHA256: 30a663d4cba2acae87efc506a23b2053bb5400d0723544068688e1ae3e4469e7
+MEASURED LOADED DLL SHA256: b7d85f2244549f0997e8e626e039d20bcb835d24c70d625f335490084a5d4660
 Pass 1 (Create): Created=2, Updated=0
-  Round 1 Leader #1: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
-  Round 1 Leader #2: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
-  Round 2 Leader #1: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
-  Round 2 Leader #2: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
-  Round 3 Leader #1: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
-  Round 3 Leader #2: ArrowDelta=0.000000, LandingDelta=0.000000, TextLocDelta=0.000000
+Identified subjects: idH=(1930660317888), idV=(1930660317904)
+  Round 1 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 1 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 2 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 2 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 3 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 3 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
 Test 2 (Horizontal Arrow Grip): ArrowKeptDelta=0.000000, LandingFrozenDelta=0.000000
-Test 3 (Vertical Text Grip X & Y): ArrowFrozenDelta=0.000000, TextKeptDelta=0.000000
-Test 4 (Vertical Arrow Grip X & Y): ArrowKeptDelta=0.000000, TextFrozenDelta=0.000000
-STRICT PASS: Delta = 0.000000 on all 3 rounds and all grip edits across horizontal and vertical leaders!
+Test 3 (Horizontal Text/Landing Grip): ArrowFrozenDelta=0.000000, LandingKeptDelta=0.000000
+Test 4 (Threshold Crossing): RemainsHorizontal=True, LandingKeptDelta=0.000000
+Test 5 (Vertical Text Grip X & Y): ArrowFrozenDelta=0.000000, TextKeptDelta=0.000000
+Test 6 (Vertical Arrow Grip X & Y): ArrowKeptDelta=0.000000, TextFrozenDelta=0.000000
+STRICT PASS: Delta = 0.000000 on all rounds, grip edits, and threshold crossing!
 FINAL VERDICT: APPROVED

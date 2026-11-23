@@ -36,12 +36,12 @@
     {
       "check": "build_v4",
       "status": "PASS",
-      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 30a663d4cba2acae87efc506a23b2053bb5400d0723544068688e1ae3e4469e7"
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 b7d85f2244549f0997e8e626e039d20bcb835d24c70d625f335490084a5d4660"
     },
     {
       "check": "accoreconsole test",
       "status": "PASS",
-      "reference": "TEST_TOADO_FULL_SUITE chay tren Danh so lien tiep.dwg: delta=0.000000 tren 3 rounds update va tat ca grip edits (arrow va text tren ca horizontal va vertical). Report luu tai products/meps/test/toado_stayput_suite_report.txt"
+      "reference": "TEST_TOADO_FULL_SUITE chay tren Danh so lien tiep.dwg: delta=0.000000 tren tat ca 3 rounds update, grip edits arrow/text ca horizontal va vertical, va threshold-crossing giu nguyen orientation horizontal. Measured loaded DLL SHA256 b7d85f2244549f0997e8e626e039d20bcb835d24c70d625f335490084a5d4660. Report luu tai products/meps/test/toado_stayput_suite_report.txt"
     },
     {
       "check": "checksums_audit",
