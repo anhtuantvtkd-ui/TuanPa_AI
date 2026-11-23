@@ -62,6 +62,30 @@ Ghi version, bước tái hiện, expected/actual, input đã ẩn dữ liệu r
 Tái hiện -> regression test -> fix trên nhánh -> review -> version mới -> kiểm lại môi trường người dùng.
 Không lặp lại cùng bản cài và gọi là bản sửa.
 
+## 8. ĐIỀU KHOẢN BẤT DI BẤT DỊCH: VẬN HÀNH QUA REPO & KHÓA VAN TIẾT KIỆM TOKEN
+> Áp dụng bắt buộc và nằm lòng cho tất cả AI (Gemini, Codex, v.v.) và các phiên làm việc trong dự án.
+
+1. **LÚC NÀO CŨNG QUA REPO (Git là Nguồn Sự Thật Duy Nhất):**
+   - Mọi mã nguồn, trao đổi kỹ thuật, bản vá delta, bài học kinh nghiệm và bằng chứng nghiệm thu BẮT BUỘC phải được commit và lưu vết 100% trên Git Repo.
+   - Tuyệt đối không trao đổi code thô dài dòng qua prompt chat làm loãng context và sinh ảo giác.
+
+2. **KỶ LUẬT KHÓA VAN TOKEN (Bảo vệ Quota tuyệt đối):**
+   - **Quy tắc gói giao việc nhỏ:** Mọi gói bàn giao hoặc patch chỉ truyền phần chênh lệch (`git diff`), giới hạn tối đa $\le 16.000$ byte UTF-8.
+   - **Nghiêm cấm tự động quét ổ đĩa:** Tuyệt đối cấm các lệnh PowerShell/shell quét đệ quy (`Get-ChildItem -Recurse`, `rg --files`, dump toàn bộ thư mục) đổ văn bản thô vào context của AI.
+   - **CLI chỉ làm chuông báo thức:** Lệnh gọi CLI cục bộ (`codex exec`) chỉ dùng để ping thông báo ngắn gọn ($\le 200$ từ / $\le 1\text{ KB}$) kèm commit SHA cụ thể. AI nhận lệnh chỉ mở đúng git diff của commit đó, không quét ổ đĩa.
+
+3. **GIẢI PHÓNG ANH TUẤN KHỎI VAI TRÒ TRUNG GIAN:**
+   - Hai AI tự động điều phối, bắt nhịp và phản biện thuật toán với nhau qua Git và lệnh ping nền.
+   - Anh Tuấn là Chủ sở hữu (Owner) duy nhất: chỉ giao đề bài và nghiệm thu sản phẩm cuối cùng.
+
+4. **BẢO VỆ MÃ NGUỒN ĐÃ ĐẠT & CHỐT HASH SHA256:**
+   - Các module đã nghiệm thu PASS (`TagSeq` V15 đánh số 32 block, `T-TOADO` V16 sửa trôi tọa độ 2.4 triệu đơn vị) được khóa cứng bằng mã băm SHA256.
+   - Nghiêm cấm tự ý sửa đổi hoặc viết lại các module nền tảng đang chạy ổn định.
+
+5. **CƠ CHẾ CÀNG LÀM CÀNG THÔNG MINH:**
+   - Mọi sự cố kỹ thuật phải đi qua chuỗi 5 bước: `Tái hiện -> Tìm nguyên nhân gốc -> Sửa delta -> Fixture hồi quy tự động -> Cập nhật bài học vào DOCS/LEARNINGS.md`.
+   - Test suite hồi quy trên AutoCAD native phải được tự động chạy lại trước mỗi lần phát hành.
+
 ## Tự động hóa đang có
 - GitHub Actions CI: unit tests, TypeScript, kiểm cấu trúc task.
 - Dependabot: cảnh báo và PR cập nhật npm/Actions hàng tuần; không tự merge.

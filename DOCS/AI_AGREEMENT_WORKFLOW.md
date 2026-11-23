@@ -18,6 +18,10 @@
    - Mã nguồn do Executor (AI này) viết bắt buộc phải được Reviewer (AI kia) kiểm tra độc lập trên Git delta diff ($\le 16.000$ byte UTF-8) trước khi phát hành.
 4. **Bảo tồn thành quả đã nghiệm thu:**
    - Mã nguồn đã PASS (TagSeq V15, T-TOADO V16) được chốt cứng bằng mã băm SHA256. Nghiêm cấm tự ý viết lại hoặc làm ảnh hưởng mã nguồn đã chạy ổn định.
+5. **Kỷ luật khóa van Token (Bảo vệ Quota tối đa - Bất di bất dịch):**
+   - Mọi gói giao việc và trao đổi mã nguồn chỉ gửi phần chênh lệch (`git diff`), giới hạn tối đa $\le 16.000$ byte UTF-8.
+   - Nghiêm cấm việc AI tự tiện chạy lệnh quét đệ quy ổ đĩa (`Get-ChildItem -Recurse`, `rg --files`) đổ văn bản thô vào context làm bay token.
+   - Lệnh gọi CLI cục bộ (`codex exec`) chỉ dùng làm "chuông báo thức" ngắn gọn ($\le 200$ từ / $\le 1\text{ KB}$), chỉ thông báo SHA commit. AI nhận lệnh chỉ mở đúng git diff trên Repo.
 
 ---
 
