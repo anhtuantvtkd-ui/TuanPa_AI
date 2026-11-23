@@ -1,0 +1,13 @@
+=== TASK-0021 FEATURES NATIVE TEST REPORT ===
+--- Test 1: Tip accuracy ---
+Block: DPT, Pos: (406387.657, 2370091.268), Computed Tip: (406387.657, 2370091.268)
+Test 1 PASS: Tip calculated successfully.
+--- Test 2: ReverseText Normal (false) vs Flipped (true) ---
+H Normal Rot: 0.000 rad (Expected 0.0), LastVertex: (120.000, 120.000) (Expected (120.000, 120.000))
+H Flipped Rot: 3.142 rad (Expected 3.142), LastVertex: (120.000, 120.000)
+V Normal Rot: 1.571 rad (Expected 1.571), LastVertex: (100.000, 150.000) (Expected (100.000, 150.000))
+V Flipped Rot: 4.712 rad (Expected -1.571), LastVertex: (100.000, 150.000)
+--- Test 3: LastVertex Anchor Verification ---
+LastVertex equals LandingPt: True
+Rotation Normal vs Flipped PASS: True
+FINAL VERDICT: ALL TASK-0021 TESTS PASSED 100%

@@ -34,6 +34,7 @@ namespace Tvxd.Meps {
         public bool UnitIsMm = false;
         public bool CircleArrow = true;
         public bool UnderlineBetween = true;
+        public bool ReverseText = false;
 
         public static string IniPath {
             get {
@@ -59,7 +60,7 @@ namespace Tvxd.Meps {
 
         TextBox txtStyle, txtHeight, txtArrowSize, txtDecimals, txtDistance;
         RadioButton rbVn2000, rbCad, rbUnitM, rbUnitMm, rbPickFree, rbBatch;
-        CheckBox chkMask, chkCircle, chkUnderline, chkAddName;
+        CheckBox chkMask, chkCircle, chkUnderline, chkAddName, chkReverse;
 
         public Toado100Form(ToadoSettings s) {
             S = s ?? new ToadoSettings();
@@ -74,12 +75,12 @@ namespace Tvxd.Meps {
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new Size(530, 570);
+            this.Size = new Size(530, 595);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Regular);
 
             int y = 15;
             // Group 1
-            var grpLook = new GroupBox { Text = "1. Trình bày & Đầu mút hình tròn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 145) };
+            var grpLook = new GroupBox { Text = "1. Trình bày & Đầu mút hình tròn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 170) };
             
             var lblH = new Label { Text = "Chiều cao chữ:", Location = new System.Drawing.Point(15, 25), AutoSize = true };
             txtHeight = new TextBox { Text = S.Height.ToString("0.##", CultureInfo.InvariantCulture), Location = new System.Drawing.Point(120, 22), Width = 70 };
@@ -96,11 +97,12 @@ namespace Tvxd.Meps {
             chkCircle = new CheckBox { Text = "● Đầu mũi tên là HÌNH TRÒN (Dot)", Checked = S.CircleArrow, Location = new System.Drawing.Point(15, 90), AutoSize = true, ForeColor = System.Drawing.Color.DarkGreen, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
             chkUnderline = new CheckBox { Text = "━ Đường gióng XEN GIỮA 2 dòng X/Y", Checked = S.UnderlineBetween, Location = new System.Drawing.Point(15, 115), AutoSize = true, ForeColor = System.Drawing.Color.DarkBlue, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
 
-            grpLook.Controls.AddRange(new Control[] { lblH, txtHeight, lblArr, txtArrowSize, lblDec, txtDecimals, lblStyle, txtStyle, chkCircle, chkUnderline });
+            chkReverse = new CheckBox { Text = "Đảo chiều đọc chữ (Ngược 180°)", Checked = S.ReverseText, Location = new System.Drawing.Point(15, 140), AutoSize = true };
+            grpLook.Controls.AddRange(new Control[] { lblH, txtHeight, lblArr, txtArrowSize, lblDec, txtDecimals, lblStyle, txtStyle, chkCircle, chkUnderline, chkReverse });
             this.Controls.Add(grpLook);
 
             // Group 2
-            y += 155;
+            y += 180;
             var grpCoord = new GroupBox { Text = "2. Hệ tọa độ VN-2000 & Đơn vị", Location = new System.Drawing.Point(15, y), Size = new Size(485, 110) };
             
             rbVn2000 = new RadioButton { Text = "VN-2000 (Dòng trên X = Trục Y CAD, Dòng dưới Y = Trục X CAD)", Checked = S.Vn2000, Location = new System.Drawing.Point(15, 23), AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = System.Drawing.Color.Firebrick };
@@ -176,6 +178,7 @@ namespace Tvxd.Meps {
             S.UnitIsMm = rbUnitMm.Checked;
             S.CircleArrow = chkCircle.Checked;
             S.UnderlineBetween = chkUnderline.Checked;
+            S.ReverseText = chkReverse.Checked;
             S.PickEach = rbPickFree.Checked;
             S.Mask = chkMask.Checked;
             S.AddName = chkAddName.Checked;
@@ -216,6 +219,7 @@ namespace Tvxd.Meps {
                         else if (k.Equals("Arrow", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.Arrow);
                         else if (k.Equals("CircleArrow", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.CircleArrow);
                         else if (k.Equals("UnderlineBetween", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.UnderlineBetween);
+                        else if (k.Equals("ReverseText", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.ReverseText);
                         else if (k.Equals("PickEach", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.PickEach);
                         else if (k.Equals("AddName", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.AddName);
                         else if (k.Equals("TwoLines", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.TwoLines);
@@ -244,6 +248,7 @@ namespace Tvxd.Meps {
                     w.WriteLine("Arrow=" + s.Arrow);
                     w.WriteLine("CircleArrow=" + s.CircleArrow);
                     w.WriteLine("UnderlineBetween=" + s.UnderlineBetween);
+                    w.WriteLine("ReverseText=" + s.ReverseText);
                     w.WriteLine("PickEach=" + s.PickEach);
                     w.WriteLine("AddName=" + s.AddName);
                     w.WriteLine("TwoLines=" + s.TwoLines);
@@ -308,18 +313,33 @@ namespace Tvxd.Meps {
 
         public static Point3d Tip(BlockReference br, bool center) {
             if (br == null) return Point3d.Origin;
+            Point3d position = br.Position;
+            Point3d fallback = position;
             try {
                 var ext = br.GeometricExtents;
-                Point3d centerPt = new Point3d(
-                    (ext.MinPoint.X + ext.MaxPoint.X) * 0.5,
-                    (ext.MinPoint.Y + ext.MaxPoint.Y) * 0.5,
-                    (ext.MinPoint.Z + ext.MaxPoint.Z) * 0.5
-                );
-                // Circle arrow tip must always point accurately to the geometric center of the block!
-                return centerPt;
-            } catch {
-                return br.Position;
-            }
+                Point3d min = ext.MinPoint;
+                Point3d max = ext.MaxPoint;
+                double diagonal = min.DistanceTo(max);
+                if (min.X <= max.X && min.Y <= max.Y && min.Z <= max.Z &&
+                    !double.IsNaN(diagonal) && !double.IsInfinity(diagonal)) {
+                    fallback = min + (max - min) * 0.5;
+                    if (position.DistanceTo(fallback) <= Math.Max(1e-6, 2.0 * diagonal))
+                        return position;
+                }
+            } catch (Autodesk.AutoCAD.Runtime.Exception) {}
+
+            if (br.Database == null) return fallback;
+            try {
+                using (var tr = br.Database.TransactionManager.StartOpenCloseTransaction()) {
+                    var btr = (BlockTableRecord)tr.GetObject(br.BlockTableRecord, OpenMode.ForRead);
+                    foreach (ObjectId id in btr) {
+                        var circle = tr.GetObject(id, OpenMode.ForRead) as Circle;
+                        if (circle != null)
+                            return circle.Center.TransformBy(br.BlockTransform);
+                    }
+                }
+            } catch (Autodesk.AutoCAD.Runtime.Exception) {}
+            return fallback;
         }
 
         public static ObjectId EnsureLayer(Transaction tr, Database db, string layerName) {
@@ -390,8 +410,16 @@ namespace Tvxd.Meps {
                 new TypedValue((int)DxfCode.ExtendedDataReal, p.Z),
                 new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.X),
                 new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Y),
-                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Z)
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Z),
+                new TypedValue((int)DxfCode.ExtendedDataAsciiString, "LandingVertex")
             );
+        }
+
+        private static bool IsVerticalLeader(MLeader ml) {
+            if (!ml.EnableDogleg && !ml.EnableLanding) return true;
+            using (MText mt = ml.MText) {
+                return mt != null && Math.Abs(Math.Abs(Math.IEEERemainder(mt.Rotation, 2.0 * Math.PI)) - Math.PI / 2) < 0.1;
+            }
         }
 
         public static bool GetStoredPoints(MLeader ml, out Point3d targetPt, out Point3d landingPt) {
@@ -400,21 +428,23 @@ namespace Tvxd.Meps {
             if (ml == null || ml.LeaderCount == 0) return false;
             try {
                 targetPt = ml.GetFirstVertex(0);
-                bool isVertical = (ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.05) || (!ml.EnableDogleg && !ml.EnableLanding);
-
-                if (isVertical) {
-                    Point3d lastVert = ml.GetLastVertex(0);
-                    double textH = (ml.MText != null && ml.MText.ActualHeight > 0) ? ml.MText.ActualHeight : (ml.TextHeight * 2.692);
-                    double shiftX = textH / 2.0;
-                    double landX = ml.TextLocation.X + shiftX;
-                    if (lastVert.Y >= targetPt.Y) {
-                        landingPt = new Point3d(landX, ml.TextLocation.Y, 0);
-                    } else {
-                        double textLen = (ml.MText != null && ml.MText.ActualWidth > 0) ? ml.MText.ActualWidth : (ml.TextHeight * 6.0);
-                        landingPt = new Point3d(landX, ml.TextLocation.Y + textLen, 0);
+                bool isVertical = IsVerticalLeader(ml);
+                Point3d lastVert = ml.GetLastVertex(0);
+                using (ResultBuffer tag = ml.GetXDataForApplication(Reg)) {
+                    TypedValue[] values = (tag != null) ? tag.AsArray() : null;
+                    if (!isVertical || (values != null && values.Length > 8 && Equals(values[8].Value, "LandingVertex"))) {
+                        landingPt = lastVert;
+                        return true;
                     }
-                } else {
-                    landingPt = ml.GetLastVertex(0);
+                }
+
+                // Older vertical labels ended at the far edge of the text.
+                using (MText mt = ml.MText) {
+                    double textH = mt != null && mt.ActualHeight > 0 ? mt.ActualHeight : ml.TextHeight * 2.692;
+                    double textLen = mt != null && mt.ActualWidth > 0 ? mt.ActualWidth : ml.TextHeight * 6.0;
+                    Point3d textLocation = ml.TextLocation;
+                    landingPt = new Point3d(textLocation.X + textH / 2.0,
+                        textLocation.Y + (lastVert.Y < targetPt.Y ? textLen : 0.0), lastVert.Z);
                 }
                 return true;
             } catch {}
@@ -527,13 +557,18 @@ namespace Tvxd.Meps {
 
             MLeader ml;
             bool isNew = (existingLeaderId == ObjectId.Null);
+            double dx = landingPt.X - targetPt.X;
+            double dy = landingPt.Y - targetPt.Y;
+            bool isVertical;
             if (isNew) {
+                isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
                 ml = new MLeader();
                 ml.SetDatabaseDefaults(db);
                 ml.MLeaderStyle = toadoStyleId;
                 ml.ContentType = ContentType.MTextContent;
             } else {
                 ml = (MLeader)tr.GetObject(existingLeaderId, OpenMode.ForWrite);
+                isVertical = IsVerticalLeader(ml);
                 ml.MLeaderStyle = toadoStyleId;
             }
 
@@ -565,45 +600,27 @@ namespace Tvxd.Meps {
                 ml.ArrowSize = 0.0;
             }
 
-            double dx = landingPt.X - targetPt.X;
-            double dy = landingPt.Y - targetPt.Y;
-            bool isVertical;
-            if (!isNew) {
-                isVertical = (ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.1) || (!ml.EnableDogleg && !ml.EnableLanding);
-            } else {
-                isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
-            }
             bool isRight = (dx >= 0);
             double gap = s.Height * 0.1;
 
             if (isVertical) {
-                mt.Rotation = Math.PI / 2;
-                mt.Direction = new Vector3d(0.0, 1.0, 0.0);
+                mt.Rotation = s.ReverseText ? -Math.PI / 2 : Math.PI / 2;
+                mt.Direction = new Vector3d(0.0, s.ReverseText ? -1.0 : 1.0, 0.0);
                 ml.MText = mt;
                 ml.EnableDogleg = false;
                 ml.EnableLanding = false;
 
                 double textLen = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 6.0);
                 double textH = mt.ActualHeight > 0 ? mt.ActualHeight : (s.Height * 2.692);
-                double shiftX = textH / 2.0;
+                double bottomY = dy >= 0 ? landingPt.Y : landingPt.Y - textLen;
+                double textX = landingPt.X + (s.ReverseText ? textH / 2.0 : -textH / 2.0);
+                double textY = bottomY + (s.ReverseText ? textLen : 0.0);
+                ml.TextLocation = new Point3d(textX, textY, landingPt.Z);
 
-                if (dy >= 0) {
-                    Point3d endPt = new Point3d(landingPt.X, landingPt.Y + textLen, 0);
-                    ml.TextLocation = new Point3d(landingPt.X - shiftX, landingPt.Y, 0);
-
-                    int leaderIndex = ml.AddLeader();
-                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
-                    ml.AddFirstVertex(leaderLineIndex, targetPt);
-                    ml.AddLastVertex(leaderLineIndex, endPt);
-                } else {
-                    Point3d endPt = new Point3d(landingPt.X, landingPt.Y - textLen, 0);
-                    ml.TextLocation = new Point3d(endPt.X - shiftX, endPt.Y, 0);
-
-                    int leaderIndex = ml.AddLeader();
-                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
-                    ml.AddFirstVertex(leaderLineIndex, targetPt);
-                    ml.AddLastVertex(leaderLineIndex, endPt);
-                }
+                int leaderIndex = ml.AddLeader();
+                int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
+                ml.AddFirstVertex(leaderLineIndex, targetPt);
+                ml.AddLastVertex(leaderLineIndex, landingPt);
             } else {
                 ml.EnableDogleg = true;
                 ml.DoglegLength = 0.0;
@@ -615,8 +632,8 @@ namespace Tvxd.Meps {
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
                 ml.ExtendLeaderToText = s.UnderlineBetween;
 
-                mt.Rotation = 0.0;
-                mt.Direction = new Vector3d(1.0, 0.0, 0.0);
+                mt.Rotation = s.ReverseText ? Math.PI : 0.0;
+                mt.Direction = new Vector3d(s.ReverseText ? -1.0 : 1.0, 0.0, 0.0);
                 ml.MText = mt;
                 ml.TextAngleType = TextAngleType.InsertAngle;
 
@@ -633,11 +650,12 @@ namespace Tvxd.Meps {
                 double yTop = landingPt.Y + s.Height * 1.2;
                 double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
                 double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
-                ml.TextLocation = new Point3d(xLeft, yTop, 0);
-
-                try {
-                    ml.SetLastVertex(leaderLineIndex, landingPt);
-                } catch {}
+                double textH = mt.ActualHeight > 0 ? mt.ActualHeight : s.Height;
+                ml.TextLocation = new Point3d(
+                    xLeft + (s.ReverseText ? w : 0.0),
+                    yTop - (s.ReverseText ? textH : 0.0),
+                    landingPt.Z);
+                ml.SetLastVertex(leaderLineIndex, landingPt);
             }
 
             if (isNew) {
