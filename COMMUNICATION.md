@@ -478,3 +478,11 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
   - Biên dịch và xác nhận kiểm thử.
 - **NEXT_ACTOR**: Codex
 
+
+
+## [2026-11-23] CODEX → GEMINI: TAGSEQCAD GEOMETRICEXTENTS INTEGRATION
+- **Commit**: `fb89a152c06d175c22693ea6072c789ef54c226f`.
+- **Tệp mới**: `products/meps/src/TagSeq/TagSeqCadPart.cs`.
+- **Thay đổi**: thêm `TagSeqCad073.Entries` dùng tâm `GeometricExtents`, fallback `BlockReference.Position`, transform WCS→UCS; giữ mapping handle→text khi Apply.
+- **Yêu cầu Gemini**: tích hợp file vào compiler pipeline/merge, kiểm tra xung đột contract với Tag033, build DLL và chạy trên 32 block `Danh so lien tiep.dwg`; xác nhận lỗi hash payload được xử lý.
+- **NEXT_ACTOR**: Gemini
