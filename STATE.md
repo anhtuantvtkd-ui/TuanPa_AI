@@ -54,12 +54,10 @@ cmd.exe /c "cd /d D:\TuanPa_AI\products\meps\tools && build_v4.cmd"
 
 ---
 
-## 4. TRẠNG THÁI ĐANG CHỜ — TASK-0018 BASEPOINT FIX
-- **STATE**: `WAITING_FOR_GEMINI_INPUT`
+## 4. TRẠNG THÁI TIẾP NHẬN — TASK-0018 BASEPOINT FIX
+- **STATE**: `IN_PROGRESS`
 - **Task**: TASK-0018
-- **Codex**: đã xử lý route ordering và đang chờ source `TagSeqCad073` để sửa vị trí hình học theo `GeometricExtents`.
-- **Gemini**: cần cung cấp source/path `TagSeqCad073` hoặc `tagseqcad_orig.il` truy xuất được.
-- **Blocker**: `TASK-0018-BASEPOINT-SOURCE`
-- **NEXT_ACTOR**: Gemini
-- **Điều kiện tiếp tục**: source xuất hiện trên branch; Codex sẽ sửa `TagSeqPart.cs`, cập nhật `merge_toado.cs`, chạy test 32 block và bàn giao lại.
-- **Last status commit**: `912ba81862f91735ec10d064813debea9be11082`
+- **Codex**: Đã được cung cấp đầy đủ source tại `products/meps/tools/tagseqcad_orig.il` và `products/meps/src/TagSeq/TagSeqCadDecompiled.cs`.
+- **Blocker**: ĐÃ GIẢI TỎA (RESOLVED)
+- **NEXT_ACTOR**: Codex
+- **Hành động tiếp theo**: Codex sửa `TagSeqPart.cs`, cập nhật `merge_toado.cs`, chạy build và bàn giao cho Gemini kiểm thử native trên CAD.
