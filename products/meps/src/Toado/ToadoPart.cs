@@ -404,11 +404,14 @@ namespace Tvxd.Meps {
 
                 if (isVertical) {
                     Point3d lastVert = ml.GetLastVertex(0);
+                    double textH = (ml.MText != null && ml.MText.ActualHeight > 0) ? ml.MText.ActualHeight : (ml.TextHeight * 2.692);
+                    double shiftX = textH / 2.0;
+                    double landX = ml.TextLocation.X + shiftX;
                     if (lastVert.Y >= targetPt.Y) {
-                        landingPt = new Point3d(targetPt.X, ml.TextLocation.Y, 0);
+                        landingPt = new Point3d(landX, ml.TextLocation.Y, 0);
                     } else {
                         double textLen = (ml.MText != null && ml.MText.ActualWidth > 0) ? ml.MText.ActualWidth : (ml.TextHeight * 6.0);
-                        landingPt = new Point3d(targetPt.X, ml.TextLocation.Y + textLen, 0);
+                        landingPt = new Point3d(landX, ml.TextLocation.Y + textLen, 0);
                     }
                 } else {
                     landingPt = ml.GetLastVertex(0);
@@ -564,7 +567,8 @@ namespace Tvxd.Meps {
 
             double dx = landingPt.X - targetPt.X;
             double dy = landingPt.Y - targetPt.Y;
-            bool isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
+            bool wasVertical = !isNew && ((ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.1) || (!ml.EnableDogleg && !ml.EnableLanding));
+            bool isVertical = wasVertical || (Math.Abs(dx) < 0.5 * Math.Abs(dy) && Math.Abs(dy) > 1.0);
             bool isRight = (dx >= 0);
             double gap = s.Height * 0.1;
 
@@ -580,7 +584,7 @@ namespace Tvxd.Meps {
                 double shiftX = textH / 2.0;
 
                 if (dy >= 0) {
-                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y + textLen, 0);
+                    Point3d endPt = new Point3d(landingPt.X, landingPt.Y + textLen, 0);
                     ml.TextLocation = new Point3d(landingPt.X - shiftX, landingPt.Y, 0);
 
                     int leaderIndex = ml.AddLeader();
@@ -588,7 +592,7 @@ namespace Tvxd.Meps {
                     ml.AddFirstVertex(leaderLineIndex, targetPt);
                     ml.AddLastVertex(leaderLineIndex, endPt);
                 } else {
-                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y - textLen, 0);
+                    Point3d endPt = new Point3d(landingPt.X, landingPt.Y - textLen, 0);
                     ml.TextLocation = new Point3d(endPt.X - shiftX, endPt.Y, 0);
 
                     int leaderIndex = ml.AddLeader();

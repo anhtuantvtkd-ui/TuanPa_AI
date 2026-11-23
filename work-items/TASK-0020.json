@@ -36,12 +36,12 @@
     {
       "check": "build_v4",
       "status": "PASS",
-      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 fae8321ef890a9200dac0f193445a813c05ba0bdccbb15c15d0e9825edda8447"
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 30a663d4cba2acae87efc506a23b2053bb5400d0723544068688e1ae3e4469e7"
     },
     {
       "check": "accoreconsole test",
       "status": "PASS",
-      "reference": "TEST_REGRESSION_SUITE chay tren Danh so lien tiep.dwg: 3 rounds update delta=0.000000; arrow grip edit delta=0.000000; text grip edit delta=0.000000 cho ca leader ngang va doc"
+      "reference": "TEST_TOADO_FULL_SUITE chay tren Danh so lien tiep.dwg: delta=0.000000 tren 3 rounds update va tat ca grip edits (arrow va text tren ca horizontal va vertical). Report luu tai products/meps/test/toado_stayput_suite_report.txt"
     },
     {
       "check": "checksums_audit",
