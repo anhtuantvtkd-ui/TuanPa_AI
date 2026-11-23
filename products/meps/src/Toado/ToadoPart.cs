@@ -315,20 +315,8 @@ namespace Tvxd.Meps {
                     (ext.MinPoint.Y + ext.MaxPoint.Y) * 0.5,
                     (ext.MinPoint.Z + ext.MaxPoint.Z) * 0.5
                 );
-                if (center) {
-                    return centerPt;
-                }
-                // If center option is false (insertion point), check if br.Position is near the visible block.
-                // In infrastructure/civil drawings, blocks (e.g. BE2 DAN59) often have their base point
-                // placed at survey origin millions of units away from the profile view on screen.
-                // If distance between br.Position and visual center exceeds 5x diagonal or 500 units,
-                // fallback to centerPt so leader arrow points directly to the visible block on screen!
-                double diag = (ext.MaxPoint - ext.MinPoint).Length;
-                double dist = (br.Position - centerPt).Length;
-                if (dist > Math.Max(diag * 5.0, 500.0)) {
-                    return centerPt;
-                }
-                return br.Position;
+                // Circle arrow tip must always point accurately to the geometric center of the block!
+                return centerPt;
             } catch {
                 return br.Position;
             }
@@ -748,6 +736,16 @@ namespace Tvxd.Meps {
                             }
 
                             ObjectId existingId = map.ContainsKey(handleStr) ? map[handleStr] : ObjectId.Null;
+                            if (existingId != ObjectId.Null) {
+                                try {
+                                    var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
+                                    if (oldObj != null && oldObj.LeaderCount > 0) {
+                                        // User requirement: When updating an existing/copied label, arrow tip & landing stay put ("đứng yên")
+                                        targetPt = oldObj.GetFirstVertex(0);
+                                        landingPt = oldObj.GetLastVertex(0);
+                                    }
+                                } catch {}
+                            }
                             CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, existingId, layerId, styleId, dotArrowId);
                             if (existingId == ObjectId.Null) created++; else updated++;
                         }
@@ -858,64 +856,15 @@ namespace Tvxd.Meps {
                         }
 
                         string blockName = "";
-                        Point3d targetPt;
-                        bool isCopiedOrRelinked = false;
-
                         double maxMatchDist = Math.Max(s.Height * 15.0, 5000.0);
                         if (closestBlock != null && closestDist < maxMatchDist) {
-                            string closestHandle = closestBlock.Handle.ToString();
-                            if (!string.Equals(handleStr, closestHandle, StringComparison.OrdinalIgnoreCase)) {
-                                handleStr = closestHandle;
-                                isCopiedOrRelinked = true;
-                            }
-                            targetPt = Tip(closestBlock, s.Center);
+                            handleStr = closestBlock.Handle.ToString();
                             blockName = NameOf(tr, closestBlock);
-                        } else {
-                            targetPt = currentArrow;
-                            blockName = "";
                         }
 
-                        Point3d landingPt;
-                        if (isCopiedOrRelinked) {
-                            landingPt = currentLanding;
-                        } else {
-                            Point3d storedTarget = Point3d.Origin;
-                            Point3d storedLanding = Point3d.Origin;
-                            bool hasStored = false;
-                            if (vals.Length >= 8) {
-                                storedTarget = new Point3d(
-                                    Convert.ToDouble(vals[2].Value, Inv),
-                                    Convert.ToDouble(vals[3].Value, Inv),
-                                    Convert.ToDouble(vals[4].Value, Inv));
-                                storedLanding = new Point3d(
-                                    Convert.ToDouble(vals[5].Value, Inv),
-                                    Convert.ToDouble(vals[6].Value, Inv),
-                                    Convert.ToDouble(vals[7].Value, Inv));
-                                hasStored = true;
-                            }
-
-                            if (hasStored) {
-                                double arrowMoved = (currentArrow - storedTarget).Length;
-                                double landingMoved = (currentLanding - storedLanding).Length;
-                                if (arrowMoved > 1.0 || landingMoved > 1.0) {
-                                    landingPt = currentLanding;
-                                } else {
-                                    landingPt = storedLanding;
-                                }
-                            } else {
-                                double dx = currentLanding.X - targetPt.X;
-                                double dy = currentLanding.Y - targetPt.Y;
-                                bool oldVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
-                                if (oldVertical) {
-                                    double textLen = ml.MText != null && ml.MText.ActualWidth > 0
-                                        ? ml.MText.ActualWidth : (s.Height * 6.0);
-                                    double sign = dy >= 0 ? 1.0 : -1.0;
-                                    landingPt = new Point3d(targetPt.X, currentLanding.Y - sign * textLen, currentLanding.Z);
-                                } else {
-                                    landingPt = currentLanding;
-                                }
-                            }
-                        }
+                        // User explicitly demands: Arrow and Landing STAY PUT ("đứng yên"), only X, Y and block name update!
+                        Point3d targetPt = currentArrow;
+                        Point3d landingPt = currentLanding;
 
                         CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, id, layerId, styleId, dotArrowId);
                         count++;
@@ -968,6 +917,16 @@ namespace Tvxd.Meps {
                     }
 
                     ObjectId existingId = map.ContainsKey(handleStr) ? map[handleStr] : ObjectId.Null;
+                    if (existingId != ObjectId.Null) {
+                        try {
+                            var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
+                            if (oldObj != null && oldObj.LeaderCount > 0) {
+                                // Preserved: Arrow tip & landing stay put ("đứng yên") on update
+                                targetPt = oldObj.GetFirstVertex(0);
+                                landingPt = oldObj.GetLastVertex(0);
+                            }
+                        } catch {}
+                    }
                     CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, existingId, layerId, styleId, dotArrowId);
                     if (existingId == ObjectId.Null) res.created++; else res.updated++;
                 }

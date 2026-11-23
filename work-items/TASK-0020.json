@@ -1,0 +1,52 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0020",
+  "title": "Sua T-TOADO: Tam mui ten trung tam hinh hoc block va MLeader khi cap nhat hoac copy dung yen khong nhay",
+  "status": "RELEASED",
+  "module": "meps",
+  "risk": "medium",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Gemini (Argon)",
+  "reviewer": "Codex",
+  "base_commit": "0abaeb6",
+  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "result_commit": "HEAD",
+  "scope": [
+    "Yeu cau 1: Mui ten hinh tron cua nhan toa do phai cam chinh xac vao tam hinh hoc thuc te cua block (GeometricExtents.Center) thay vi basepoint lech.",
+    "Yeu cau 2: Khi nguoi dung cap nhat hoac copy MLeader toa do sang vi tri/block khac, tam mui ten va vi tri dat nhan phai dung yen tai cho (giu nguyen currentArrow va currentLanding), chi cap nhat lai noi dung gia tri X, Y va ten block theo dung toa do mui ten dang dung."
+  ],
+  "out_of_scope": [
+    "Cac module khac ngoai T-TOADO"
+  ],
+  "sources": [
+    "products/meps/src/Toado/ToadoPart.cs"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Mui ten hinh tron nam chinh xac tai tam hinh hoc extents cua block khi tao moi hoac refresh",
+    "Khi cap nhat (RefreshAll hoac T-TOADO tren nhan da co hoac nhan duoc copy), mui ten khong bi nhay vi tri, giu nguyen tai cho, gia tri X Y duoc cap nhat theo dung toa do hien tai cua mui ten",
+    "Build TVXD.Meps.dll thanh cong va dong goi ban cai V17"
+  ],
+  "required_checks": [
+    "build_v4",
+    "accoreconsole test",
+    "checksums_audit"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 54138bad48bc48be9a5aa56c51d00b307239a5b183f1dbbb699c1a78e7b79be8"
+    },
+    {
+      "check": "accoreconsole test",
+      "status": "PASS",
+      "reference": "TEST_TOADO_STAYPUT chay tren Danh so lien tiep.dwg: Pass 1 tao 2 leader tai tam hinh hoc, Pass 2 cap nhat ca 2 leader voi Arrow delta=0 va Landing delta=0 (giu nguyen vi tri dung yen 100%)"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "reference": "293/293 files in 17. TVXD.BG V17 and OneDrive match 100% SHA256SUMS.json"
+    }
+  ]
+}

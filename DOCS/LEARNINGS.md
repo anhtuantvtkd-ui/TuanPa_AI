@@ -35,3 +35,17 @@
   2. **AutoCAD Guard:** Luôn kiểm tra xem AutoCAD (`acad.exe`, `accoreconsole.exe`) có đang mở và khóa file DLL không; từ chối cài đè khi tiến trình đang chạy để tránh lỗi hỏng file.
   3. **Rollback an toàn:** Lưu vết trạng thái cũ để có thể hoàn nguyên nguyên trạng byte-for-byte khi cài đặt gặp sự cố.
 
+---
+
+## BÀI HỌC 04: GIỮ NGUYÊN VỊ TRÍ MŨI TÊN VÀ LANDING KHI CẬP NHẬT HOẶC COPY MUSHROOM LEADER (STAY-PUT UPDATE)
+- **Phạm vi:** Module `T-TOADO` (`products/meps/src/Toado/ToadoPart.cs`).
+- **Triệu chứng lỗi:** Khi người dùng copy MLeader tọa độ sang một block khác rồi cập nhật lại, mũi tên tự động nhảy vị trí sang block khác hoặc lệch vị trí mong muốn.
+- **Nguyên nhân gốc:** Thuật toán refresh tự động gán lại `targetPt = Tip(closestBlock)` và tính lại `landingPt`. Nếu block gần đó có tâm khác hoặc match nhầm, mũi tên sẽ bị giật nhảy (jump).
+- **Quy tắc giải pháp:**
+  1. **Tâm mũi tên hình tròn:** `Tip(br, true)` luôn trả về chính xác trọng tâm hình học `GeometricExtents.Center` của block để mũi tên cắm đúng tâm đối tượng.
+  2. **Đứng yên khi cập nhật (Stay-Put):** Giữ nguyên `targetPt = currentArrow` và `landingPt = currentLanding` của leader hiện tại.
+  3. **Cập nhật giá trị:** Tính toán lại tọa độ hiển thị $X, Y$ theo đúng `targetPt` và cập nhật tên block gần nhất. Mũi tên và đường dẫn giữ nguyên vị trí 100% không bị nhảy.
+- **Test Fixture bảo vệ:** Kịch bản native `TestToadoUpdateStayPut.cs` trên `Danh so lien tiep.dwg`.
+- **Tiêu chuẩn nghiệm thu:** `Arrow delta = 0`, `Landing delta = 0` (độ lệch bằng 0 tuyệt đối).
+
+
