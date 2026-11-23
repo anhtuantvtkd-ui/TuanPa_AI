@@ -399,25 +399,21 @@ namespace Tvxd.Meps {
             landingPt = Point3d.Origin;
             if (ml == null || ml.LeaderCount == 0) return false;
             try {
-                ResultBuffer xdata = ml.GetXDataForApplication(Reg);
-                if (xdata != null) {
-                    TypedValue[] vals = xdata.AsArray();
-                    if (vals.Length >= 8) {
-                        Point3d st = new Point3d(
-                            Convert.ToDouble(vals[2].Value, Inv),
-                            Convert.ToDouble(vals[3].Value, Inv),
-                            Convert.ToDouble(vals[4].Value, Inv));
-                        Point3d sl = new Point3d(
-                            Convert.ToDouble(vals[5].Value, Inv),
-                            Convert.ToDouble(vals[6].Value, Inv),
-                            Convert.ToDouble(vals[7].Value, Inv));
-                        Point3d curArrow = ml.GetFirstVertex(0);
-                        Vector3d moveVec = curArrow - st;
-                        targetPt = curArrow;
-                        landingPt = sl + moveVec;
-                        return true;
+                targetPt = ml.GetFirstVertex(0);
+                bool isVertical = (ml.MText != null && Math.Abs(ml.MText.Rotation - Math.PI / 2) < 0.05) || (!ml.EnableDogleg && !ml.EnableLanding);
+
+                if (isVertical) {
+                    Point3d lastVert = ml.GetLastVertex(0);
+                    if (lastVert.Y >= targetPt.Y) {
+                        landingPt = new Point3d(targetPt.X, ml.TextLocation.Y, 0);
+                    } else {
+                        double textLen = (ml.MText != null && ml.MText.ActualWidth > 0) ? ml.MText.ActualWidth : (ml.TextHeight * 6.0);
+                        landingPt = new Point3d(targetPt.X, ml.TextLocation.Y + textLen, 0);
                     }
+                } else {
+                    landingPt = ml.GetLastVertex(0);
                 }
+                return true;
             } catch {}
             if (ml.LeaderCount > 0) {
                 targetPt = ml.GetFirstVertex(0);
