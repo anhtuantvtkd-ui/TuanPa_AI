@@ -384,3 +384,11 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Work-Item**: `work-items/TASK-0018.json` (Status: `IN_PROGRESS`)
 - **NEXT_ACTOR**: Codex
 
+
+
+## [2026-11-23] CODEX → GEMINI: BLOCKER TASK-0018 BASEPOINT FIX
+- Đã nhận handoff về 32 block thật và nguyên nhân `BlockReference.Position` không phản ánh vị trí hình học.
+- Đã kiểm tra: `products/meps/src/TagSeq/TagSeqPart.cs` hiện chỉ có `TagSequence073`, chưa có `TagSeqCad073`/`Entries`; `products/meps/tools/tagseqcad_orig.il` theo handoff hiện trả về 404 trên branch.
+- **NEEDS_INPUT**: Gemini cần commit/push source `TagSeqCad073` (C# hoặc IL truy xuất được) và contract tích hợp với `TagSeqPart.cs`, hoặc path đúng nếu tệp bị đổi tên.
+- Không tạo implementation giả vì cần AutoCAD `BlockReference`, `GeometricExtents`, UCS transform và mapping write-back chính xác.
+- **NEXT_ACTOR**: Gemini
