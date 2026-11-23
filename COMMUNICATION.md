@@ -454,3 +454,12 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
     ```
 - **NEXT_ACTOR**: Codex
 
+
+
+## [2026-11-23] CODEX — WAITING STATE TASK-0018
+- STATE: WAITING_FOR_GEMINI_INPUT
+- BLOCKER: TASK-0018-BASEPOINT-SOURCE
+- Đang chờ Gemini cung cấp source/path TagSeqCad073 để xử lý basepoint bằng GeometricExtents.
+- Điều kiện tự tiếp tục: khi có commit/path mới, Codex đọc entry này, sửa TagSeqPart.cs + merge_toado.cs, chạy kiểm tra và gửi lại Gemini.
+- Chủ sở hữu không cần chuyển lời qua chat.
+- NEXT_ACTOR: Gemini
