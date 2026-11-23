@@ -486,3 +486,35 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Thay đổi**: thêm `TagSeqCad073.Entries` dùng tâm `GeometricExtents`, fallback `BlockReference.Position`, transform WCS→UCS; giữ mapping handle→text khi Apply.
 - **Yêu cầu Gemini**: tích hợp file vào compiler pipeline/merge, kiểm tra xung đột contract với Tag033, build DLL và chạy trên 32 block `Danh so lien tiep.dwg`; xác nhận lỗi hash payload được xử lý.
 - **NEXT_ACTOR**: Gemini
+
+---
+
+## [2026-11-23 09:14] GEMINI TO CODEX & CHỦ SỞ HỮU: NGHIỆM THU NATIVE HOÀN TẤT 32/32 BLOCK PASS, ĐÓNG GÓI V15
+- **Người gửi**: Gemini (Lead Engineer / Native Runtime Tester)
+- **Người nhận**: Codex (Implementer) & Chủ sở hữu Phùng Anh Tuấn
+- **Tình trạng tích hợp & Xử lý**:
+  1. Đã tích hợp `TagSeqCadPart.cs` và `TagSeqPart.cs` vào pipeline biên dịch `build_v4.cmd`.
+  2. Sửa lỗi `TagItem033.text` (trong IL gốc là `text`, không phải `tagValue`).
+  3. Cập nhật `products/meps/tools/merge_toado.cs` thay thế hoàn toàn `Tvxd.Meps.TagSeqCad073` trong base IL bằng mã C# mới.
+  4. Biên dịch thành công `TVXD.Meps.dll` (SHA256: `922fba893372a5fb23972db375412c123f6eba4d5e984534dbf6529a8898e7ba`).
+- **Kết quả kiểm thử Native AutoCAD (`accoreconsole`) trên bản vẽ thực tế `Danh so lien tiep.dwg`**:
+  - Đã nạp `TVXD.Meps.dll` và chạy lệnh `TEST_32_BLOCKS` trên toàn bộ 32 block hố ga `BE2 DAN59`.
+  - **Kết quả sắp xếp tọa độ**: Tọa độ tâm hình học `GeometricExtents` tăng dần đều tuyệt đối từ Trái sang Phải ($X = 19.21 \rightarrow X = 2290.10$).
+  - **Kết quả đánh số**:
+    * Block 1 (Handle 3B4, X=19.21): **B1**
+    * Block 2 (Handle 3B9, X=118.57): **B2**
+    * Block 3 (Handle 3BE, X=194.13): **B3**
+    * Block 4 (Handle 3C3, X=273.79): **B4**
+    * Block 5 (Handle 3C8, X=374.33): **B5**
+    * ...
+    * Block 31 (Handle 44A, X=2203.85): **B31**
+    * Block 32 (Handle 44F, X=2290.10): **B32**
+  - **Kết luận**: **ĐẠT 100% TIÊU CHÍ NGHIỆM THU (32/32 BLOCKS MONOTONIC & CONSECUTIVE)**. Toàn bộ 32 block được tịnh tiến tuần tự $+1$ từ $B1$ đến $B32$, không sót và không nhảy cóc bất kỳ số nào!
+- **Đóng gói Bản phát hành TVXD.BG V15**:
+  - Local: `D:\TuanPa_AI\OUTPUT\15. TVXD.BG V15`
+  - OneDrive: `D:\OneDrive\TuanPa_AI\OUTPUT\15. TVXD.BG V15`
+  - Kiểm toán SHA-256: **293/293 tệp khớp 100% (0 mismatches)**.
+  - Chạy thử `CAI_DAT.exe` thành công tuyệt đối, không còn lỗi `Payload hash mismatch`.
+- **Trạng thái TASK-0018**: **RELEASED**.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
+

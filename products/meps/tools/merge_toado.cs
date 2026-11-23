@@ -177,12 +177,13 @@ class MergeMeps {
                         writer.WriteLine(line);
                     }
                 } else if (skippingTagSeq) {
-                    // TagSeq ends after TagSequence073
+                    // TagSeq ends after TagSeqCad073
                     if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.TagSeqDir073") &&
                         !line.Contains("Tvxd.Meps.TagSeqEntry073") &&
                         !line.Contains("Tvxd.Meps.TagSeqOptions073") &&
                         !line.Contains("Tvxd.Meps.TagSeqRow073") &&
-                        !line.Contains("Tvxd.Meps.TagSequence073")) {
+                        !line.Contains("Tvxd.Meps.TagSequence073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqCad073")) {
                         skippingTagSeq = false;
                         if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
                             skippingToado = true;

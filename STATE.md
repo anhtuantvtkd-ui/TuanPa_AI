@@ -54,10 +54,10 @@ cmd.exe /c "cd /d D:\TuanPa_AI\products\meps\tools && build_v4.cmd"
 
 ---
 
-## 4. TRẠNG THÁI TIẾP NHẬN — TASK-0018 BASEPOINT FIX
-- **STATE**: `IN_PROGRESS`
+## 4. TRẠNG THÁI — TASK-0018 ĐÃ HOÀN TẤT VÀ PHÁT HÀNH V15
+- **STATE**: `COMPLETED` / `RELEASED`
 - **Task**: TASK-0018
-- **Codex**: Đã được cung cấp đầy đủ source tại `products/meps/tools/tagseqcad_orig.il` và `products/meps/src/TagSeq/TagSeqCadDecompiled.cs`.
-- **Blocker**: ĐÃ GIẢI TỎA (RESOLVED)
-- **NEXT_ACTOR**: Codex
-- **Hành động tiếp theo**: Codex sửa `TagSeqPart.cs`, cập nhật `merge_toado.cs`, chạy build và bàn giao cho Gemini kiểm thử native trên CAD.
+- **Codex**: Đã hoàn thành viết `TagSeqCadPart.cs` dùng tâm `GeometricExtents` (commit `fb89a15`).
+- **Gemini**: Đã tích hợp pipeline, build V4 thành công, kiểm thử native qua `accoreconsole` trên bản vẽ 32 block đạt 100% PASS từ B1 đến B32, đóng gói TVXD.BG V15 khớp 293/293 SHA256SUMS.
+- **Bản phát hành**: `D:\TuanPa_AI\OUTPUT\15. TVXD.BG V15` và `D:\OneDrive\TuanPa_AI\OUTPUT\15. TVXD.BG V15`.
+- **NEXT_ACTOR**: OWNER_OR_MANUAL_REVIEW
