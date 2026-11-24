@@ -106,6 +106,7 @@ class MergeMeps {
         int replacedButtons = 0;
         int nanCount = 0;
         int infCount = 0;
+        int patchedRouteStatsCommands = 0;
 
         using (var reader = new StreamReader(mepsOrigPath, Encoding.UTF8))
         using (var writer = new StreamWriter(mepsFinalPath, false, Encoding.UTF8)) {
@@ -115,6 +116,8 @@ class MergeMeps {
             bool skippingTagSeq = false;
             bool insideArrangeActions = false;
             bool afterToolbox106 = false;
+            bool insideRouteStatsCctor = false;
+            bool afterCdsInRouteStats = false;
 
             while ((line = reader.ReadLine()) != null) {
                 // Fix nan and inf
@@ -164,6 +167,32 @@ class MergeMeps {
                     line = line.Replace("0xba", "0xf0");
                     afterToolbox106 = false;
                     replacedSectionHeight++;
+                }
+
+                // Whitelist T-KLHD in RouteStats076::Commands
+                if (line.Contains("RouteStats076::'<Hook>b__6'")) {
+                    insideRouteStatsCctor = true;
+                }
+                if (insideRouteStatsCctor) {
+                    if (line.Contains("ldc.i4.7") && !line.Contains("stelem.ref")) {
+                        line = line.Replace("ldc.i4.7", "ldc.i4.8");
+                    }
+                    if (line.Contains("\"CDS\"")) {
+                        afterCdsInRouteStats = true;
+                    }
+                    if (afterCdsInRouteStats && line.Contains("stelem.ref")) {
+                        writer.WriteLine(line);
+                        writer.WriteLine("    ldloc.0");
+                        writer.WriteLine("    ldc.i4.7");
+                        writer.WriteLine("    ldstr      \"T-KLHD\"");
+                        writer.WriteLine("    stelem.ref");
+                        afterCdsInRouteStats = false;
+                        patchedRouteStatsCommands++;
+                        continue;
+                    }
+                    if (line.Contains("} // end of method RouteStats076::.cctor")) {
+                        insideRouteStatsCctor = false;
+                    }
                 }
 
                 // Inject ModernThemeEngine before disassembly completion marker
@@ -256,7 +285,7 @@ class MergeMeps {
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}).",
-            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount));
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}).",
+            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands));
     }
 }
