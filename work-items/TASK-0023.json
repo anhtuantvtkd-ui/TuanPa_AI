@@ -1,0 +1,45 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0023",
+  "title": "Tạo bảng bóc tách đường dây 0,4 kV",
+  "status": "NEEDS_INPUT",
+  "module": "line-quantity",
+  "risk": "high",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex (GPT-6)",
+  "reviewer": "unassigned",
+  "base_commit": "3c6e5582a3f906839cd02e321e82353519676263",
+  "branch": "task/TASK-0023-boc-tach-duong-day",
+  "scope": [
+    "Tạo bản Excel tạm từ đặc tả và script PowerShell dùng Excel COM."
+  ],
+  "out_of_scope": [
+    "Nghiệm thu chuyên môn, merge và phát hành."
+  ],
+  "sources": [
+    "docs/tasks/TASK-0023-spec.md, mục 2–4"
+  ],
+  "missing_inputs": [
+    "CSV mẫu của người dùng để kiểm tra tên, thứ tự và đơn vị cột.",
+    "Bản vẽ MBSH và dữ liệu chi tiết cho đoạn thiếu điểm đấu nối, chiều dài, rãnh cáp và thiết bị/phụ kiện."
+  ],
+  "acceptance_criteria": [
+    "Có đủ bốn TBA và dòng tổng lộ, tổng trạm, tổng dự án.",
+    "Đối chiếu cấu trúc chính xác với CSV mẫu và khối lượng với bản vẽ."
+  ],
+  "required_checks": [
+    "excel_native",
+    "technical_reference",
+    "independent_review"
+  ],
+  "evidence": [
+    {
+      "check": "excel_native",
+      "status": "PASS",
+      "reference": "PowerShell Excel COM: tạo, tính và mở lại workbook; 109 dòng chi tiết, 4 trạm. Kiểm tra XLSX: 886 công thức, 0 ô lỗi; E6=0,46; I6=T6=57,46; D128=3106. SHA256 E52AF77CFD93DF9CCDCAA62BA8AEC8230F8111A9008BE92EB49C2FEB5CD01566."
+    }
+  ],
+  "review": null,
+  "approval": null,
+  "release": null
+}
