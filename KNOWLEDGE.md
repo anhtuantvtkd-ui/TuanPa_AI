@@ -30,3 +30,5 @@
 
 - **Bằng chứng** TASK-0025, commit `4864292eb24a69bcf0b2e6763a9c1762db71a263`. WinForms gọi đúng callback cho 10/10 mục, trong khi IL của cả hai DLL cho thấy `T-KLHD` bị bộ lọc dispatch từ chối. [Báo cáo](DOCS/tasks/TASK-0025-codex-verification-report.md)
 - **Test hồi quy cần có** Dùng fixture AutoCAD để bấm từng mục và xác nhận lệnh chạy đúng một lần. Đo cả nhãn và vùng vẽ của nút sau khi hook layout chạy.
+
+- **Kiểm chứng bổ sung TASK-0025** Bản vá `5bdd390eb926dfe39b591bdfdf9168da9cc35e16` cho thấy có thể kiểm `Allowed` trên DLL release trong AutoCAD Core Console và bắt `LispWillStart` sau `Dispatch` với request sẵn sàng. Ca hồi quy ở ranh giới này kiểm mã mới, mã cũ, mã bị từ chối và LISP thực sự được kích hoạt. Lượt bấm Palette từ trạng thái chưa nạp LISP cần thử trong host desktop. [Bằng chứng](DOCS/tasks/TASK-0025-codex-verification-report.md#verification-status-resolved)

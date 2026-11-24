@@ -1,8 +1,25 @@
-﻿# TASK-0025 — Báo cáo kiểm chứng và nghiệm thu của Codex
+# TASK-0025 — Báo cáo kiểm chứng và nghiệm thu của Codex
 
 ## Kết luận
 
 **Chưa đạt nghiệm thu toàn diện.** DLL V4 ráp thành công. Cả 10 mục menu thực tế gửi đúng mã đúng một lần đến `RequestRouteStats` trong WinForms. Tuy nhiên, `T-KLHD` bị từ chối ở tầng dispatch từ Palette trong cả bản nền lẫn bản mới. Bố cục vẫn có nhãn bị cắt. Renderer đã có badge và hover, nhưng phạm vi áp dụng và khả năng thích ứng chưa đạt đề xuất thiết kế. Kiểm chứng nghiệp vụ trong AutoCAD 2021 và phê duyệt của chủ sở hữu còn mở.
+
+## Verification Status: RESOLVED
+
+Kiểm chứng bổ sung ngày 24/11/2026. Codex (GPT-6) đối chiếu commit `5bdd390eb926dfe39b591bdfdf9168da9cc35e16` với `8ffaa23`. Trạng thái này áp dụng cho **F1, lỗi whitelist chặn T-KLHD**. Các kết quả trước đây ở trên mô tả DLL cũ.
+
+| Hạng mục | Kết quả |
+|---|---|
+| IL của `RouteStats076::.cctor` | Build cô lập qua bước ILAsm, merger báo `RouteStats076 (1)`. ILDasm trên DLL vừa ráp và DLL release đều xác nhận `ldc.i4.8` cấp phát `string[8]`. Bảy phần tử cũ giữ index 0–6. Sau khi ghi CDS ở index 6, đoạn `ldloc.0 → ldc.i4.7 → ldstr "T-KLHD" → stelem.ref` ghi index 7 trước `stsfld Commands`. Độ sâu đoạn chèn là 0 → 1 → 2 → 3 → 0, đúng `.maxstack 3`. |
+| `Allowed` trong AutoCAD 2021 Core Console R.47.0.0 | Gọi trên bản sao DLL release. `T-KLHD` và cả bảy mục whitelist cũ đều trả `True`. `t-klhd`, mã ngoài danh sách và `null` trả `False`, đúng so sánh ordinal. |
+| Dispatch và LISP | IL giữ đường `Plugin.RouteStatsAction → Queue → Ready/Dispatch`. Sau khi request sẵn sàng và hash LISP khớp, `Dispatch` gửi `"T-KLHD "` bằng `SendStringToExecute(..., false, false, true)`. Trong Core Console trên bản vẽ trắng, phép thử nạp LISP release và dựng request sẵn sàng bằng reflection, rồi gọi `Dispatch` thật. Trace ghi `ROUTE-SENT=True`, `LispWillStart` ghi `(C:T-KLHD)`, và AutoCAD hiện lời nhắc chọn đối tượng của `c:BKL_CAP`. Console được dừng sau khi ghi nhận lời nhắc. Phép thử gọi trực tiếp `T-KLHD` riêng cũng vào `c:BKL_CAP` và báo bản vẽ trắng không có đối tượng phù hợp. |
+| Chín lệnh gốc | ILDasm trước/sau khớp ở constructor menu, `RouteClicked`, `RouteStatsAction`, `Allowed`, `Queue`, `Ready` và `Dispatch`. Sáu lệnh RouteStats gốc vẫn được phép. Ba nhánh riêng giữ nguyên thân entry point: `STTPHA → NumberPhase076.Queue`, `CDS → CdsTable155.Start` và `T-VEDAYPL → VedayPl155.Start`. CDS cũng giữ index 6 trong whitelist. |
+
+SHA-256 DLL release đã kiểm là `21236A4BE3B44543815399FF29D951DA6DCCC93E250AD356B07B939F90273BB5`, khớp manifest. Build và thử CAD dùng bản sao cô lập. `git diff HEAD -- products/meps/release` rỗng.
+
+`npm.cmd run type-check` đạt. `npm.cmd test` qua 19/19 unit test và trả exit 1 ở workflow checker do các hồ sơ TASK-0018, TASK-0019 và TASK-0020.
+
+Nghiệm thu toàn TASK-0025 vẫn **BLOCKED**. Phép thử dispatch dùng request sẵn sàng, nên lượt bấm Palette với chu trình nạp LISP từ đầu, thực thi nghiệp vụ của mười mục trên fixture, các finding F2–F5 và phê duyệt chủ sở hữu vẫn cần xử lý. Điểm dò IL trong merger vẫn phụ thuộc văn bản IL nền. Khi thay IL nền, kiểm số lần vá, mảng sau khi ráp và kết quả dispatch trên fixture.
 
 ## Phạm vi và truy xuất
 
