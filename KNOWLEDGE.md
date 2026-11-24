@@ -25,3 +25,8 @@
 - **Quy tắc**: Test phải bao phủ Explode, vị trí X/Y, vị trí stem, refresh lặp và các góc thuận/ngược.
 - **Bằng chứng**: TASK-0016 đã phát hiện test rotation-only không đủ.
 - **Regression**: Không gọi PASS nếu chỉ kiểm tra Rotation 90°.
+
+### MEPS / Palette: kiểm cả callback và dispatch
+
+- **Bằng chứng** TASK-0025, commit `4864292eb24a69bcf0b2e6763a9c1762db71a263`. WinForms gọi đúng callback cho 10/10 mục, trong khi IL của cả hai DLL cho thấy `T-KLHD` bị bộ lọc dispatch từ chối. [Báo cáo](DOCS/tasks/TASK-0025-codex-verification-report.md)
+- **Test hồi quy cần có** Dùng fixture AutoCAD để bấm từng mục và xác nhận lệnh chạy đúng một lần. Đo cả nhãn và vùng vẽ của nút sau khi hook layout chạy.

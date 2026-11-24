@@ -1,0 +1,183 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0025",
+  "title": "Modernize MEPS Palette UI and Dropdown Menus",
+  "status": "BLOCKED",
+  "module": "meps",
+  "risk": "high",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "tuvanxdbg-crypto (tác giả commit Git)",
+  "reviewer": "Codex (GPT-6)",
+  "base_commit": "e89e5b943a2a94593f95c93c208731b9ee33fd99",
+  "result_commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+  "branch": "task/TASK-0025-meps-palette-redesign",
+  "verification_branch": "task/TASK-0025-codex-verification",
+  "scope": [
+    "Bố cục Palette, dropdown và 10 mục Route"
+  ],
+  "out_of_scope": [
+    "Sửa mã sản phẩm, cài đặt và phát hành"
+  ],
+  "sources": [
+    "DOCS/tasks/TASK-0025-spec.md",
+    "DOCS/tasks/TASK-0025-codex-verification-report.md"
+  ],
+  "missing_inputs": [
+    "Bằng chứng thử nghiệp vụ và UI trong AutoCAD 2021",
+    "Nghiệm thu của chủ sở hữu"
+  ],
+  "acceptance_criteria": [
+    "10 mục thực thi đúng lệnh",
+    "Nhãn hiển thị đầy đủ",
+    "Dropdown đạt thiết kế trong host"
+  ],
+  "required_checks": [
+    "build_v4 isolated",
+    "IL + WinForms 10 callbacks",
+    "T-KLHD dispatch",
+    "WinForms label measurement",
+    "npm type-check",
+    "workflow:check",
+    "AutoCAD 2021 native"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4 isolated",
+      "status": "PASS",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "IL + WinForms 10 callbacks",
+      "status": "PASS",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "T-KLHD dispatch",
+      "status": "FAIL",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "WinForms label measurement",
+      "status": "FAIL",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "npm type-check",
+      "status": "PASS",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "workflow:check",
+      "status": "FAIL",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    },
+    {
+      "check": "AutoCAD 2021 native",
+      "status": "BLOCKED",
+      "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+      "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+    }
+  ],
+  "review": {
+    "task_id": "TASK-0025",
+    "reviewed_commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+    "reviewer": "Codex",
+    "model": "GPT-6",
+    "independent": true,
+    "verdict": "CHANGES_REQUESTED",
+    "findings": [
+      {
+        "id": "F1",
+        "status": "open",
+        "severity": "high",
+        "summary": "T-KLHD bị từ chối ở dispatch"
+      },
+      {
+        "id": "F2",
+        "status": "open",
+        "severity": "high",
+        "summary": "Nhãn vượt vùng vẽ tại 96 DPI"
+      },
+      {
+        "id": "F3",
+        "status": "open",
+        "severity": "medium",
+        "summary": "Dropdown có phạm vi và kích thước cố định"
+      },
+      {
+        "id": "F4",
+        "status": "open",
+        "severity": "medium",
+        "summary": "Trạng thái menu và vòng đời font"
+      },
+      {
+        "id": "F5",
+        "status": "open",
+        "severity": "medium",
+        "summary": "Build/merge thiếu điều kiện dừng khi lỗi"
+      }
+    ],
+    "evidence": [
+      {
+        "check": "build_v4 isolated",
+        "status": "PASS",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "IL + WinForms 10 callbacks",
+        "status": "PASS",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "T-KLHD dispatch",
+        "status": "FAIL",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "WinForms label measurement",
+        "status": "FAIL",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "npm type-check",
+        "status": "PASS",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "workflow:check",
+        "status": "FAIL",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      },
+      {
+        "check": "AutoCAD 2021 native",
+        "status": "BLOCKED",
+        "commit": "4864292eb24a69bcf0b2e6763a9c1762db71a263",
+        "reference": "DOCS/tasks/TASK-0025-codex-verification-report.md"
+      }
+    ],
+    "limitations": [
+      "Chưa chạy nghiệp vụ trong AutoCAD 2021",
+      "WinForms đo tại 96 DPI"
+    ]
+  },
+  "approval": null,
+  "release": null,
+  "changed_files": [
+    "DOCS/tasks/TASK-0025-codex-verification-report.md",
+    "work-items/TASK-0025.json",
+    "KNOWLEDGE.md"
+  ],
+  "next_action": "Xử lý finding và chạy test native trên fixture tổng hợp."
+}
