@@ -3,6 +3,7 @@
 ; nối nhau trong 0.25 m để chấp nhận sai lệch điểm bắt trên bản vẽ mẫu.
 ; Nhãn hộ/cáp chiếu theo X tối đa 2 m tới nút lô. Nhãn cáp nằm giữa tuyến và nhãn hộ.
 ; Với lô ngay tủ, lấy Dim rẽ nhánh tại nút làm chiều dài cột D.
+(vl-load-com)
 
 (defun bklcap:trim (s)
   (vl-string-trim (strcat " " (chr 9) (chr 10) (chr 13)) s))
@@ -326,6 +327,48 @@
     (setq i (1+ i)))
   line)
 
+(defun bklcap:format-xlsx (csvPath xlsxPath / psScript psFile wsh cmd)
+  (setq psFile (strcat (getvar "TEMPPREFIX") "bkl_format_excel.ps1"))
+  (setq psScript (open psFile "w"))
+  (if psScript
+    (progn
+      (write-line "$csvPath = $args[0]" psScript)
+      (write-line "$xlsxPath = $args[1]" psScript)
+      (write-line "$excel = New-Object -ComObject Excel.Application" psScript)
+      (write-line "$excel.Visible = $false; $excel.DisplayAlerts = $false" psScript)
+      (write-line "try {" psScript)
+      (write-line "  $wb = $excel.Workbooks.Open($csvPath)" psScript)
+      (write-line "  $ws = $wb.Sheets.Item(1)" psScript)
+      (write-line "  $lastRow = $ws.UsedRange.Rows.Count" psScript)
+      (write-line "  $ws.Cells.Font.Name = 'Times New Roman'" psScript)
+      (write-line "  $ws.Cells.Font.Size = 11" psScript)
+      (write-line "  $widths = @(7, 16, 14, 12, 12, 12, 12, 13, 8, 8, 13, 13, 13, 13)" psScript)
+      (write-line "  for ($i = 0; $i -lt 14; $i++) { $ws.Columns.Item($i+1).ColumnWidth = $widths[$i] }" psScript)
+      (write-line "  $ws.Rows.Item(1).RowHeight = 32" psScript)
+      (write-line "  $title = $ws.Range('A1:N1'); $title.Merge(); $title.Font.Size = 13; $title.Font.Bold = $true; $title.HorizontalAlignment = -4108; $title.VerticalAlignment = -4108" psScript)
+      (write-line "  $ws.Rows.Item(2).RowHeight = 45; $ws.Rows.Item(3).RowHeight = 25; $ws.Rows.Item(4).RowHeight = 15" psScript)
+      (write-line "  foreach ($m in @('A2:A4','B2:B4','C2:C4','D2:D4','E2:E4','F2:F4','G2:G4','H2:H4','I2:I4','J2:J4','K2:L2','K3:K4','L3:L4','M2:N2','M3:M4','N3:N4')) { $ws.Range($m).Merge() }" psScript)
+      (write-line "  $h = $ws.Range('A2:N4'); $h.Font.Bold = $true; $h.WrapText = $true; $h.HorizontalAlignment = -4108; $h.VerticalAlignment = -4108" psScript)
+      (write-line "  $ws.Rows.Item(5).RowHeight = 22; $ws.Range('A5:N5').Merge(); $s5 = $ws.Range('A5:N5'); $s5.Font.Bold = $true; $s5.HorizontalAlignment = -4131; $s5.VerticalAlignment = -4108" psScript)
+      (write-line "  $ws.Rows.Item(6).RowHeight = 20; $ws.Range('A6:N6').Merge(); $s6 = $ws.Range('A6:N6'); $s6.Font.Bold = $true; $s6.HorizontalAlignment = -4131; $s6.VerticalAlignment = -4108" psScript)
+      (write-line "  if ($lastRow -ge 7) {" psScript)
+      (write-line "    $d = $ws.Range('A7:N' + $lastRow); $d.HorizontalAlignment = -4108; $d.VerticalAlignment = -4108" psScript)
+      (write-line "    for ($r = 7; $r -le $lastRow; $r++) { $ws.Rows.Item($r).RowHeight = 18 }" psScript)
+      (write-line "    $ws.Rows.Item(7).Font.Bold = $true" psScript)
+      (write-line "  }" psScript)
+      (write-line "  $table = $ws.Range('A2:N' + $lastRow)" psScript)
+      (write-line "  $table.Borders.LineStyle = 1; $table.Borders.Weight = 2" psScript)
+      (write-line "  $wb.SaveAs($xlsxPath, 51)" psScript)
+      (write-line "  $wb.Close($false)" psScript)
+      (write-line "} finally { $excel.Quit(); [System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel) | Out-Null }" psScript)
+      (close psScript)
+      (if (setq wsh (vlax-get-or-create-object "WScript.Shell"))
+        (progn
+          (setq cmd (strcat "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File \"" psFile "\" \"" csvPath "\" \"" xlsxPath "\""))
+          (vlax-invoke-method wsh 'Run cmd 0 :vlax-true)
+          (vlax-release-object wsh)
+          (findfile xlsxPath))))))
+
 (defun bklcap:export (path rows / *error* stream row format)
   (defun *error* (message)
     (if stream (close stream))
@@ -346,7 +389,7 @@
     (if validation-message validation-message (vl-catch-all-error-message result))
     result))
 
-(defun c:BKL_CAP (/ filter selection result path)
+(defun c:BKL_CAP (/ filter selection result path csvPath xlsxPath ext totalHouses)
   (if (not (equal (ascii "Đ") 272))
     (princ "\nBKL_CAP: Dùng AutoCAD 2021 trở lên. Đặt LISPSYS bằng 1 rồi khởi động lại AutoCAD.")
     (progn
@@ -360,12 +403,21 @@
         ((= (type (setq result (bklcap:build selection))) 'STR)
          (princ (strcat "\nBKL_CAP: " result)))
         ((setq path (getfiled "Lưu bảng bóc tách cáp điện"
-                      (strcat (getvar "DWGPREFIX") "BKL_CAP_DIEN.csv") "csv" 1))
-         (if (bklcap:export path (bklcap:rows result))
-           (princ (strcat "\nBKL_CAP: Đã xuất "
-                          (itoa (apply '+ (mapcar '(lambda (g) (length (cdr g))) result)))
-                          " hộ vào " path))
-           (princ "\nBKL_CAP: Không ghi được CSV."))))))
+                      (strcat (getvar "DWGPREFIX") "BKL_CAP_DIEN.xlsx") "xlsx;csv" 1))
+         (setq ext (strcase (substr path (- (strlen path) 3))))
+         (if (= ext "XLSX")
+           (setq xlsxPath path
+                 csvPath (strcat (substr path 1 (- (strlen path) 5)) ".csv"))
+           (setq csvPath path
+                 xlsxPath (strcat (substr path 1 (- (strlen path) 4)) ".xlsx")))
+         (if (bklcap:export csvPath (bklcap:rows result))
+           (progn
+             (bklcap:format-xlsx csvPath xlsxPath)
+             (setq totalHouses (itoa (apply '+ (mapcar '(lambda (g) (length (cdr g))) result))))
+             (princ (strcat "\nBKL_CAP: Đã xuất " totalHouses " hộ vào file Excel định dạng chuẩn:"))
+             (princ (strcat "\n  -> " xlsxPath))
+             (princ (strcat "\n  -> " csvPath)))
+           (princ "\nBKL_CAP: Không ghi được file."))))))
   (princ))
 
 (defun c:BKLCAP () (c:BKL_CAP))
