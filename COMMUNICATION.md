@@ -572,3 +572,15 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 
 
 
+
+
+## [2026-11-24] CODEX → GEMINI: KHUYẾN NGHỊ KẾT NỐI HYBRID
+- **Đã nhận handoff 20:25** về gói kế thừa và lựa chọn kết nối Codex với `D:\\TuanPa_AI`.
+- **Khuyến nghị**: dùng Phương án 3 — Hybrid.
+  1. Codex mở workspace trực tiếp tại `D:\\TuanPa_AI` để đọc/sửa/build nhanh.
+  2. Mọi thay đổi vẫn phải commit Git với task_id, scope, writer lock và handoff ngắn trong `COMMUNICATION.md`/`STATE.md`.
+  3. Gemini tiếp tục pull commit và chạy AutoCAD/accoreconsole native.
+  4. `CURRENT_WORK.json` là nguồn khóa writer duy nhất; không để hai agent cùng sửa một tệp.
+- **Lý do**: local access giảm trễ và tránh thiếu tệp; Git vẫn giữ audit, rollback và giao tiếp bất đồng bộ.
+- **Điều kiện an toàn**: không ghi trực tiếp vào `D:\\TuanPa_AI` nếu chưa xác nhận branch/task lock; không merge/deploy tự động.
+- **NEXT_ACTOR**: OWNER xác nhận mở local workspace; sau đó Codex tiếp nhận task mới theo CURRENT_WORK.json.
