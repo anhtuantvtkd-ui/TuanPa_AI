@@ -108,7 +108,7 @@
                    (> (atoi number) 0)))
        (bklcap:fail (strcat "Số nhà không hợp lệ: " s)))
      (list 'house p (atoi number) (strcat "Số nhà " number)))
-    ((and (wcmatch key "DSTA *") (not (vl-string-search ":" key)))
+    ((and (or (wcmatch key "DSTA *") (wcmatch key "HDPE *")) (not (vl-string-search ":" key)))
      (setq cut (vl-string-search "(" key))
      (if (and cut (setq close-tag (vl-string-search ")" key (1+ cut))))
        (setq cabinet-tag (bklcap:trim (substr s (+ cut 2) (- close-tag cut 1)))))
@@ -117,7 +117,8 @@
                  (vl-list->string
                    (vl-remove 32 (vl-string->list (if cut (substr key 1 cut) key))))))
      (setq phase (cond ((= key "DSTA2X10") 1)
-                       ((member key '("DSTA16" "DSTA3X16+1X10")) 3)))
+                       ((member key '("DSTA16" "DSTA3X16+1X10")) 3)
+                       ((wcmatch key "HDPE*") 0)))
      (list 'cable p phase s cabinet-tag))))
 
 (defun bklcap:collect (selection / i entity data kind record a b mode main branches cabinets houses cables)
@@ -229,7 +230,7 @@
                (< (* (- (cadar cable) (cadar node)) (- (cadar cable) (cadr p))) 0.0))
         (setq candidates (cons cable candidates))))
     (setq label (bklcap:nearest p candidates 'bklcap:x-gap))
-    (if (or (not label) (not (cadr label)) (member label prior))
+    (if (or (not label) (null (cadr label)) (member label prior))
       (bklcap:fail (strcat "Thiếu, trùng hoặc sai chủng loại nhãn cáp: " (caddr house))))
     (setq cab (bklcap:serving-cabinet node chain cab-nodes label))
     (if (not cab) (bklcap:fail (strcat "Không xác định được tủ: " (caddr house))))
@@ -254,16 +255,36 @@
       (setq result (strcat "=" result))))
   result)
 
-(defun bklcap:detail (house row-number / r single total)
-  ; Book1.xlsx A:N, hàng chi tiết. Các phần bù E:G đều tính theo mét.
-  (setq r (itoa row-number) single (= (nth 3 house) 1)
+(defun bklcap:detail (house row-number / r phase total meter1 meter3 hdpe40 hdpe50 hdpeSpare cap3 cap1)
+  ; BKL_CAP_DIEN.xlsx A:O, hàng chi tiết (15 cột). Các phần bù E:G đều tính theo mét.
+  (setq r (itoa row-number)
+        phase (nth 3 house)
         total (strcat "D" r "+E" r "+F" r "+G" r))
+  (cond
+    ((= phase 1)
+     (setq meter1 "1" meter3 ""
+           hdpe40 (strcat "=" total "-2")
+           hdpe50 (strcat "=N" r "-J" r)
+           hdpeSpare ""
+           cap3 (strcat "=(" total ")*J" r)
+           cap1 (strcat "=(" total ")*I" r)))
+    ((= phase 3)
+     (setq meter1 "" meter3 "1"
+           hdpe40 "0"
+           hdpe50 (strcat "=N" r "-2")
+           hdpeSpare ""
+           cap3 (strcat "=(" total ")*J" r)
+           cap1 (strcat "=(" total ")*I" r)))
+    (T ; phase = 0: chỉ có ống HDPE 50/40 (chờ dây)
+     (setq meter1 "0" meter3 ""
+           hdpe40 "0"
+           hdpe50 (strcat "=N" r "-J" r)
+           hdpeSpare (strcat "=" total "-2")
+           cap3 (strcat "=(" total ")*J" r)
+           cap1 (strcat "=(" total ")*I" r))))
   (list "" "" (cadr house) (bklcap:sum-formula (caddr house))
         "2" "=0.7+1.5" "3" (if (= (rem (car house) 2) 1) (strcat "=E" r) "0")
-        (if single "1" "") (if single "" "1")
-        (if single (strcat "=" total "-2") "0")
-        (if single (strcat "=M" r "-J" r) (strcat "=M" r "-2"))
-        (strcat "=(" total ")*J" r) (strcat "=(" total ")*I" r)))
+        meter1 meter3 hdpe40 hdpe50 hdpeSpare cap3 cap1))
 
 (defun bklcap:rows (groups / rows index row-number group houses house)
   (setq rows '(("DIỄN GIẢI KHỐI LƯỢNG ĐƯỜNG DÂY 0,4KV SINH HOẠT CẤP ĐẾN HỘ DÂN")
@@ -271,8 +292,8 @@
                 "Từ rãnh cáp đến đầu lô đất" "Lên xuống rãnh cáp"
                 "Lên điểm đấu vào nhà hiện trạng + dự phòng"
                 "rãnh cáp từ trục chính đến hộ dân (m)"
-                "Số công tơ 1F\n (2x10mm2)" "Số công tơ 3F (3x16+1x10)" "Ống HDPE gân xoắn")
-               ("" "" "" "" "" "" "" "" "" "" "40/30 (DSTA 10)" "50/40 (DSTA 16)" "3x16+1x10" "2x10")
+                "Số công tơ 1F\n (2x10mm2)" "Số công tơ 3F (3x16+1x10)" "Ống HDPE gân xoắn" "" "" "" "")
+               ("" "" "" "" "" "" "" "" "" "" "40/30 (DSTA 10)" "50/40 (DSTA 16)" "50/40 (Chờ ống)" "3x16+1x10" "2x10")
                ()
                ("A. ĐƯỜNG DÂY 0,4KV SINH HOẠT HOÀN TRẢ SAU TBA ")
                ("LỘ I"))
@@ -316,7 +337,7 @@
 
 (defun bklcap:csv-line (cells separator decimal / i line value)
   (setq i 0 line "")
-  (repeat 14
+  (repeat 15
     (if (> i 0) (setq line (strcat line separator)))
     (if cells
       (progn
@@ -332,8 +353,8 @@
   (setq psScript (open psFile "w"))
   (if psScript
     (progn
-      (write-line "$csvPath = $args[0]" psScript)
-      (write-line "$xlsxPath = $args[1]" psScript)
+      (write-line "$csvPath = [System.IO.Path]::GetFullPath($args[0])" psScript)
+      (write-line "$xlsxPath = [System.IO.Path]::GetFullPath($args[1])" psScript)
       (write-line "$excel = New-Object -ComObject Excel.Application" psScript)
       (write-line "$excel.Visible = $false; $excel.DisplayAlerts = $false" psScript)
       (write-line "try {" psScript)
@@ -342,21 +363,23 @@
       (write-line "  $lastRow = $ws.UsedRange.Rows.Count" psScript)
       (write-line "  $ws.Cells.Font.Name = 'Times New Roman'" psScript)
       (write-line "  $ws.Cells.Font.Size = 11" psScript)
-      (write-line "  $widths = @(7, 16, 14, 12, 12, 12, 12, 13, 8, 8, 13, 13, 13, 13)" psScript)
-      (write-line "  for ($i = 0; $i -lt 14; $i++) { $ws.Columns.Item($i+1).ColumnWidth = $widths[$i] }" psScript)
+      (write-line "  $widths = @(7, 16, 14, 12, 12, 12, 12, 13, 8, 8, 13, 13, 13, 13, 13)" psScript)
+      (write-line "  for ($i = 0; $i -lt 15; $i++) { $ws.Columns.Item($i+1).ColumnWidth = $widths[$i] }" psScript)
       (write-line "  $ws.Rows.Item(1).RowHeight = 32" psScript)
-      (write-line "  $title = $ws.Range('A1:N1'); $title.Merge(); $title.Font.Size = 13; $title.Font.Bold = $true; $title.HorizontalAlignment = -4108; $title.VerticalAlignment = -4108" psScript)
+      (write-line "  $title = $ws.Range('A1:O1'); $title.Merge(); $title.Font.Size = 13; $title.Font.Bold = $true; $title.HorizontalAlignment = -4108; $title.VerticalAlignment = -4108" psScript)
       (write-line "  $ws.Rows.Item(2).RowHeight = 45; $ws.Rows.Item(3).RowHeight = 25; $ws.Rows.Item(4).RowHeight = 15" psScript)
-      (write-line "  foreach ($m in @('A2:A4','B2:B4','C2:C4','D2:D4','E2:E4','F2:F4','G2:G4','H2:H4','I2:I4','J2:J4','K2:L2','K3:K4','L3:L4','M2:N2','M3:M4','N3:N4')) { $ws.Range($m).Merge() }" psScript)
-      (write-line "  $h = $ws.Range('A2:N4'); $h.Font.Bold = $true; $h.WrapText = $true; $h.HorizontalAlignment = -4108; $h.VerticalAlignment = -4108" psScript)
-      (write-line "  $ws.Rows.Item(5).RowHeight = 22; $ws.Range('A5:N5').Merge(); $s5 = $ws.Range('A5:N5'); $s5.Font.Bold = $true; $s5.HorizontalAlignment = -4131; $s5.VerticalAlignment = -4108" psScript)
-      (write-line "  $ws.Rows.Item(6).RowHeight = 20; $ws.Range('A6:N6').Merge(); $s6 = $ws.Range('A6:N6'); $s6.Font.Bold = $true; $s6.HorizontalAlignment = -4131; $s6.VerticalAlignment = -4108" psScript)
+      (write-line "  foreach ($m in @('A2:A4','B2:B4','C2:C4','D2:D4','E2:E4','F2:F4','G2:G4','H2:H4','I2:I4','J2:J4','K2:M2','K3:K4','L3:L4','M3:M4','N2:O2','N3:N4','O3:O4')) { $ws.Range($m).Merge() }" psScript)
+      (write-line "  $h = $ws.Range('A2:O4'); $h.Font.Bold = $true; $h.WrapText = $true; $h.HorizontalAlignment = -4108; $h.VerticalAlignment = -4108" psScript)
+      (write-line "  $ws.Rows.Item(5).RowHeight = 22; $ws.Range('A5:O5').Merge(); $s5 = $ws.Range('A5:O5'); $s5.Font.Bold = $true; $s5.HorizontalAlignment = -4131; $s5.VerticalAlignment = -4108" psScript)
+      (write-line "  $ws.Rows.Item(6).RowHeight = 20; $ws.Range('A6:O6').Merge(); $s6 = $ws.Range('A6:O6'); $s6.Font.Bold = $true; $s6.HorizontalAlignment = -4131; $s6.VerticalAlignment = -4108" psScript)
       (write-line "  if ($lastRow -ge 7) {" psScript)
-      (write-line "    $d = $ws.Range('A7:N' + $lastRow); $d.HorizontalAlignment = -4108; $d.VerticalAlignment = -4108" psScript)
-      (write-line "    for ($r = 7; $r -le $lastRow; $r++) { $ws.Rows.Item($r).RowHeight = 18 }" psScript)
-      (write-line "    $ws.Rows.Item(7).Font.Bold = $true" psScript)
+      (write-line "    $d = $ws.Range('A7:O' + $lastRow); $d.HorizontalAlignment = -4108; $d.VerticalAlignment = -4108" psScript)
+      (write-line "    for ($r = 7; $r -le $lastRow; $r++) {" psScript)
+      (write-line "      $ws.Rows.Item($r).RowHeight = 18" psScript)
+      (write-line "      if ($ws.Cells.Item($r, 1).Text -ne '') { $ws.Rows.Item($r).Font.Bold = $true }" psScript)
+      (write-line "    }" psScript)
       (write-line "  }" psScript)
-      (write-line "  $table = $ws.Range('A2:N' + $lastRow)" psScript)
+      (write-line "  $table = $ws.Range('A2:O' + $lastRow)" psScript)
       (write-line "  $table.Borders.LineStyle = 1; $table.Borders.Weight = 2" psScript)
       (write-line "  $wb.SaveAs($xlsxPath, 51)" psScript)
       (write-line "  $wb.Close($false)" psScript)
@@ -365,7 +388,7 @@
       (if (setq wsh (vlax-get-or-create-object "WScript.Shell"))
         (progn
           (setq cmd (strcat "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File \"" psFile "\" \"" csvPath "\" \"" xlsxPath "\""))
-          (vlax-invoke-method wsh 'Run cmd 0 :vlax-true)
+          (vlax-invoke-method wsh 'Run cmd 0 1)
           (vlax-release-object wsh)
           (findfile xlsxPath))))))
 
@@ -420,6 +443,8 @@
            (princ "\nBKL_CAP: Không ghi được file."))))))
   (princ))
 
+(defun c:T-KLHD () (c:BKL_CAP))
+(defun c:T_KLHD () (c:BKL_CAP))
 (defun c:BKLCAP () (c:BKL_CAP))
 
 (princ)
