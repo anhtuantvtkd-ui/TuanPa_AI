@@ -30,8 +30,13 @@ namespace Tvxd.Meps
 
     public class TagApply033
     {
-        public int modified;
+        public bool changed;
+        public bool warn;
         public int created;
+        public int updated;
+        public int unchanged;
+        public string message;
+        public int modified { get { return updated; } }
         public int deleted;
     }
 
@@ -240,24 +245,95 @@ namespace Tvxd.Meps
 
         public static TagApply033 Apply(Database db, TagSnapshot033 snap, IList<TagSeqRow073> plan, double height, Action<string> guard)
         {
-            if (snap == null || plan == null || plan.Count != snap.items.Count)
+            if (db == null || snap == null || plan == null || plan.Count != snap.items.Count)
                 throw new InvalidOperationException("Bảng đánh số không khớp lựa chọn; bản vẽ không đổi.");
             var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var row in plan)
             {
                 if (row == null || row.id == null || dict.ContainsKey(row.id))
                     throw new InvalidOperationException("Bảng đánh số có block trùng/thiếu; bản vẽ không đổi.");
+                if (string.IsNullOrWhiteSpace(row.newText))
+                    throw new InvalidOperationException("Block " + row.id + " thiếu số mới; bản vẽ không đổi.");
                 dict[row.id] = row.newText;
             }
-            var texts = new List<string>();
-            foreach (var item in snap.items)
+
+            const string primaryTag = "TVXD_LABEL_033";
+            const string alternateTag = "TVXD_LABEL_033_1";
+            var result = new TagApply033();
+            int deletedCount = 0;
+            using (var tr = db.TransactionManager.StartTransaction())
             {
-                string text;
-                if (!dict.TryGetValue(item.handle, out text))
-                    throw new InvalidOperationException("Block " + item.handle + " không có trong bảng đánh số; bản vẽ không đổi.");
-                texts.Add(text);
+                foreach (var item in snap.items)
+                {
+                    string text;
+                    if (!dict.TryGetValue(item.handle, out text))
+                        throw new InvalidOperationException("Block " + item.handle + " không có trong bảng đánh số; bản vẽ không đổi.");
+
+                    var br = tr.GetObject(item.owner, OpenMode.ForWrite) as BlockReference;
+                    if (br == null)
+                        throw new InvalidOperationException("Block không hợp lệ: " + item.handle);
+
+                    var labels = new List<AttributeReference>();
+                    foreach (ObjectId id in br.AttributeCollection)
+                    {
+                        if (id.IsErased) continue;
+                        var ar = tr.GetObject(id, OpenMode.ForRead) as AttributeReference;
+                        if (ar != null && (string.Equals(ar.Tag, primaryTag, StringComparison.OrdinalIgnoreCase) ||
+                                           string.Equals(ar.Tag, alternateTag, StringComparison.OrdinalIgnoreCase)))
+                            labels.Add(ar);
+                    }
+
+                    if (labels.Count == 0)
+                    {
+                        if (!(height > 0) || double.IsInfinity(height))
+                            throw new InvalidOperationException("Cần chiều cao dương để tạo nhãn cho block " + item.handle + ".");
+
+                        var ar = new AttributeReference();
+                        ar.SetDatabaseDefaults(db);
+                        ar.LayerId = br.LayerId;
+                        ar.Tag = primaryTag;
+                        ar.TextString = text;
+                        ar.Height = height;
+                        ar.Position = br.Position;
+                        br.AttributeCollection.AppendAttribute(ar);
+                        tr.AddNewlyCreatedDBObject(ar, true);
+                        result.created++;
+                        continue;
+                    }
+
+                    var first = labels[0];
+                    bool changeHeight = height > 0 && Math.Abs(first.Height - height) > 1e-4;
+                    if (!string.Equals(first.TextString, text, StringComparison.Ordinal) || changeHeight)
+                    {
+                        first.UpgradeOpen();
+                        first.TextString = text;
+                        if (changeHeight) first.Height = height;
+                        if (first.IsMTextAttribute) first.UpdateMTextAttribute();
+                        if (first.Justify != AttachmentPoint.BaseLeft) first.AdjustAlignment(db);
+                        result.updated++;
+                    }
+                    else if (labels.Count == 1)
+                    {
+                        result.unchanged++;
+                    }
+
+                    for (int i = 1; i < labels.Count; i++)
+                    {
+                        var extra = labels[i];
+                        extra.UpgradeOpen();
+                        extra.Erase(true);
+                        deletedCount++;
+                    }
+                }
+
+                if (guard != null) guard("ngay trước khi lưu số thứ tự");
+                tr.Commit();
             }
-            return TagCad033.ApplyTexts(db, snap, texts, height, guard);
+
+            result.changed = result.created > 0 || result.updated > 0 || deletedCount > 0;
+            result.message = string.Format("Đánh số {0} block. Tạo {1} nhãn, sửa {2} nhãn, xóa {3} nhãn thừa.",
+                snap.items.Count, result.created, result.updated, deletedCount);
+            return result;
         }
     }
 }

@@ -503,7 +503,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = s.Height;
+                mls.DoglegLength = 0.001;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -521,7 +521,7 @@ namespace Tvxd.Meps {
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
                 mls.EnableDogleg = true;
-                mls.DoglegLength = s.Height;
+                mls.DoglegLength = 0.001;
                 mls.LandingGap = s.Height * 0.1;
                 mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
@@ -623,7 +623,7 @@ namespace Tvxd.Meps {
                 ml.AddLastVertex(leaderLineIndex, landingPt);
             } else {
                 ml.EnableDogleg = true;
-                ml.DoglegLength = s.Height;
+                ml.DoglegLength = 0.001;
                 ml.EnableLanding = true;
                 ml.LandingGap = gap;
                 ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
