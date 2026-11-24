@@ -1,0 +1,3 @@
+@echo off
+set CODEX_HOME=D:\.codex
+"C:\Program Files\WindowsApps\OpenAI.Codex_26.1117.4957.0_x64__2p2nqsd0c76g0\app\resources\codex.exe" exec --cd "D:\TuanPa_AI" --model gpt-6.2-sol --sandbox workspace-write --dangerously-bypass-approvals-and-sandbox "Doc file docs/tasks/TASK-0025-spec.md. Phan tich kien truc giao dien CompactView06 va VerticalBoard103 trong products/meps/src/Modules/CompactView06.cs va meps_orig.il. De xuat giai phap gop nut, phoi mau sinh dong hien dai (Dark theme, accent colors), va thiet ke Custom ProfessionalRenderer cho Menu dropdown de hien thi dep mat, khong bi cat chu. Ghi de xuat chi tiet vao docs/tasks/TASK-0025-codex-review.md." < nul

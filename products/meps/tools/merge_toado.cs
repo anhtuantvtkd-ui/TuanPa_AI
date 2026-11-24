@@ -8,6 +8,7 @@ class MergeMeps {
         string toadoPartPath = Path.Combine(baseDir, "ToadoPart.il");
         string vietchuPartPath = Path.Combine(baseDir, "VietchuPart.il");
         string tagSeqPartPath = Path.Combine(baseDir, "TagSeqPart.il");
+        string modernThemePartPath = Path.Combine(baseDir, "ModernThemeEngine.il");
         string mepsOrigPath = Path.Combine(baseDir, @"base\meps_orig.il");
         if (!File.Exists(mepsOrigPath)) mepsOrigPath = Path.Combine(baseDir, "meps_orig.il");
         string mepsFinalPath = Path.Combine(baseDir, "meps_final.il");
@@ -63,6 +64,24 @@ class MergeMeps {
             Console.WriteLine("TagSeq section extracted: " + (tagSeqLines.Length - startTagSeq) + " lines.");
         }
 
+        Console.WriteLine("Reading ModernThemeEngine.il from: " + modernThemePartPath);
+        var modernThemeLines = File.Exists(modernThemePartPath) ? File.ReadAllLines(modernThemePartPath) : new string[0];
+        int startModernTheme = -1;
+        for (int i = 0; i < modernThemeLines.Length; i++) {
+            if (modernThemeLines[i].StartsWith(".class ") && modernThemeLines[i].Contains("Tvxd.Meps.ModernThemeEngine")) {
+                startModernTheme = i;
+                break;
+            }
+        }
+        var newModernThemeSection = new StringBuilder();
+        if (startModernTheme >= 0) {
+            for (int i = startModernTheme; i < modernThemeLines.Length; i++) {
+                if (modernThemeLines[i].StartsWith("// =============================================================")) break;
+                newModernThemeSection.AppendLine(modernThemeLines[i]);
+            }
+            Console.WriteLine("ModernThemeEngine section extracted: " + (modernThemeLines.Length - startModernTheme) + " lines.");
+        }
+
         // Byte replacements for Palette uppercase title and button name
         // 1. "Triển khai và thống kê" -> "TRIỂN KHAI VÀ THỐNG KÊ"
         string origTitle1 = "54 00 72 00 69 00 C3 1E 6E 00 20 00 6B 00 68 00";
@@ -80,6 +99,9 @@ class MergeMeps {
         int replacedToado = 0;
         int replacedVietchu = 0;
         int replacedTagSeq = 0;
+        int injectedModernTheme = 0;
+        int hookedArrangeActions = 0;
+        int replacedSectionHeight = 0;
         int replacedTitles = 0;
         int replacedButtons = 0;
         int nanCount = 0;
@@ -91,6 +113,8 @@ class MergeMeps {
             bool skippingToado = false;
             bool skippingVietchu = false;
             bool skippingTagSeq = false;
+            bool insideArrangeActions = false;
+            bool afterToolbox106 = false;
 
             while ((line = reader.ReadLine()) != null) {
                 // Fix nan and inf
@@ -119,6 +143,35 @@ class MergeMeps {
                 if (line.Contains(origBtnHex)) {
                     line = line.Replace(origBtnHex, newBtnHex);
                     replacedButtons++;
+                }
+
+                // Hook ArrangeActions to apply ModernThemeEngine
+                if (line.Contains("ArrangeActions() cil managed")) {
+                    insideArrangeActions = true;
+                }
+                if (insideArrangeActions && line.Contains("leave.s    IL_039a")) {
+                    writer.WriteLine("      ldarg.0");
+                    writer.WriteLine("      call       void Tvxd.Meps.ModernThemeEngine::ApplyTheme(class [System.Windows.Forms]System.Windows.Forms.Control)");
+                    insideArrangeActions = false;
+                    hookedArrangeActions++;
+                }
+
+                // Expand TRIEN KHAI VA THONG KE section height from 186 (0xba) to 240 (0xf0)
+                if (line.Contains("Tvxd.Meps.CompactView06::Toolbox106")) {
+                    afterToolbox106 = true;
+                }
+                if (afterToolbox106 && line.Contains("ldc.i4     0xba")) {
+                    line = line.Replace("0xba", "0xf0");
+                    afterToolbox106 = false;
+                    replacedSectionHeight++;
+                }
+
+                // Inject ModernThemeEngine before disassembly completion marker
+                if (line.StartsWith("// *********** DISASSEMBLY COMPLETE")) {
+                    if (newModernThemeSection.Length > 0) {
+                        writer.Write(newModernThemeSection.ToString());
+                        injectedModernTheme++;
+                    }
                 }
 
                 // Section replacements
@@ -203,7 +256,7 @@ class MergeMeps {
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Titles ({3}), Buttons ({4}), Fixed nan ({5}), inf ({6}).",
-            replacedToado, replacedVietchu, replacedTagSeq, replacedTitles, replacedButtons, nanCount, infCount));
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}).",
+            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount));
     }
 }
