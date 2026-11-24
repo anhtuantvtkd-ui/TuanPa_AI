@@ -33,21 +33,29 @@ if (Test-Path "D:\OneDrive\TuanPa_AI\OUTPUT") {
 }
 
 # Directly update AutoCAD LocalAppData
-if (Test-Path (Split-Path $appDataDll)) {
+$appDataDir = Split-Path $appDataDll
+$appDataLsp = Join-Path $appDataDir "RouteStats076.lsp"
+if (Test-Path $appDataDir) {
     Copy-Item -Path "$src\MEPS060\TVXD.Meps.dll" -Destination $appDataDll -Force
-    Write-Host "Directly updated $appDataDll"
+    Copy-Item -Path "$src\MEPS060\RouteStats076.lsp" -Destination $appDataLsp -Force
+    Copy-Item -Path "$src\MEPS060\RELEASE.json" -Destination (Join-Path $appDataDir "RELEASE.json") -Force
+    Write-Host "Directly updated $appDataDir (DLL, RouteStats076.lsp, RELEASE.json)"
 }
 
 Write-Host "Verifying hashes:"
 $hSrc = (Get-FileHash -Algorithm SHA256 "$src\MEPS060\TVXD.Meps.dll").Hash
 $hOut23 = (Get-FileHash -Algorithm SHA256 "$out23\MEPS060\TVXD.Meps.dll").Hash
 $hApp = (Get-FileHash -Algorithm SHA256 $appDataDll).Hash
+$hLspSrc = (Get-FileHash -Algorithm SHA256 "$src\MEPS060\RouteStats076.lsp").Hash
+$hLspApp = (Get-FileHash -Algorithm SHA256 $appDataLsp).Hash
 
-Write-Host "SRC:     $hSrc"
-Write-Host "OUT23:   $hOut23"
-Write-Host "APPDATA: $hApp"
+Write-Host "DLL SRC:     $hSrc"
+Write-Host "DLL OUT23:   $hOut23"
+Write-Host "DLL APPDATA: $hApp"
+Write-Host "LSP SRC:     $hLspSrc"
+Write-Host "LSP APPDATA: $hLspApp"
 
-if ($hSrc -eq $hOut23 -and $hSrc -eq $hApp) {
+if ($hSrc -eq $hOut23 -and $hSrc -eq $hApp -and $hLspSrc -eq $hLspApp) {
     Write-Host "SUCCESS: V23 Deployment hashes match identically!"
 } else {
     Write-Host "WARNING: Hash mismatch detected!"
