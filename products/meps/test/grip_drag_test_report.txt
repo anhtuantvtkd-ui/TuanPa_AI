@@ -1,0 +1,79 @@
+﻿Redirect stdout (file: C:\Users\ADMIN\AppData\Local\Temp\accc214402).
+AcCoreConsole: StdOutConsoleMode: processed-output: disabled,auto
+AutoCAD Core Engine Console - Copyright 2020 Autodesk, Inc.  All rights reserved. (R.47.0.0)
+
+Execution Path:
+C:\Program Files\Autodesk\AutoCAD 2021\accoreconsole.exe
+
+Version Number: R.47.0.0 (UNICODE)
+CoreHeartBeat
+Regenerating model.
+
+**** System Variable Changed ****
+2 of the monitored system variables have changed from the preferred value. Use SYSVARMONITOR command to view changes.
+
+
+Command:
+Command:
+
+Command:
+Command: SECURELOAD
+Enter new value for SECURELOAD <0>: 0
+
+Command: NETLOAD Assembly file name: "D:/TuanPa_AI/products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll"
+
+Command: NETLOAD Assembly file name: "D:/TuanPa_AI/products/meps/test/GripDragTest.dll"
+
+Command: GRIP_DRAG_TEST
+
+==================================================================
+   AUTOMATED CAD TEST: GRIP DRAG & 360-DEGREE FLIP STABILITY
+==================================================================
+
+--- Case 1: Initial Placement Q1 (Up-Right) ---
+  Target=(100,100), Landing=(120,115), IsRight=True
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=115.45 > LandY=115 > LineY_MaxY=113.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+--- Case 2: Grip Drag to Q2 (Up-Left, horizontal flip) ---
+  Target=(100,100), Landing=(80,120), IsRight=False
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=120.45 > LandY=120 > LineY_MaxY=118.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+--- Case 3: Grip Drag to Q3 (Down-Left, diagonal flip) ---
+  Target=(100,100), Landing=(75,85), IsRight=False
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=85.45 > LandY=85 > LineY_MaxY=83.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+--- Case 4: Grip Drag to Q4 (Down-Right, horizontal flip) ---
+  Target=(100,100), Landing=(125,80), IsRight=True
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=80.45 > LandY=80 > LineY_MaxY=78.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+--- Case 5: Grip Drag to Slanted Near-Axis (dx=5, dy=25) ---
+  Target=(100,100), Landing=(105,125), IsRight=True
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=125.45 > LandY=125 > LineY_MaxY=123.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+--- Case 6: Grip Drag to Slanted Near-Axis Left (dx=-5, dy=-25) ---
+  Target=(100,100), Landing=(95,75), IsRight=False
+  Background Transparent: PASS
+  Dogleg Elbow (len=3.75): PASS
+  Separator Check: LineX_MinY=75.45 > LandY=75 > LineY_MaxY=73.82 => UnderlineBetween=True => PASS
+  ==> Verdict: PASS
+
+>>> GRIP DRAG TEST SUMMARY: 6/6 CASES PASSED 100% <<<
+
+Command: _.QUIT _Y
+Really want to discard all changes to drawing? <N> _Y
+

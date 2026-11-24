@@ -2,10 +2,13 @@ using System;
 using System.IO;
 using System.Text;
 
-class MergeToado {
+class MergeMeps {
     static void Main() {
         string baseDir = AppDomain.CurrentDomain.BaseDirectory;
         string toadoPartPath = Path.Combine(baseDir, "ToadoPart.il");
+        string vietchuPartPath = Path.Combine(baseDir, "VietchuPart.il");
+        string tagSeqPartPath = Path.Combine(baseDir, "TagSeqPart.il");
+        string modernThemePartPath = Path.Combine(baseDir, "ModernThemeEngine.il");
         string mepsOrigPath = Path.Combine(baseDir, @"base\meps_orig.il");
         if (!File.Exists(mepsOrigPath)) mepsOrigPath = Path.Combine(baseDir, "meps_orig.il");
         string mepsFinalPath = Path.Combine(baseDir, "meps_final.il");
@@ -14,34 +17,105 @@ class MergeToado {
         var toadoLines = File.ReadAllLines(toadoPartPath);
         int startToado = -1;
         for (int i = 0; i < toadoLines.Length; i++) {
-            if (toadoLines[i].StartsWith(".class public auto ansi sealed beforefieldinit Tvxd.Meps.ToadoSettings") ||
-                toadoLines[i].Contains("Tvxd.Meps.ToadoSettings")) {
-                if (toadoLines[i].StartsWith(".class ") && toadoLines[i].Contains("Tvxd.Meps.ToadoSettings")) {
-                    startToado = i;
-                    break;
-                }
+            if (toadoLines[i].StartsWith(".class ") && toadoLines[i].Contains("Tvxd.Meps.ToadoSettings")) {
+                startToado = i;
+                break;
             }
         }
-        if (startToado < 0) {
-            Console.WriteLine("Error: ToadoSettings not found in ToadoPart.il");
-            Environment.Exit(1);
-            return;
+        var newToadoSection = new StringBuilder();
+        if (startToado >= 0) {
+            for (int i = startToado; i < toadoLines.Length; i++) {
+                newToadoSection.AppendLine(toadoLines[i]);
+            }
+            Console.WriteLine("Toado section extracted: " + (toadoLines.Length - startToado) + " lines.");
         }
 
-        var newToadoSection = new StringBuilder();
-        for (int i = startToado; i < toadoLines.Length; i++) {
-            newToadoSection.AppendLine(toadoLines[i]);
+        Console.WriteLine("Reading VietchuPart.il from: " + vietchuPartPath);
+        var vietchuLines = File.ReadAllLines(vietchuPartPath);
+        int startVietchu = -1;
+        for (int i = 0; i < vietchuLines.Length; i++) {
+            if (vietchuLines[i].StartsWith(".class ") && vietchuLines[i].Contains("Tvxd.Meps.TextWrite110")) {
+                startVietchu = i;
+                break;
+            }
         }
-        Console.WriteLine("Toado section extracted: " + (toadoLines.Length - startToado) + " lines.");
+        var newVietchuSection = new StringBuilder();
+        if (startVietchu >= 0) {
+            for (int i = startVietchu; i < vietchuLines.Length; i++) {
+                newVietchuSection.AppendLine(vietchuLines[i]);
+            }
+            Console.WriteLine("Vietchu section extracted: " + (vietchuLines.Length - startVietchu) + " lines.");
+        }
+
+        Console.WriteLine("Reading TagSeqPart.il from: " + tagSeqPartPath);
+        var tagSeqLines = File.ReadAllLines(tagSeqPartPath);
+        int startTagSeq = -1;
+        for (int i = 0; i < tagSeqLines.Length; i++) {
+            if (tagSeqLines[i].StartsWith(".class ") && tagSeqLines[i].Contains("Tvxd.Meps.TagSeqDir073")) {
+                startTagSeq = i;
+                break;
+            }
+        }
+        var newTagSeqSection = new StringBuilder();
+        if (startTagSeq >= 0) {
+            for (int i = startTagSeq; i < tagSeqLines.Length; i++) {
+                newTagSeqSection.AppendLine(tagSeqLines[i]);
+            }
+            Console.WriteLine("TagSeq section extracted: " + (tagSeqLines.Length - startTagSeq) + " lines.");
+        }
+
+        Console.WriteLine("Reading ModernThemeEngine.il from: " + modernThemePartPath);
+        var modernThemeLines = File.Exists(modernThemePartPath) ? File.ReadAllLines(modernThemePartPath) : new string[0];
+        int startModernTheme = -1;
+        for (int i = 0; i < modernThemeLines.Length; i++) {
+            if (modernThemeLines[i].StartsWith(".class ") && modernThemeLines[i].Contains("Tvxd.Meps.ModernThemeEngine")) {
+                startModernTheme = i;
+                break;
+            }
+        }
+        var newModernThemeSection = new StringBuilder();
+        if (startModernTheme >= 0) {
+            for (int i = startModernTheme; i < modernThemeLines.Length; i++) {
+                if (modernThemeLines[i].StartsWith("// =============================================================")) break;
+                newModernThemeSection.AppendLine(modernThemeLines[i]);
+            }
+            Console.WriteLine("ModernThemeEngine section extracted: " + (modernThemeLines.Length - startModernTheme) + " lines.");
+        }
+
+        // Byte replacements for Palette uppercase title and button name
+        // 1. "Triển khai và thống kê" -> "TRIỂN KHAI VÀ THỐNG KÊ"
+        string origTitle1 = "54 00 72 00 69 00 C3 1E 6E 00 20 00 6B 00 68 00";
+        string newTitle1 =  "54 00 52 00 49 00 C2 1E 4E 00 20 00 4B 00 48 00";
+        string origTitle2 = "61 00 69 00 20 00 76 00 E0 00 20 00 74 00 68 00";
+        string newTitle2 =  "41 00 49 00 20 00 56 00 C0 00 20 00 54 00 48 00";
+        string origTitle3 = "D1 1E 6E 00 67 00 20 00 6B 00 EA 00";
+        string newTitle3 =  "D0 1E 4E 00 47 00 20 00 4B 00 CA 00";
+
+        // 2. "VIẾT CHỮ" -> "GHI CHÚ MTEXT"
+        string origBtnHex = "56 00 49 00 BE 1E 54 00 20 00 43 00 48 00 EE 1E";
+        string newBtnHex =  "47 00 48 00 49 00 20 00 43 00 48 00 DA 00 20 00 4D 00 54 00 45 00 58 00 54 00";
 
         Console.WriteLine("Merging into base IL: " + mepsOrigPath);
-        int replacedCount = 0;
+        int replacedToado = 0;
+        int replacedVietchu = 0;
+        int replacedTagSeq = 0;
+        int injectedModernTheme = 0;
+        int hookedArrangeActions = 0;
+        int replacedSectionHeight = 0;
+        int replacedTitles = 0;
+        int replacedButtons = 0;
         int nanCount = 0;
         int infCount = 0;
+
         using (var reader = new StreamReader(mepsOrigPath, Encoding.UTF8))
         using (var writer = new StreamWriter(mepsFinalPath, false, Encoding.UTF8)) {
             string line;
-            bool skipping = false;
+            bool skippingToado = false;
+            bool skippingVietchu = false;
+            bool skippingTagSeq = false;
+            bool insideArrangeActions = false;
+            bool afterToolbox106 = false;
+
             while ((line = reader.ReadLine()) != null) {
                 // Fix nan and inf
                 if (line.Contains("-nan(ind)")) {
@@ -53,24 +127,136 @@ class MergeToado {
                     infCount++;
                 }
 
-                if (!skipping) {
-                    if (line.StartsWith(".class public auto ansi sealed beforefieldinit Tvxd.Meps.ToadoSettings") ||
-                        (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings"))) {
-                        skipping = true;
+                // Palette replacements
+                if (line.Contains(origTitle1)) {
+                    line = line.Replace(origTitle1, newTitle1);
+                    replacedTitles++;
+                }
+                if (line.Contains(origTitle2)) {
+                    line = line.Replace(origTitle2, newTitle2);
+                    replacedTitles++;
+                }
+                if (line.Contains(origTitle3)) {
+                    line = line.Replace(origTitle3, newTitle3);
+                    replacedTitles++;
+                }
+                if (line.Contains(origBtnHex)) {
+                    line = line.Replace(origBtnHex, newBtnHex);
+                    replacedButtons++;
+                }
+
+                // Hook ArrangeActions to apply ModernThemeEngine
+                if (line.Contains("ArrangeActions() cil managed")) {
+                    insideArrangeActions = true;
+                }
+                if (insideArrangeActions && line.Contains("leave.s    IL_039a")) {
+                    writer.WriteLine("      ldarg.0");
+                    writer.WriteLine("      call       void Tvxd.Meps.ModernThemeEngine::ApplyTheme(class [System.Windows.Forms]System.Windows.Forms.Control)");
+                    insideArrangeActions = false;
+                    hookedArrangeActions++;
+                }
+
+                // Expand TRIEN KHAI VA THONG KE section height from 186 (0xba) to 240 (0xf0)
+                if (line.Contains("Tvxd.Meps.CompactView06::Toolbox106")) {
+                    afterToolbox106 = true;
+                }
+                if (afterToolbox106 && line.Contains("ldc.i4     0xba")) {
+                    line = line.Replace("0xba", "0xf0");
+                    afterToolbox106 = false;
+                    replacedSectionHeight++;
+                }
+
+                // Inject ModernThemeEngine before disassembly completion marker
+                if (line.StartsWith("// *********** DISASSEMBLY COMPLETE")) {
+                    if (newModernThemeSection.Length > 0) {
+                        writer.Write(newModernThemeSection.ToString());
+                        injectedModernTheme++;
+                    }
+                }
+
+                // Section replacements
+                if (!skippingToado && !skippingVietchu && !skippingTagSeq) {
+                    if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
+                        skippingToado = true;
                         writer.Write(newToadoSection.ToString());
-                        replacedCount++;
+                        replacedToado++;
+                        continue;
+                    }
+                    if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TextWrite110")) {
+                        skippingVietchu = true;
+                        writer.Write(newVietchuSection.ToString());
+                        replacedVietchu++;
+                        continue;
+                    }
+                    if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                        skippingTagSeq = true;
+                        writer.Write(newTagSeqSection.ToString());
+                        replacedTagSeq++;
                         continue;
                     }
                     writer.WriteLine(line);
-                } else {
+                } else if (skippingToado) {
                     if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.Toado")) {
-                        skipping = false;
+                        skippingToado = false;
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TextWrite110")) {
+                            skippingVietchu = true;
+                            writer.Write(newVietchuSection.ToString());
+                            replacedVietchu++;
+                            continue;
+                        }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                            skippingTagSeq = true;
+                            writer.Write(newTagSeqSection.ToString());
+                            replacedTagSeq++;
+                            continue;
+                        }
+                        writer.WriteLine(line);
+                    }
+                } else if (skippingVietchu) {
+                    if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.TextWrite110")) {
+                        skippingVietchu = false;
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
+                            skippingToado = true;
+                            writer.Write(newToadoSection.ToString());
+                            replacedToado++;
+                            continue;
+                        }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TagSeqDir073")) {
+                            skippingTagSeq = true;
+                            writer.Write(newTagSeqSection.ToString());
+                            replacedTagSeq++;
+                            continue;
+                        }
+                        writer.WriteLine(line);
+                    }
+                } else if (skippingTagSeq) {
+                    // TagSeq ends after TagSeqCad073
+                    if (line.StartsWith(".class ") && !line.Contains("Tvxd.Meps.TagSeqDir073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqEntry073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqOptions073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqRow073") &&
+                        !line.Contains("Tvxd.Meps.TagSequence073") &&
+                        !line.Contains("Tvxd.Meps.TagSeqCad073")) {
+                        skippingTagSeq = false;
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.ToadoSettings")) {
+                            skippingToado = true;
+                            writer.Write(newToadoSection.ToString());
+                            replacedToado++;
+                            continue;
+                        }
+                        if (line.StartsWith(".class ") && line.Contains("Tvxd.Meps.TextWrite110")) {
+                            skippingVietchu = true;
+                            writer.Write(newVietchuSection.ToString());
+                            replacedVietchu++;
+                            continue;
+                        }
                         writer.WriteLine(line);
                     }
                 }
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado section ({0}), Fixed nan ({1}), inf ({2}).", replacedCount, nanCount, infCount));
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}).",
+            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount));
     }
 }

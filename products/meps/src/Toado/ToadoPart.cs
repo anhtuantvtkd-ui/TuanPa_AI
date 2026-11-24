@@ -34,6 +34,7 @@ namespace Tvxd.Meps {
         public bool UnitIsMm = false;
         public bool CircleArrow = true;
         public bool UnderlineBetween = true;
+        public bool ReverseText = false;
 
         public static string IniPath {
             get {
@@ -57,9 +58,9 @@ namespace Tvxd.Meps {
         public ToadoSettings S;
         public bool TriggerRefreshOnly = false;
 
-        TextBox txtStyle, txtHeight, txtArrowSize, txtDecimals;
+        TextBox txtStyle, txtHeight, txtArrowSize, txtDecimals, txtDistance;
         RadioButton rbVn2000, rbCad, rbUnitM, rbUnitMm, rbPickFree, rbBatch;
-        CheckBox chkMask, chkCircle, chkUnderline, chkAddName;
+        CheckBox chkMask, chkCircle, chkUnderline, chkAddName, chkReverse;
 
         public Toado100Form(ToadoSettings s) {
             S = s ?? new ToadoSettings();
@@ -74,12 +75,12 @@ namespace Tvxd.Meps {
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new Size(530, 570);
+            this.Size = new Size(530, 595);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Regular);
 
             int y = 15;
             // Group 1
-            var grpLook = new GroupBox { Text = "1. Trình bày & Đầu mút hình tròn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 145) };
+            var grpLook = new GroupBox { Text = "1. Trình bày & Đầu mút hình tròn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 170) };
             
             var lblH = new Label { Text = "Chiều cao chữ:", Location = new System.Drawing.Point(15, 25), AutoSize = true };
             txtHeight = new TextBox { Text = S.Height.ToString("0.##", CultureInfo.InvariantCulture), Location = new System.Drawing.Point(120, 22), Width = 70 };
@@ -96,11 +97,12 @@ namespace Tvxd.Meps {
             chkCircle = new CheckBox { Text = "● Đầu mũi tên là HÌNH TRÒN (Dot)", Checked = S.CircleArrow, Location = new System.Drawing.Point(15, 90), AutoSize = true, ForeColor = System.Drawing.Color.DarkGreen, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
             chkUnderline = new CheckBox { Text = "━ Đường gióng XEN GIỮA 2 dòng X/Y", Checked = S.UnderlineBetween, Location = new System.Drawing.Point(15, 115), AutoSize = true, ForeColor = System.Drawing.Color.DarkBlue, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
 
-            grpLook.Controls.AddRange(new Control[] { lblH, txtHeight, lblArr, txtArrowSize, lblDec, txtDecimals, lblStyle, txtStyle, chkCircle, chkUnderline });
+            chkReverse = new CheckBox { Text = "Đảo chiều đọc chữ (Ngược 180°)", Checked = S.ReverseText, Location = new System.Drawing.Point(15, 140), AutoSize = true };
+            grpLook.Controls.AddRange(new Control[] { lblH, txtHeight, lblArr, txtArrowSize, lblDec, txtDecimals, lblStyle, txtStyle, chkCircle, chkUnderline, chkReverse });
             this.Controls.Add(grpLook);
 
             // Group 2
-            y += 155;
+            y += 180;
             var grpCoord = new GroupBox { Text = "2. Hệ tọa độ VN-2000 & Đơn vị", Location = new System.Drawing.Point(15, y), Size = new Size(485, 110) };
             
             rbVn2000 = new RadioButton { Text = "VN-2000 (Dòng trên X = Trục Y CAD, Dòng dưới Y = Trục X CAD)", Checked = S.Vn2000, Location = new System.Drawing.Point(15, 23), AutoSize = true, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold), ForeColor = System.Drawing.Color.Firebrick };
@@ -115,19 +117,23 @@ namespace Tvxd.Meps {
 
             // Group 3
             y += 120;
-            var grpPlace = new GroupBox { Text = "3. Hướng đặt nhãn & Tùy chọn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 105) };
+            var grpPlace = new GroupBox { Text = "3. Hướng đặt nhãn & Tùy chọn", Location = new System.Drawing.Point(15, y), Size = new Size(485, 110) };
 
             rbPickFree = new RadioButton { Text = "Click chuột chọn hướng tự do 360° (Khuyên dùng)", Checked = S.PickEach, Location = new System.Drawing.Point(15, 22), AutoSize = true, ForeColor = System.Drawing.Color.DarkGreen, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
             rbBatch = new RadioButton { Text = "Tự động lệch góc cố định 45°", Checked = !S.PickEach, Location = new System.Drawing.Point(15, 47), AutoSize = true };
 
-            chkMask = new CheckBox { Text = "Nền che nét (Mask)", Checked = S.Mask, Location = new System.Drawing.Point(15, 75), AutoSize = true };
-            chkAddName = new CheckBox { Text = "Ghi kèm Tên/TAG Block", Checked = S.AddName, Location = new System.Drawing.Point(220, 75), AutoSize = true };
+            var lblDist = new Label { Text = "Khoảng cách (Distance):", Location = new System.Drawing.Point(220, 48), AutoSize = true };
+            double initialDist = (S.Distance >= S.Height) ? S.Distance : (S.Height * 3.5);
+            txtDistance = new TextBox { Text = initialDist.ToString("0.##", CultureInfo.InvariantCulture), Location = new System.Drawing.Point(375, 45), Width = 70 };
 
-            grpPlace.Controls.AddRange(new Control[] { rbPickFree, rbBatch, chkMask, chkAddName });
+            chkMask = new CheckBox { Text = "Nền che nét (Mask)", Checked = S.Mask, Location = new System.Drawing.Point(15, 78), AutoSize = true };
+            chkAddName = new CheckBox { Text = "Ghi kèm Tên/TAG Block", Checked = S.AddName, Location = new System.Drawing.Point(220, 78), AutoSize = true };
+
+            grpPlace.Controls.AddRange(new Control[] { rbPickFree, rbBatch, lblDist, txtDistance, chkMask, chkAddName });
             this.Controls.Add(grpPlace);
 
             // Buttons
-            y += 115;
+            y += 120;
             var btnOk = new Button { Text = "▶ ĐẶT TỌA ĐỘ", Location = new System.Drawing.Point(25, y), Size = new Size(135, 40), BackColor = System.Drawing.Color.LightSteelBlue, Font = new System.Drawing.Font("Segoe UI", 9F, FontStyle.Bold) };
             btnOk.Click += (sender, e) => {
                 Collect();
@@ -161,6 +167,9 @@ namespace Tvxd.Meps {
             double.TryParse(txtArrowSize.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out S.ArrowSize);
             if (S.ArrowSize <= 0) S.ArrowSize = 1.5;
 
+            double.TryParse(txtDistance.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out S.Distance);
+            if (S.Distance <= 0) S.Distance = S.Height * 3.5;
+
             int.TryParse(txtDecimals.Text, out S.Decimals);
             if (S.Decimals < 0 || S.Decimals > 6) S.Decimals = 3;
 
@@ -169,6 +178,7 @@ namespace Tvxd.Meps {
             S.UnitIsMm = rbUnitMm.Checked;
             S.CircleArrow = chkCircle.Checked;
             S.UnderlineBetween = chkUnderline.Checked;
+            S.ReverseText = chkReverse.Checked;
             S.PickEach = rbPickFree.Checked;
             S.Mask = chkMask.Checked;
             S.AddName = chkAddName.Checked;
@@ -209,10 +219,14 @@ namespace Tvxd.Meps {
                         else if (k.Equals("Arrow", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.Arrow);
                         else if (k.Equals("CircleArrow", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.CircleArrow);
                         else if (k.Equals("UnderlineBetween", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.UnderlineBetween);
+                        else if (k.Equals("ReverseText", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.ReverseText);
                         else if (k.Equals("PickEach", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.PickEach);
                         else if (k.Equals("AddName", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.AddName);
                         else if (k.Equals("TwoLines", StringComparison.OrdinalIgnoreCase)) bool.TryParse(v, out s.TwoLines);
                     }
+                }
+                if (s.Distance <= 0 || s.Distance < s.Height * 0.5) {
+                    s.Distance = s.Height * 3.5;
                 }
             } catch {}
             return s;
@@ -234,6 +248,7 @@ namespace Tvxd.Meps {
                     w.WriteLine("Arrow=" + s.Arrow);
                     w.WriteLine("CircleArrow=" + s.CircleArrow);
                     w.WriteLine("UnderlineBetween=" + s.UnderlineBetween);
+                    w.WriteLine("ReverseText=" + s.ReverseText);
                     w.WriteLine("PickEach=" + s.PickEach);
                     w.WriteLine("AddName=" + s.AddName);
                     w.WriteLine("TwoLines=" + s.TwoLines);
@@ -270,6 +285,22 @@ namespace Tvxd.Meps {
         public static string NameOf(Transaction tr, BlockReference br) {
             if (br == null) return "";
             try {
+                // If block has a tag/identifier attribute (e.g. TAG, SO_HIEU, TEN), prioritize it
+                if (br.AttributeCollection != null && br.AttributeCollection.Count > 0) {
+                    foreach (ObjectId attId in br.AttributeCollection) {
+                        if (!attId.IsErased) {
+                            var ar = tr.GetObject(attId, OpenMode.ForRead) as AttributeReference;
+                            if (ar != null && (ar.Tag.Equals("TAG", StringComparison.OrdinalIgnoreCase) ||
+                                               ar.Tag.Equals("SO_HIEU", StringComparison.OrdinalIgnoreCase) ||
+                                               ar.Tag.Equals("TEN", StringComparison.OrdinalIgnoreCase))) {
+                                if (!string.IsNullOrEmpty(ar.TextString)) {
+                                    return ar.TextString.Trim();
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (br.IsDynamicBlock) {
                     var btr = (BlockTableRecord)tr.GetObject(br.DynamicBlockTableRecord, OpenMode.ForRead);
                     return btr.Name;
@@ -282,7 +313,33 @@ namespace Tvxd.Meps {
 
         public static Point3d Tip(BlockReference br, bool center) {
             if (br == null) return Point3d.Origin;
-            return br.Position;
+            Point3d position = br.Position;
+            Point3d fallback = position;
+            try {
+                var ext = br.GeometricExtents;
+                Point3d min = ext.MinPoint;
+                Point3d max = ext.MaxPoint;
+                double diagonal = min.DistanceTo(max);
+                if (min.X <= max.X && min.Y <= max.Y && min.Z <= max.Z &&
+                    !double.IsNaN(diagonal) && !double.IsInfinity(diagonal)) {
+                    fallback = min + (max - min) * 0.5;
+                    if (position.DistanceTo(fallback) <= Math.Max(1e-6, 2.0 * diagonal))
+                        return position;
+                }
+            } catch (Autodesk.AutoCAD.Runtime.Exception) {}
+
+            if (br.Database == null) return fallback;
+            try {
+                using (var tr = br.Database.TransactionManager.StartOpenCloseTransaction()) {
+                    var btr = (BlockTableRecord)tr.GetObject(br.BlockTableRecord, OpenMode.ForRead);
+                    foreach (ObjectId id in btr) {
+                        var circle = tr.GetObject(id, OpenMode.ForRead) as Circle;
+                        if (circle != null)
+                            return circle.Center.TransformBy(br.BlockTransform);
+                    }
+                }
+            } catch (Autodesk.AutoCAD.Runtime.Exception) {}
+            return fallback;
         }
 
         public static ObjectId EnsureLayer(Transaction tr, Database db, string layerName) {
@@ -344,14 +401,59 @@ namespace Tvxd.Meps {
             return list;
         }
 
-        public static ResultBuffer Tag(string handle, Point3d p) {
+        public static ResultBuffer Tag(string handle, Point3d p, Point3d landingPt) {
             return new ResultBuffer(
                 new TypedValue((int)DxfCode.ExtendedDataRegAppName, Reg),
                 new TypedValue((int)DxfCode.ExtendedDataAsciiString, handle ?? ""),
                 new TypedValue((int)DxfCode.ExtendedDataReal, p.X),
                 new TypedValue((int)DxfCode.ExtendedDataReal, p.Y),
-                new TypedValue((int)DxfCode.ExtendedDataReal, p.Z)
+                new TypedValue((int)DxfCode.ExtendedDataReal, p.Z),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.X),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Y),
+                new TypedValue((int)DxfCode.ExtendedDataReal, landingPt.Z),
+                new TypedValue((int)DxfCode.ExtendedDataAsciiString, "LandingVertex")
             );
+        }
+
+        private static bool IsVerticalLeader(MLeader ml) {
+            if (!ml.EnableDogleg && !ml.EnableLanding) return true;
+            using (MText mt = ml.MText) {
+                return mt != null && Math.Abs(Math.Abs(Math.IEEERemainder(mt.Rotation, 2.0 * Math.PI)) - Math.PI / 2) < 0.1;
+            }
+        }
+
+        public static bool GetStoredPoints(MLeader ml, out Point3d targetPt, out Point3d landingPt) {
+            targetPt = Point3d.Origin;
+            landingPt = Point3d.Origin;
+            if (ml == null || ml.LeaderCount == 0) return false;
+            try {
+                targetPt = ml.GetFirstVertex(0);
+                bool isVertical = IsVerticalLeader(ml);
+                Point3d lastVert = ml.GetLastVertex(0);
+                using (ResultBuffer tag = ml.GetXDataForApplication(Reg)) {
+                    TypedValue[] values = (tag != null) ? tag.AsArray() : null;
+                    if (!isVertical || (values != null && values.Length > 8 && Equals(values[8].Value, "LandingVertex"))) {
+                        landingPt = lastVert;
+                        return true;
+                    }
+                }
+
+                // Older vertical labels ended at the far edge of the text.
+                using (MText mt = ml.MText) {
+                    double textH = mt != null && mt.ActualHeight > 0 ? mt.ActualHeight : ml.TextHeight * 2.692;
+                    double textLen = mt != null && mt.ActualWidth > 0 ? mt.ActualWidth : ml.TextHeight * 6.0;
+                    Point3d textLocation = ml.TextLocation;
+                    landingPt = new Point3d(textLocation.X + textH / 2.0,
+                        textLocation.Y + (lastVert.Y < targetPt.Y ? textLen : 0.0), lastVert.Z);
+                }
+                return true;
+            } catch {}
+            if (ml.LeaderCount > 0) {
+                targetPt = ml.GetFirstVertex(0);
+                landingPt = ml.GetLastVertex(0);
+                return true;
+            }
+            return false;
         }
 
         public static ObjectId EnsureDotArrow(Database db) {
@@ -400,12 +502,14 @@ namespace Tvxd.Meps {
                 MLeaderStyle mls = (MLeaderStyle)tr.GetObject(styleId, OpenMode.ForWrite);
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
-                mls.EnableDogleg = false;
+                mls.EnableDogleg = true;
+                mls.DoglegLength = 0.001;
                 mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                mls.ExtendLeaderToText = true;
+                mls.ExtendLeaderToText = s.UnderlineBetween;
                 if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
                 mls.ArrowSize = s.ArrowSize;
                 mls.TextHeight = s.Height;
@@ -416,12 +520,14 @@ namespace Tvxd.Meps {
                 MLeaderStyle mls = new MLeaderStyle();
                 mls.ContentType = ContentType.MTextContent;
                 mls.EnableLanding = true;
-                mls.EnableDogleg = false;
+                mls.EnableDogleg = true;
+                mls.DoglegLength = 0.001;
                 mls.LandingGap = s.Height * 0.1;
+                mls.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 mls.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 mls.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
-                mls.ExtendLeaderToText = true;
+                mls.ExtendLeaderToText = s.UnderlineBetween;
                 if (arrowId != ObjectId.Null) mls.ArrowSymbolId = arrowId;
                 mls.ArrowSize = s.ArrowSize;
                 mls.TextHeight = s.Height;
@@ -451,17 +557,19 @@ namespace Tvxd.Meps {
 
             MLeader ml;
             bool isNew = (existingLeaderId == ObjectId.Null);
+            double dx = landingPt.X - targetPt.X;
+            double dy = landingPt.Y - targetPt.Y;
+            bool isVertical;
             if (isNew) {
+                isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
                 ml = new MLeader();
                 ml.SetDatabaseDefaults(db);
                 ml.MLeaderStyle = toadoStyleId;
                 ml.ContentType = ContentType.MTextContent;
             } else {
                 ml = (MLeader)tr.GetObject(existingLeaderId, OpenMode.ForWrite);
+                isVertical = IsVerticalLeader(ml);
                 ml.MLeaderStyle = toadoStyleId;
-                while (ml.LeaderCount > 0) {
-                    try { ml.RemoveLeader(0); } catch { break; }
-                }
             }
 
             MText mt = new MText();
@@ -469,12 +577,15 @@ namespace Tvxd.Meps {
             if (styleId != ObjectId.Null) mt.TextStyleId = styleId;
             mt.TextHeight = s.Height;
             mt.Contents = Format(targetPt, s, blockName, false);
+            mt.BackgroundFill = s.Mask;
             if (s.Mask) {
-                mt.BackgroundFill = true;
                 mt.UseBackgroundColor = true;
                 mt.BackgroundScaleFactor = 1.15;
             }
-            ml.MText = mt;
+
+            while (ml.LeaderCount > 0) {
+                try { ml.RemoveLeader(0); } catch { break; }
+            }
 
             if (styleId != ObjectId.Null) ml.TextStyleId = styleId;
             ml.TextHeight = s.Height;
@@ -489,49 +600,44 @@ namespace Tvxd.Meps {
                 ml.ArrowSize = 0.0;
             }
 
-            double dx = landingPt.X - targetPt.X;
-            double dy = landingPt.Y - targetPt.Y;
-            bool isVertical = Math.Abs(dx) < 0.25 * Math.Abs(dy) && Math.Abs(dy) > 1.0;
             bool isRight = (dx >= 0);
             double gap = s.Height * 0.1;
 
             if (isVertical) {
-                mt.Rotation = Math.PI / 2;
+                mt.Rotation = s.ReverseText ? -Math.PI / 2 : Math.PI / 2;
+                mt.Direction = new Vector3d(0.0, s.ReverseText ? -1.0 : 1.0, 0.0);
                 ml.MText = mt;
                 ml.EnableDogleg = false;
                 ml.EnableLanding = false;
 
                 double textLen = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 6.0);
                 double textH = mt.ActualHeight > 0 ? mt.ActualHeight : (s.Height * 2.692);
-                double shiftX = textH / 2.0;
+                double bottomY = dy >= 0 ? landingPt.Y : landingPt.Y - textLen;
+                double textX = landingPt.X + (s.ReverseText ? textH / 2.0 : -textH / 2.0);
+                double textY = bottomY + (s.ReverseText ? textLen : 0.0);
+                ml.TextLocation = new Point3d(textX, textY, landingPt.Z);
 
-                if (dy >= 0) {
-                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y + textLen, 0);
-                    ml.TextLocation = new Point3d(landingPt.X - shiftX, landingPt.Y, 0);
-
-                    int leaderIndex = ml.AddLeader();
-                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
-                    ml.AddFirstVertex(leaderLineIndex, targetPt);
-                    ml.AddLastVertex(leaderLineIndex, endPt);
-                } else {
-                    Point3d endPt = new Point3d(targetPt.X, landingPt.Y - textLen, 0);
-                    ml.TextLocation = new Point3d(endPt.X - shiftX, endPt.Y, 0);
-
-                    int leaderIndex = ml.AddLeader();
-                    int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
-                    ml.AddFirstVertex(leaderLineIndex, targetPt);
-                    ml.AddLastVertex(leaderLineIndex, endPt);
-                }
+                int leaderIndex = ml.AddLeader();
+                int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
+                ml.AddFirstVertex(leaderLineIndex, targetPt);
+                ml.AddLastVertex(leaderLineIndex, landingPt);
             } else {
-                ml.EnableDogleg = false;
+                ml.EnableDogleg = true;
+                ml.DoglegLength = 0.001;
                 ml.EnableLanding = true;
                 ml.LandingGap = gap;
+                ml.TextAttachmentDirection = TextAttachmentDirection.AttachmentHorizontal;
                 ml.TextAttachmentType = TextAttachmentType.AttachmentBottomOfTopLine;
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.LeftLeader);
                 ml.SetTextAttachmentType(TextAttachmentType.AttachmentBottomOfTopLine, LeaderDirectionType.RightLeader);
                 ml.ExtendLeaderToText = s.UnderlineBetween;
 
+                mt.Rotation = s.ReverseText ? Math.PI : 0.0;
+                mt.Direction = new Vector3d(s.ReverseText ? -1.0 : 1.0, 0.0, 0.0);
+                bool alignLeft = isRight ^ s.ReverseText;
+                mt.Attachment = alignLeft ? AttachmentPoint.MiddleLeft : AttachmentPoint.MiddleRight;
                 ml.MText = mt;
+                ml.TextAngleType = TextAngleType.InsertAngle;
 
                 int leaderIndex = ml.AddLeader();
                 int leaderLineIndex = ml.AddLeaderLine(leaderIndex);
@@ -543,14 +649,8 @@ namespace Tvxd.Meps {
                     ml.SetDogleg(leaderIndex, doglegDir);
                 } catch {}
 
-                double yTop = landingPt.Y + s.Height * 1.2;
-                double w = mt.ActualWidth > 0 ? mt.ActualWidth : (s.Height * 5.0);
-                double xLeft = isRight ? (landingPt.X + gap) : (landingPt.X - gap - w);
-                ml.TextLocation = new Point3d(xLeft, yTop, 0);
-
-                try {
-                    ml.SetLastVertex(leaderLineIndex, landingPt);
-                } catch {}
+                ml.TextLocation = landingPt;
+                ml.SetLastVertex(leaderLineIndex, landingPt);
             }
 
             if (isNew) {
@@ -558,7 +658,7 @@ namespace Tvxd.Meps {
                 tr.AddNewlyCreatedDBObject(ml, true);
             }
 
-            ml.XData = Tag(blockHandle, targetPt);
+            ml.XData = Tag(blockHandle, targetPt, landingPt);
             return ml.ObjectId;
         }
 
@@ -573,7 +673,23 @@ namespace Tvxd.Meps {
                         if (arr.Length > 1) {
                             string h = Convert.ToString(arr[1].Value);
                             if (!string.IsNullOrEmpty(h)) {
-                                dict[h] = id;
+                                try {
+                                    Handle handle = new Handle(Convert.ToInt64(h, 16));
+                                    ObjectId bId;
+                                    if (ms.Database.TryGetObjectId(handle, out bId) && !bId.IsErased) {
+                                        BlockReference br = tr.GetObject(bId, OpenMode.ForRead) as BlockReference;
+                                        if (br != null) {
+                                            MLeader ml = (MLeader)obj;
+                                            Point3d v0 = ml.GetFirstVertex(0);
+                                            Point3d tipPt = Tip(br, false);
+                                            if ((v0 - tipPt).Length < 100.0 || (v0 - br.Position).Length < 100.0) {
+                                                dict[h] = id;
+                                            }
+                                        }
+                                    }
+                                } catch {
+                                    if (!dict.ContainsKey(h)) dict[h] = id;
+                                }
                             }
                         }
                         xdata.Dispose();
@@ -649,6 +765,8 @@ namespace Tvxd.Meps {
                             string handleStr = br.Handle.ToString();
 
                             Point3d landingPt;
+                            double dist = (s.Distance >= s.Height) ? s.Distance : (s.Height * 3.5);
+                            double offset = dist * 0.7071067811865475;
                             if (s.PickEach) {
                                 var ppo = new PromptPointOptions(string.Format("\nĐiểm đặt nhãn cho {0} [{1}/{2}] (Enter = mặc định, ESC = dừng): ", blockName, i + 1, blockIds.Count));
                                 ppo.UseBasePoint = true;
@@ -658,16 +776,25 @@ namespace Tvxd.Meps {
                                 if (ppr.Status == PromptStatus.OK) {
                                     landingPt = ppr.Value;
                                 } else if (ppr.Status == PromptStatus.None) {
-                                    landingPt = new Point3d(targetPt.X + s.Distance, targetPt.Y + s.Distance, targetPt.Z);
+                                    landingPt = new Point3d(targetPt.X + offset, targetPt.Y + offset, targetPt.Z);
                                 } else {
                                     ed.WriteMessage("\nĐã dừng gắn nhãn.");
                                     break;
                                 }
                             } else {
-                                landingPt = new Point3d(targetPt.X + s.Distance, targetPt.Y + s.Distance, targetPt.Z);
+                                landingPt = new Point3d(targetPt.X + offset, targetPt.Y + offset, targetPt.Z);
                             }
 
                             ObjectId existingId = map.ContainsKey(handleStr) ? map[handleStr] : ObjectId.Null;
+                            if (existingId != ObjectId.Null) {
+                                try {
+                                    var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
+                                    if (oldObj != null && oldObj.LeaderCount > 0) {
+                                        // User requirement: When updating an existing/copied label, arrow tip & landing stay put ("đứng yên")
+                                        GetStoredPoints(oldObj, out targetPt, out landingPt);
+                                    }
+                                } catch {}
+                            }
                             CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, existingId, layerId, styleId, dotArrowId);
                             if (existingId == ObjectId.Null) created++; else updated++;
                         }
@@ -690,10 +817,12 @@ namespace Tvxd.Meps {
                         ppo2.AllowNone = true;
                         var ppr2 = ed.GetPoint(ppo2);
                         Point3d landingPt;
+                        double dist = (s.Distance >= s.Height) ? s.Distance : (s.Height * 3.5);
+                        double offset = dist * 0.7071067811865475;
                         if (ppr2.Status == PromptStatus.OK) {
                             landingPt = ppr2.Value;
                         } else if (ppr2.Status == PromptStatus.None) {
-                            landingPt = new Point3d(targetPt.X + s.Distance, targetPt.Y + s.Distance, targetPt.Z);
+                            landingPt = new Point3d(targetPt.X + offset, targetPt.Y + offset, targetPt.Z);
                         } else {
                             break;
                         }
@@ -736,6 +865,19 @@ namespace Tvxd.Meps {
                     BlockTable bt = (BlockTable)tr.GetObject(db.BlockTableId, OpenMode.ForRead);
                     BlockTableRecord ms = (BlockTableRecord)tr.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForWrite);
 
+                    var allBlocks = new List<BlockReference>();
+                    foreach (ObjectId entId in ms) {
+                        if (entId.ObjectClass.DxfName.Equals("INSERT", StringComparison.OrdinalIgnoreCase)) {
+                            var br = tr.GetObject(entId, OpenMode.ForRead) as BlockReference;
+                            if (br != null && !br.IsErased) {
+                                string bname = NameOf(tr, br);
+                                if (bname.IndexOf("khung", StringComparison.OrdinalIgnoreCase) < 0) {
+                                    allBlocks.Add(br);
+                                }
+                            }
+                        }
+                    }
+
                     int count = 0;
                     foreach (ObjectId id in ms) {
                         if (!id.ObjectClass.DxfName.Equals("MULTILEADER", StringComparison.OrdinalIgnoreCase)) continue;
@@ -748,28 +890,35 @@ namespace Tvxd.Meps {
                         TypedValue[] vals = xdata.AsArray();
                         string handleStr = vals.Length > 1 ? Convert.ToString(vals[1].Value) : "";
 
-                        Point3d targetPt = ml.GetFirstVertex(0);
-                        string blockName = "";
-                        if (!string.IsNullOrEmpty(handleStr)) {
-                            try {
-                                Handle h = new Handle(Convert.ToInt64(handleStr, 16));
-                                ObjectId blockId;
-                                if (db.TryGetObjectId(h, out blockId) && !blockId.IsErased) {
-                                    BlockReference br = tr.GetObject(blockId, OpenMode.ForRead) as BlockReference;
-                                    if (br != null) {
-                                        targetPt = Tip(br, s.Center);
-                                        blockName = NameOf(tr, br);
-                                    }
-                                }
-                            } catch {}
+                        Point3d currentArrow = ml.GetFirstVertex(0);
+                        Point3d currentLanding = ml.GetLastVertex(0);
+
+                        BlockReference closestBlock = null;
+                        double closestDist = double.MaxValue;
+                        foreach (var br in allBlocks) {
+                            Point3d tip = Tip(br, s.Center);
+                            double d = (currentArrow - tip).Length;
+                            if (d < closestDist) {
+                                closestDist = d;
+                                closestBlock = br;
+                            }
                         }
 
-                        Point3d landingPt;
-                        try {
-                            landingPt = ml.GetLastVertex(0);
-                        } catch {
-                            landingPt = ml.TextLocation;
+                        string blockName = "";
+                        double maxMatchDist = Math.Max(s.Height * 15.0, 5000.0);
+                        if (closestBlock != null && closestDist < maxMatchDist) {
+                            handleStr = closestBlock.Handle.ToString();
+                            blockName = NameOf(tr, closestBlock);
                         }
+
+                        // User explicitly demands: Arrow and Landing STAY PUT ("đứng yên"), only X, Y and block name update!
+                        Point3d targetPt;
+                        Point3d landingPt;
+                        if (!GetStoredPoints(ml, out targetPt, out landingPt)) {
+                            targetPt = currentArrow;
+                            landingPt = currentLanding;
+                        }
+
                         CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, id, layerId, styleId, dotArrowId);
                         count++;
                     }
@@ -810,15 +959,26 @@ namespace Tvxd.Meps {
                     string blockName = NameOf(tr, br);
                     string handleStr = br.Handle.ToString();
 
+                    double dist = (s.Distance >= s.Height) ? s.Distance : (s.Height * 3.5);
+                    double offset = dist * 0.7071067811865475;
                     Point3d landingPt;
                     if (pick != null) {
                         Point3d? picked = pick(i + 1, list.Count, targetPt);
-                        landingPt = picked.HasValue ? picked.Value : new Point3d(targetPt.X + s.Distance, targetPt.Y + s.Distance, targetPt.Z);
+                        landingPt = picked.HasValue ? picked.Value : new Point3d(targetPt.X + offset, targetPt.Y + offset, targetPt.Z);
                     } else {
-                        landingPt = new Point3d(targetPt.X + s.Distance, targetPt.Y + s.Distance, targetPt.Z);
+                        landingPt = new Point3d(targetPt.X + offset, targetPt.Y + offset, targetPt.Z);
                     }
 
                     ObjectId existingId = map.ContainsKey(handleStr) ? map[handleStr] : ObjectId.Null;
+                    if (existingId != ObjectId.Null) {
+                        try {
+                            var oldObj = tr.GetObject(existingId, OpenMode.ForRead) as MLeader;
+                            if (oldObj != null && oldObj.LeaderCount > 0) {
+                                // Preserved: Arrow tip & landing stay put ("đứng yên") on update
+                                GetStoredPoints(oldObj, out targetPt, out landingPt);
+                            }
+                        } catch {}
+                    }
                     CreateOrUpdateLeader(db, tr, ms, targetPt, landingPt, s, blockName, handleStr, existingId, layerId, styleId, dotArrowId);
                     if (existingId == ObjectId.Null) res.created++; else res.updated++;
                 }

@@ -1,0 +1,4 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/test/FullDwgReport.dll"
+FULL_DWG_REPORT
+_.QUIT _Y

@@ -1,0 +1,6 @@
+PASS: Entity is AcDbMText
+Layer: T_TEXT
+Color: 7
+LineWeight: 18
+TextHeight: 250
+Contents: TEST NOIDUNG MTEXT V11

@@ -1,0 +1,68 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0019",
+  "title": "Sua loi T-TOADO gan nhan toa do tren block co basepoint khao sat lech xa khoi hinh hoc",
+  "status": "RELEASED",
+  "module": "meps",
+  "risk": "medium",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Gemini (Argon)",
+  "reviewer": "Gemini & Codex",
+  "base_commit": "d395dc8",
+  "branch": "task/TASK-0016-fix-toado-vertical-horizontal",
+  "result_commit": "HEAD",
+  "scope": [
+    "Khac phuc loi gan nhan toa do T-TOADO tren cac block co basepoint khao sat lech hang trieu don vi khoi hinh ve (nhu block BE2 DAN59 tren file Danh so lien tiep.dwg)",
+    "Nang cap ham Tip trong ToadoPart.cs tu dong phat hien va lay tam GeometricExtents khi basepoint bi drift xa khoi extents",
+    "Nang cap NameOf uu tien doc thuoc tinh TAG/SO_HIEU/TEN khi co attribute",
+    "Cap nhat ScanExistingLeaders phu hop voi ca tipPt va br.Position",
+    "Dong goi ban cai dat V16 tai D:\\TuanPa_AI\\OUTPUT\\16. TVXD.BG V16 va D:\\OneDrive\\TuanPa_AI\\OUTPUT\\16. TVXD.BG V16"
+  ],
+  "out_of_scope": [
+    "Cac tinh nang khac cua module MEPS"
+  ],
+  "sources": [
+    "D:\\TuanPa_AI\\INPUT\\Danh so lien tiep.dwg",
+    "products/meps/src/Toado/ToadoPart.cs"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Khi chay T-TOADO tren block BE2 DAN59 trong file Danh so lien tiep.dwg, mui ten MLeader phai cam chinh xac vao tam hinh ve hoso ga tren man hinh (X~19.21, Y~651.83), khong bi cam ra toa do khao sat -688491",
+    "Nhan toa do hien thi toa do thuc te tren man hinh va text landing nam ngay canh block",
+    "Dong goi ban cai dat V16 khop 100% SHA256SUMS.json"
+  ],
+  "required_checks": [
+    "build_v4",
+    "checksums_audit",
+    "accoreconsole TEST_APPLY_TOADO"
+  ],
+  "evidence": [
+    {
+      "check": "build_v4",
+      "status": "PASS",
+      "reference": "build_v4.cmd bien dich thanh cong TVXD.Meps.dll voi SHA256 f080f565be20552b3b95ca401f9db4489c29e216e024bad927b35b2641342ce7"
+    },
+    {
+      "check": "checksums_audit",
+      "status": "PASS",
+      "reference": "293 files in 16. TVXD.BG V16 verified matching SHA256SUMS.json 100% (0 mismatches)"
+    },
+    {
+      "check": "accoreconsole TEST_APPLY_TOADO",
+      "status": "PASS",
+      "reference": "MLeader arrow points to (19.21, 651.83) matching visible block center exactly"
+    }
+  ],
+  "release": {
+    "version": "TVXD.BG V16",
+    "artifacts": [
+      {
+        "path": "products/meps/release/TVXD.BG_V4/MEPS060/TVXD.Meps.dll",
+        "sha256": "f080f565be20552b3b95ca401f9db4489c29e216e024bad927b35b2641342ce7"
+      }
+    ],
+    "installation_guide": "Dong AutoCAD, chay CAI_DAT.cmd tai D:\\OneDrive\\TuanPa_AI\\OUTPUT\\16. TVXD.BG V16",
+    "rollback_guide": "Khoi phuc tu D:\\TuanPa_AI\\OUTPUT\\15. TVXD.BG V15",
+    "test_report": "accoreconsole TEST_APPLY_TOADO on Danh so lien tiep.dwg: PASS 3/3 MLeaders created at visible coordinates"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0024",
+  "title": "Bóc tách cáp điện sinh hoạt bằng AutoLISP",
+  "status": "BLOCKED",
+  "module": "electrical",
+  "risk": "high",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Codex (GPT-6)",
+  "reviewer": "unassigned",
+  "base_commit": "0012db6ce496b0f469c805814beee9c24da5d69e",
+  "branch": "task/TASK-0024-lisp-boc-tach-cap",
+  "scope": [
+    "products/meps/src/bkl_cap.lsp: BKL_CAP, BKLCAP và xuất CSV Book1.",
+    "TEST/bkl-cap-fixture.lsp và TEST/bkl-cap-qa.scr: ca thử AutoCAD tổng hợp."
+  ],
+  "out_of_scope": ["Thiết kế điện, merge và phát hành bản cài đặt."],
+  "sources": [
+    "docs/tasks/TASK-0024-spec.md, mục 2–4.",
+    "Book1.xlsx, bảng tính mẫu trong INPUT, các cột A:N."
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Quét chọn hoặc Enter trong không gian hiện hành, lấy chiều dài Dim và phân loại cáp từng hộ.",
+    "CSV UTF-8 BOM giữ 14 cột, thứ tự tiêu đề và phép tính của Book1, mở trực tiếp trong Excel."
+  ],
+  "required_checks": ["technical_reference", "cad_fixture", "excel_native", "independent_review"],
+  "evidence": [
+    {
+      "check": "cad_fixture",
+      "status": "PASS",
+      "reference": "AutoCAD 2021 accoreconsole.exe /s TEST/bkl-cap-qa.scr /l en-US: 4 hộ, cột D là 16,5 / 16,5 / 2 / 9 m, đúng pha và chặn nhãn cáp trùng. Thử lõi qua selection set tổng hợp."
+    },
+    {
+      "check": "technical_reference",
+      "status": "PASS",
+      "reference": "PowerShell TextFieldParser và XML XLSX: BOM EF BB BF, 14 trường mỗi dòng và khớp toàn bộ ô tiêu đề có dữ liệu trong Book1 A1:N6."
+    },
+    {
+      "check": "excel_native",
+      "status": "PASS",
+      "reference": "Excel COM Workbooks.Open: 14 cột, đọc đúng Số nhà 1, N8 và M9 bằng 23,7 m, K8 và L9 bằng 21,7 m trong ca tổng hợp."
+    },
+    {
+      "check": "repo",
+      "status": "FAIL",
+      "reference": "npm ci --ignore-scripts và npm run type-check hoàn thành. npm test đạt 19 test Node rồi lỗi kiểm hồ sơ sẵn có TASK-0018, TASK-0019 và TASK-0020."
+    }
+  ],
+  "findings": [
+    "Phạm vi hình học theo mẫu: tuyến dọc X, tọa độ mét, đầu mút nối trong 0,25 m và nhãn lệch tối đa 2 m theo X. Tủ lấy theo ghi chú cáp hoặc tủ gần nhất trên cùng tuyến.",
+    "Book1 ghi 11 ở dòng tủ và liệt kê 12 hộ. Lệnh đếm các hộ trích xuất được. Cột H dùng công thức tham chiếu E cho mọi hộ lẻ theo đặc tả.",
+    "Ca tổng hợp đã chạy ở Core Console. Quét chọn tương tác và hộp thoại lưu cần xác nhận trên giao diện AutoCAD."
+  ],
+  "next_action": "Chạy nghiệm thu tương tác và lấy review độc lập trước khi duyệt kỹ thuật.",
+  "review": null,
+  "approval": null,
+  "release": null
+}

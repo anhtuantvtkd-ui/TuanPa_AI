@@ -1,0 +1,17 @@
+=== TOADO COMPREHENSIVE STAY-PUT & GRIP EDIT REGRESSION SUITE ===
+MEASURED LOADED DLL SHA256: cf2be5930cac40184450dee7982dbd3d59afa8e24a492db02013f8d5c1402379
+Pass 1 (Create): Created=2, Updated=0
+Identified subjects: idH=(1985378839232), idV=(1985378839248)
+  Round 1 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 1 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 2 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 2 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 3 H: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+  Round 3 V: ArrowDelta=0.000000, LandingDelta=0.000000, TextDelta=0.000000
+Test 2 (Horizontal Arrow Grip): ArrowKeptDelta=0.000000, LandingFrozenDelta=0.000000
+Test 3 (Horizontal Text/Landing Grip): ArrowFrozenDelta=0.000000, LandingKeptDelta=0.000000
+Test 4 (Threshold Crossing): RemainsHorizontal=True, LandingKeptDelta=0.000000
+Test 5 (Vertical Text Grip X & Y): ArrowFrozenDelta=0.000000, TextKeptDelta=0.000000
+Test 6 (Vertical Arrow Grip X & Y): ArrowKeptDelta=0.000000, TextFrozenDelta=0.000000
+STRICT PASS: Delta = 0.000000 on all rounds, grip edits, and threshold crossing!
+FINAL VERDICT: APPROVED

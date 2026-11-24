@@ -1,0 +1,4 @@
+NETLOAD "D:\TuanPa_AI\products\meps\release\TVXD.BG_V4\MEPS060\TVXD.Meps.dll"
+NETLOAD "D:\TuanPa_AI\products\meps\test\TestMTextWriter.dll"
+TEST_MTEXT_WRITER
+QUIT

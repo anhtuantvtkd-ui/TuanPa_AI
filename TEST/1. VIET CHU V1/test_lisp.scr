@@ -1,0 +1,15 @@
+SECURELOAD 0
+(load "D:/TuanPa_AI/TEST/1. VIET CHU V1/T-VIETCHU.lsp")
+(setq *T_VIETCHU_HEIGHT* 250.0)
+;; Tao 1 doi tuong MText kiem thu
+(setq doc (vla-get-activedocument (vlax-get-acad-object)))
+(setq ms (vla-get-block (vla-get-activelayout doc)))
+(setq mt (vla-addmtext ms (vlax-3d-point '(100.0 200.0 0.0)) 0.0 "TEST MTEXT T_TEXT 0.18"))
+(vla-put-stylename mt "Tuan_arial")
+(vla-put-height mt 250.0)
+(if (not (tblsearch "LAYER" "T_TEXT"))
+  (command "-LAYER" "M" "T_TEXT" "C" 7 "T_TEXT" "LW" 0.18 "T_TEXT" "")
+)
+(vla-put-layer mt "T_TEXT")
+(princ (strcat "\nTEST_RESULT: Layer=" (vla-get-layer mt) ", Height=" (rtos (vla-get-height mt) 2 1) ", Style=" (vla-get-stylename mt) ", Text=" (vla-get-textstring mt)))
+_.QUIT _Y

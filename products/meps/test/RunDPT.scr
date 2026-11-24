@@ -1,0 +1,4 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/test/InspectDPT.dll"
+INSPECT_DPT
+_.QUIT _Y

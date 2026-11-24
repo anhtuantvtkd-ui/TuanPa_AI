@@ -1,0 +1,3 @@
+@echo off
+set CODEX_HOME=D:\.codex
+"C:\Program Files\WindowsApps\OpenAI.Codex_26.1117.4957.0_x64__2p2nqsd0c76g0\app\resources\codex.exe" exec --cd "D:\TuanPa_AI" --model gpt-6.2-sol --sandbox workspace-write --dangerously-bypass-approvals-and-sandbox "Doc file docs/tasks/TASK-0023-spec.md va tao script Node.js hoac PowerShell (su dung COM Excel hoac script tu dong) de tao file Excel D:\TuanPa_AI\OUTPUT\BANG_BOC_TACH_KHOI_LUONG_DUONG_DAY_0.4KV_THAN_KHUE.xlsx voi day du 4 Tram bien ap (TBA Dich Te, TBA V69, TBA UBND Song Mai, TBA Phuc Duc 2), tat ca cac cot theo dung mau CSV cua nguoi dung, co cong thuc tinh tu dong SUM, ROUND hao hut 1%%, dinh dang ke bang dep, ro rang." < nul

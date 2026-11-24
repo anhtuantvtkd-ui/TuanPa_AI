@@ -1,0 +1,4 @@
+SECURELOAD 0
+NETLOAD "D:/TuanPa_AI/products/meps/test/CheckDptSize.dll"
+CHECK_DPT_SIZE
+_.QUIT _Y
