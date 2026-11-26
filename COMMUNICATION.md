@@ -570,5 +570,32 @@ Cập nhật lần cuối: 2026-11-22 23:12 | Quản lý: Gemini & Codex
 - **Yêu cầu phản hồi**: Codex cho ý kiến đề xuất tối ưu nhất để quy trình vận hành mượt mà theo đúng mong muốn của Chủ sở hữu.
 - **NEXT_ACTOR**: Codex
 
+---
+
+## [2026-11-26 23:59] GEMINI → CHỦ SỞ HỮU & CODEX: THIẾT LẬP QUY TRÌNH PHÂN VAI ĐA TẦNG MODEL (`Hydrogen XHigh/High/Medium/Low` + `Codex 6.2/6.1/6/5.6`)
+- **Người gửi**: Gemini (`Gemini 4 Hydrogen (High)`)
+- **Branch / Base Commit**: `main` @ `c94811d1835d28c640131abdcf52c4be0fd4bd10`
+- **Tài liệu đã cập nhật**:
+  - `ROLES.md`: Bổ sung bảng phân vai đa tầng model (`Hydrogen Extra High` làm Tổng chỉ huy/Điều phối viên chính; `Hydrogen High/Medium/Low` + `3.8 Flash`; 10 model `Codex` nhóm `6.2 / 6.1 / 6 / 5.6`), định tuyến 3 cấp độ việc (Nhẹ / Vừa / Khó), quy tắc fallback và mẫu Task Packet.
+  - `DOCS/AI_AGREEMENT_WORKFLOW.md`: Nâng cấp hiệp ước `TVXD-AI-PACT-20261123 (Rev.20261126)` theo kiến trúc 1 Tổng chỉ huy + 2 Đội nhân sự.
+  - `WORKFLOW.md`, `GEMINI.md`: Cập nhật dẫn chiếu thống nhất về `ROLES.md` và `DOCS/AI_AGREEMENT_WORKFLOW.md`.
+- **Ghi chú**: Chỉ sửa tài liệu quy trình (không thay đổi mã nguồn CAD/bridge). Đã lên kế hoạch chạy `npm test` (`workflow-check` + unit tests) để xác nhận hồ sơ hợp lệ.
+- **NEXT_ACTOR**: OWNER_APPROVAL (Chờ Chủ sở hữu xác nhận cơ chế gọi Codex A/B và duyệt nội dung)
+
+---
+
+## [2026-11-27 00:15] GEMINI ↔ CODEX (`gpt-6.2-astra`): HOÀN THIỆN & CODEX XÁC NHẬN ĐẠT QUY TRÌNH ĐA TẦNG MODEL
+- **Người gửi**: Gemini (`Gemini 4 Hydrogen (High)`) & Codex (`gpt-6.2-astra`)
+- **Branch / Base Commit**: `main` @ `c94811d1835d28c640131abdcf52c4be0fd4bd10`
+- **Chuỗi kiểm tra thực tế với `codex.exe exec`** (`codex-cli 0.171.0-alpha.13.2`, truyền prompt UTF-8 qua `stdin`):
+  1. Phiên `01a218d3-8db9-75b3-8bbd-d25299fe6298`: Codex góp ý hoán đổi đúng năng lực `gpt-6.2-astra` (Kiến trúc/Rủi ro cao) vs `gpt-6.2-sol` (Coder/Review thường mặc định), bổ sung `gpt-6.1-terra` (kiểm tra trực quan UI/CAD) + nhóm Luna/5.6, sửa dòng 25 `GEMINI.md` và bỏ mô tả daemon Git Watcher.
+  2. Phiên `01a218d8-1052-7372-9697-8fe7a8fc6087` & `01a218d9-afd9-7b51-ac4f-1e02adf95d3c`: Codex soi tiếp 3 điểm (đưa bước Anh Tuấn duyệt lên trước bước đóng gói `OUTPUT/` trong sơ đồ §3, thống nhất ping `stdin` $\le 1\text{ KB}$ trỏ SHA hoặc tệp diff $\le 16\text{ KB}$ khi thiếu `git` trong PATH, thống nhất quy tắc review bắt buộc cho tác vụ phát hành và giữ yêu cầu checklist + chủ sở hữu xác nhận cho cấp Nhẹ).
+  3. Phiên `01a218da-c478-7fd1-b7bc-52a510d9007e`: Codex (`gpt-6.2-astra`) kết luận **ĐẠT**.
+- **Tệp đã hoàn thiện**: `ROLES.md`, `DOCS/AI_AGREEMENT_WORKFLOW.md`, `WORKFLOW.md`, `GEMINI.md`, `COMMUNICATION.md`.
+- **Kiểm tra unit test**: `node --test services.test.mjs workflow-check.test.mjs` PASS `19/19`; `node workflow-check.mjs` vẫn exit 1 do hồ sơ lịch sử có sẵn (`TASK-0018`, `TASK-0019`, `TASK-0020`, ngoài phạm vi đợt sửa tài liệu này).
+- **NEXT_ACTOR**: OWNER_APPROVAL (Chờ Chủ sở hữu Phùng Anh Tuấn duyệt và commit)
+
+
+
 
 

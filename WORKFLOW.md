@@ -17,7 +17,7 @@ Chọn mức suy luận phù hợp độ khó/rủi ro: tài liệu, tìm kiếm
 
 ## 3. Triển khai
 Tạo nhánh task/TASK-xxxx-mo-ta từ main và ghi base_commit đầy đủ.
-Gemini Argon là lựa chọn triển khai chính theo chủ sở hữu; không phải cam kết luôn tốt hơn model khác.
+Điều phối theo mô hình đa tầng trong `ROLES.md` và `DOCS/AI_AGREEMENT_WORKFLOW.md`: `Gemini 4 Hydrogen (Extra High)` làm Tổng chỉ huy (chốt phân tích, đặc tả kỹ thuật, chia Task Packet và chỉ đóng gói `OUTPUT/` khi đã đạt duyệt); các mức `Hydrogen High / Medium / Low` và dàn model `Codex` (`GPT-6.2 / 6.1 / 6 / 5.6`) được giao đúng sở trường theo cấp độ việc (Nhẹ / Vừa / Khó).
 Một writer cho task; chia module có hợp đồng giao tiếp rõ nếu cần.
 Viết lõi xác định, test có ý nghĩa, rồi adapter/UI. Không trộn giả định thiết kế vào dữ liệu khách hàng.
 Nếu Gemini chỉ có quyền đọc MCP: xuất patch/code + tên tệp + test plan; chủ sở hữu hoặc Codex có phiên ghi được phép áp dụng vào nhánh. Không báo đã push khi chỉ sinh văn bản.
@@ -34,7 +34,7 @@ Không có môi trường native: BLOCKED nghiệm thu native, không ghi PASS.
 
 ## 5. Review độc lập
 Tạo PR có task_id; gửi reviewer diff, base/result commit, đặc tả và bằng chứng tối thiểu.
-Reviewer có thể là Codex hoặc phiên/model khác thực sự chạy; task thường có thể dùng checklist chủ sở hữu, task high cần reviewer độc lập và chủ sở hữu nghiệm thu chuyên môn.
+Mọi thay đổi mã nguồn/phát hành (kể cả cấp Vừa và Khó) bắt buộc có reviewer độc lập (khác writer và người thiết kế); chỉ tác vụ cấp Nhẹ không chạm mã phát hành (tài liệu, checklist nội bộ, JSON hồ sơ) mới được dùng checklist tự kiểm + xác nhận của chủ sở hữu (xem `ROLES.md` và `DOCS/AI_AGREEMENT_WORKFLOW.md`). Task high cần chủ sở hữu nghiệm thu chuyên môn trước khi đóng gói phát hành.
 Llama chỉ hỗ trợ giải thích/tìm góc thiếu; giới hạn 768 token, không dùng làm reviewer duy nhất cho tính toán an toàn.
 Ghi finding, severity, trạng thái giải quyết và reviewed_commit trong REVIEW.template.json.
 Code đổi sau review: kiểm delta và review lại phần ảnh hưởng. Không dùng review cũ để chứng nhận bản mới.
@@ -73,7 +73,7 @@ Không lặp lại cùng bản cài và gọi là bản sửa.
 2. **KỶ LUẬT KHÓA VAN TOKEN (Bảo vệ Quota tuyệt đối):**
    - **Quy tắc gói giao việc nhỏ:** Mọi gói bàn giao hoặc patch chỉ truyền phần chênh lệch (`git diff`), giới hạn tối đa $\le 16.000$ byte UTF-8.
    - **Nghiêm cấm tự động quét ổ đĩa:** Tuyệt đối cấm các lệnh PowerShell/shell quét đệ quy (`Get-ChildItem -Recurse`, `rg --files`, dump toàn bộ thư mục) đổ văn bản thô vào context của AI.
-   - **CLI chỉ làm chuông báo thức:** Lệnh gọi CLI cục bộ (`codex exec`) chỉ dùng để ping thông báo ngắn gọn ($\le 200$ từ / $\le 1\text{ KB}$) kèm commit SHA cụ thể. AI nhận lệnh chỉ mở đúng git diff của commit đó, không quét ổ đĩa.
+   - **CLI chỉ làm chuông báo thức:** Lệnh gọi CLI cục bộ (`codex.exe exec ... -` truyền qua `stdin`) chỉ dùng để ping ngắn gọn ($\le 200$ từ / $\le 1\text{ KB}$) kèm commit SHA hoặc đường dẫn tệp diff/Task Packet ($\le 16\text{ KB}$). AI nhận lệnh chỉ mở đúng tệp diff đó hoặc `git diff` của commit, không quét ổ đĩa.
 
 3. **GIẢI PHÓNG ANH TUẤN KHỎI VAI TRÒ TRUNG GIAN:**
    - Hai AI tự động điều phối, bắt nhịp và phản biện thuật toán với nhau qua Git và lệnh ping nền.

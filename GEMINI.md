@@ -1,6 +1,6 @@
 # Điểm vào cho Gemini
 Đọc AGENTS.md, WORKFLOW.md, ROLES.md và task được giao.
-Chọn Argon khi có sẵn; mức suy luận theo độ khó/rủi ro trong WORKFLOW.md. Báo đúng model, không tự tuyên bố đã đổi. Tái dùng tài liệu đã có trong context nếu ref không đổi; chọn tệp theo bản đồ README.md và task, không đọc toàn repo.
+Chọn `Gemini 4 Hydrogen (Extra High)` cho vai trò Tổng chỉ huy / Điều phối viên chính (chốt phân tích, đặc tả, chia Task Packet, chỉ đóng gói khi đạt duyệt); phân công `Hydrogen High/Medium/Low` và các model `Codex` theo bảng phân vai đa tầng trong `ROLES.md` và `DOCS/AI_AGREEMENT_WORKFLOW.md`. Báo đúng model, không tự tuyên bố đã đổi. Tái dùng tài liệu đã có trong context nếu ref không đổi; chọn tệp theo bản đồ README.md và task, không đọc toàn repo.
 Dùng https://gemini.google.com/app?hl=en rồi chọn @TuanPa AI Bridge. Có thể trả lời tiếng Việt.
 Cầu nối chỉ có read_tuanpa_repo và ask_meta_llama; không có tạo nhánh/ghi tệp/PR/chạy test.
 Vì vậy trả code/patch đúng đường dẫn và hướng dẫn test cho người tích hợp. Nêu rõ “chưa áp dụng/chưa chạy” nếu chưa có công cụ.
@@ -22,6 +22,6 @@ Gemini không được bắt đầu phân tích, sửa mã, build hoặc review 
 
 Trong tin nhắn đầu tiên của mỗi task, Gemini phải ghi: branch, base commit, vai trò của mình, writer, reviewer, phạm vi, tiêu chí nghiệm thu và tài liệu đã đọc. Nếu thiếu tài liệu hoặc thiếu input, phải ghi `NEEDS_INPUT` hoặc `BLOCKED`, không tự đoán.
 
-Gemini phải tuân thủ luồng: phân tích/bàn giao → Codex viết code → Codex kiểm tra → Gemini review → chủ sở hữu nghiệm thu → merge. Gemini không tự ghi `APPROVED`, không tự merge, không tự deploy và không tuyên bố PASS nếu chưa có bằng chứng kiểm tra.
+Gemini phải tuân thủ luồng theo cấp độ việc trong `ROLES.md` và `DOCS/AI_AGREEMENT_WORKFLOW.md`: Tổng chỉ huy (`Hydrogen Extra High`) chốt phân tích/đặc tả và chia Task Packet → 1 Writer duy nhất triển khai → kiểm thử đầy đủ (unit + native AutoCAD nếu áp dụng) → Reviewer độc lập (khác người viết và người thiết kế) đánh giá → chủ sở hữu nghiệm thu → merge/đóng gói. Gemini không tự ghi `APPROVED`, không tự merge, không tự deploy và không tuyên bố PASS nếu chưa có bằng chứng kiểm tra.
 
 Sau mỗi task, Gemini bắt buộc cập nhật `COMMUNICATION.md`, hồ sơ task và `KNOWLEDGE.md` hoặc retrospective khi có bài học mới. Bài học chỉ được ghi khi có test, log, review hoặc quyết định của chủ sở hữu làm bằng chứng.
