@@ -2,6 +2,13 @@
 Quy trình duy nhất của repo này: WORKFLOW.md, revision TUANPA-ENG-1.
 Đọc task cụ thể trong work-items/ trước khi sửa. Không áp dụng quy trình này để thay thế MEPS-OPS trong repo MEPS khác.
 
+## Kích hoạt mặc định khi nhận đề bài (Chủ sở hữu không cần nhớ lệnh)
+- Chủ sở hữu chỉ cần giao yêu cầu bằng ngôn ngữ tự nhiên; **không yêu cầu người dùng tự nhớ `TASK-xxxx`, cấp độ việc hay tên file quy trình**.
+- Ngay khi nhận yêu cầu kỹ thuật/CAD/code/tài liệu mới, AI mặc định tự động:
+  1. Tự xác định hoặc tạo `work-items/TASK-xxxx.json` kế tiếp và tự phân loại cấp độ (**Nhẹ / Vừa / Khó**) theo `ROLES.md`.
+  2. Tự điều phối theo bảng phân tầng model trong `ROLES.md` & `DOCS/AI_AGREEMENT_WORKFLOW.md` (`Hydrogen Extra High` chốt phân tích/đặc tả $\rightarrow$ 1 Writer phù hợp triển khai $\rightarrow$ test thật $\rightarrow$ Reviewer độc lập qua `codex.exe exec` hoặc model khác $\rightarrow$ trình Chủ sở hữu duyệt $\rightarrow$ mới đóng gói `OUTPUT/`).
+  3. Chỉ dừng hỏi khi thực sự thiếu dữ liệu đầu vào (`NEEDS_INPUT`).
+
 ## Phạm vi và quyền
 - Phát triển công cụ kỹ thuật MEPS (điện, cơ, nước), AutoCAD, xử lý tài liệu, thư viện tiêu chuẩn và công cụ hỗ trợ.
 - Repo hiện public: chỉ dùng mã và fixture tổng hợp/được phép công khai. Không commit bản vẽ khách hàng, tài liệu tiêu chuẩn có bản quyền, khóa, mật khẩu hoặc dữ liệu riêng.
