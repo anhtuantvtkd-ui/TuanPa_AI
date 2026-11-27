@@ -1,0 +1,69 @@
+{
+  "schema_version": "TUANPA-ENG-1",
+  "task_id": "TASK-0026",
+  "title": "Viết lệnh T-THTTLL bóc tách khối lượng hệ thống thông tin liên lạc từ bản vẽ AutoCAD ra Excel 3 sheet DG TTLL/THKL",
+  "status": "IMPLEMENTING",
+  "module": "meps",
+  "risk": "high",
+  "owner": "Phùng Anh Tuấn",
+  "writer": "Gemini 4 Hydrogen (Medium)",
+  "reviewer": "Codex GPT-6.2 Astra",
+  "base_commit": "609806d5cc2b6b366aace248a9bb55b8ace2d89f",
+  "branch": "task/TASK-0026-lisp-t-thttll",
+  "scope": [
+    "products/meps/src/bkl_ttll.lsp",
+    "products/meps/test/MakeSyntheticTtll.lsp",
+    "products/meps/test/bkl_ttll.test.mjs",
+    "products/meps/test/RunBklTtllSynthetic.scr",
+    "DOCS/tasks/TASK-0026-spec.md"
+  ],
+  "out_of_scope": [
+    "products/meps/src/TagSeq/*",
+    "products/meps/src/Toado/*",
+    "DWG khách hàng không được phép commit lên repo public"
+  ],
+  "sources": [
+    "DOCS/tasks/TASK-0026-spec.md",
+    "products/meps/src/bkl_cap.lsp",
+    "products/meps/src/bkl_thaodo.lsp",
+    "MB TTLL.dwg (local owner file, excluded from repo)",
+    "04._BANG_THKL_THONG_TIN_LIEN_LAC.xlsx (local owner reference, excluded from repo)"
+  ],
+  "missing_inputs": [],
+  "acceptance_criteria": [
+    "Lệnh T-THTTLL chạy được trong AutoCAD GUI và accoreconsole.exe với bộ lọc chọn đối tượng không cần vla-get-Layouts",
+    "Thuật toán đồ thị bóc tách trung thực 100% theo đối tượng/nhãn trên bản vẽ CAD (Phương án A) và liệt kê đầy đủ cảnh báo đối soát",
+    "Xuất file Excel .xlsx đủ 3 sheet (THKL, DG TTLL, DM LOAI ONG) giữ đúng công thức và định dạng mẫu",
+    "Đạt tất cả test tự động (synthetic DWG + native accoreconsole.exe trên bản sao MB TTLL.dwg + workflow-check.mjs) và review ĐẠT từ Codex"
+  ],
+  "required_checks": [
+    "unit",
+    "technical_reference",
+    "native_if_applicable"
+  ],
+  "evidence": [
+    {
+      "check": "unit",
+      "status": "PASS",
+      "command": "node --test products/meps/test/bkl_ttll.test.mjs",
+      "reference": "products/meps/test/bkl_ttll.test.mjs (2/2 PASS via AutoCAD 2021 accoreconsole.exe)",
+      "commit": "uncommitted-working-tree"
+    },
+    {
+      "check": "technical_reference",
+      "status": "PASS",
+      "reference": "DOCS/tasks/TASK-0026-spec.md; scratch/expected_ttll.csv & scratch/xlsx_formulas.txt",
+      "commit": "uncommitted-working-tree"
+    },
+    {
+      "check": "native_if_applicable",
+      "status": "PASS",
+      "command": "accoreconsole.exe /i scratch/mb_ttll.dwg /s scratch/run_mb_ttll.scr + Excel COM open check",
+      "reference": "254 spans (BE=66, GA=151, TU=13, 2D110=4982m, 4D110=94m, D60=2176m, 1D110=762m, QD=397m), 6 warnings (D110 19/40/5/26m, 2D110 38m, TT-03); XLSX opens clean via Excel COM",
+      "commit": "uncommitted-working-tree"
+    }
+  ],
+  "review": null,
+  "approval": null,
+  "release": null
+}

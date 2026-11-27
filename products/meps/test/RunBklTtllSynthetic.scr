@@ -1,0 +1,8 @@
+_FILEDIA 0
+_CMDECHO 0
+(load "D:/TuanPa_AI/products/meps/test/MakeSyntheticTtll.lsp")
+(syn:build-all)
+(load "D:/TuanPa_AI/products/meps/src/bkl_ttll.lsp")
+(setq ss (ssget "_X" '((0 . "INSERT,DIMENSION,TEXT,MTEXT,LWPOLYLINE,LINE,LEADER"))))
+(bkl-ttll:run-with-path ss "D:/TuanPa_AI/products/meps/test/synthetic_ttll_out.xlsx")
+_QUIT Y
