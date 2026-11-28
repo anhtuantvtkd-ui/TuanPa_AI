@@ -371,5 +371,8 @@ class MergeMeps {
 
         Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}), HtktLayer ({11}), WireEnsure ({12}), WireCheck ({13}).",
             replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands, patchedHtktLayer, patchedWireEnsure, patchedWireCheck));
+        if (patchedHtktLayer != 1 || patchedWireEnsure != 1 || patchedWireCheck != 1) {
+            throw new Exception("Missing required Task-0027 IL hook!");
+        }
     }
 }

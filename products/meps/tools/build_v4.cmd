@@ -82,6 +82,10 @@ if %errorlevel% neq 0 (
 
 echo [6/8] Merging into Base IL...
 "%CSC%" /out:"%TOOLS_DIR%merge_toado.exe" "%TOOLS_DIR%merge_toado.cs"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to compile merge_toado.cs
+    exit /b 1
+)
 "%TOOLS_DIR%merge_toado.exe"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to merge IL
