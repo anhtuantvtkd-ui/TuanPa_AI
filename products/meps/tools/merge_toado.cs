@@ -9,6 +9,7 @@ class MergeMeps {
         string vietchuPartPath = Path.Combine(baseDir, "VietchuPart.il");
         string tagSeqPartPath = Path.Combine(baseDir, "TagSeqPart.il");
         string modernThemePartPath = Path.Combine(baseDir, "ModernThemeEngine.il");
+        string htktWirePartPath = Path.Combine(baseDir, "HtktWireFix027.il");
         string mepsOrigPath = Path.Combine(baseDir, @"base\meps_orig.il");
         if (!File.Exists(mepsOrigPath)) mepsOrigPath = Path.Combine(baseDir, "meps_orig.il");
         string mepsFinalPath = Path.Combine(baseDir, "meps_final.il");
@@ -82,6 +83,24 @@ class MergeMeps {
             Console.WriteLine("ModernThemeEngine section extracted: " + (modernThemeLines.Length - startModernTheme) + " lines.");
         }
 
+        var newHtktWireSection = new StringBuilder();
+        if (File.Exists(htktWirePartPath)) {
+            var hwLines = File.ReadAllLines(htktWirePartPath);
+            int startHw = -1;
+            for (int i = 0; i < hwLines.Length; i++) {
+                if (hwLines[i].StartsWith(".class ") && hwLines[i].Contains("Tvxd.Meps.HtktWireFix027")) {
+                    startHw = i;
+                    break;
+                }
+            }
+            if (startHw >= 0) {
+                for (int i = startHw; i < hwLines.Length; i++) {
+                    newHtktWireSection.AppendLine(hwLines[i]);
+                }
+                Console.WriteLine("HtktWireFix027 section extracted: " + (hwLines.Length - startHw) + " lines.");
+            }
+        }
+
         // Byte replacements for Palette uppercase title and button name
         // 1. "Triển khai và thống kê" -> "TRIỂN KHAI VÀ THỐNG KÊ"
         string origTitle1 = "54 00 72 00 69 00 C3 1E 6E 00 20 00 6B 00 68 00";
@@ -107,6 +126,9 @@ class MergeMeps {
         int nanCount = 0;
         int infCount = 0;
         int patchedRouteStatsCommands = 0;
+        int patchedHtktLayer = 0;
+        int patchedWireEnsure = 0;
+        int patchedWireCheck = 0;
 
         using (var reader = new StreamReader(mepsOrigPath, Encoding.UTF8))
         using (var writer = new StreamWriter(mepsFinalPath, false, Encoding.UTF8)) {
@@ -118,6 +140,9 @@ class MergeMeps {
             bool afterToolbox106 = false;
             bool insideRouteStatsCctor = false;
             bool afterCdsInRouteStats = false;
+            bool insideHtktLayerName = false;
+            bool insideEnsureType = false;
+            bool insideWireCheckSettings = false;
 
             while ((line = reader.ReadLine()) != null) {
                 // Fix nan and inf
@@ -195,8 +220,67 @@ class MergeMeps {
                     }
                 }
 
-                // Inject ModernThemeEngine before disassembly completion marker
+                // 1. Patch HtktLayer096::Name to resolve HTKT-BE-*, HTKT-GANIVO-*, HTKT-TU-*, Cot den kep *
+                if (patchedHtktLayer == 0 && line.Contains("Name(class Tvxd.Meps.LibEntry e)")) insideHtktLayerName = true;
+                if (insideHtktLayerName) {
+                    if (line.Contains("IL_0096:  ldstr")) {
+                        writer.WriteLine("    IL_0096:  ldloc.0");
+                        writer.WriteLine("    call       string Tvxd.Meps.HtktWireFix027::ResolveHtktLayer(string)");
+                        writer.WriteLine("    dup");
+                        writer.WriteLine("    brfalse.s  IL_0096_THROW");
+                        writer.WriteLine("    ret");
+                        writer.WriteLine("    IL_0096_THROW: pop");
+                        writer.WriteLine(line.Replace("IL_0096:", "         "));
+                        patchedHtktLayer++;
+                        insideHtktLayerName = false;
+                        continue;
+                    }
+                    if (line.Contains("} // end of method")) insideHtktLayerName = false;
+                }
+
+                // 2. Patch WireCad010::EnsureType to load DIEN_SS_*_SS from linetypes076
+                if (line.Contains("EnsureType(class [Acdbmgd]Autodesk.AutoCAD.DatabaseServices.Database db,")) insideEnsureType = true;
+                if (insideEnsureType) {
+                    if (line.Contains("IL_0000:  nop")) {
+                        writer.WriteLine(line);
+                        writer.WriteLine("    ldarg.0");
+                        writer.WriteLine("    ldarg.1");
+                        writer.WriteLine("    ldarg.2");
+                        writer.WriteLine("    ldfld      string Tvxd.Meps.WireStyle010::linetype");
+                        writer.WriteLine("    call       valuetype [Acdbmgd]Autodesk.AutoCAD.DatabaseServices.ObjectId Tvxd.Meps.HtktWireFix027::EnsureCustomLinetype(class [Acdbmgd]Autodesk.AutoCAD.DatabaseServices.Database, class [Acdbmgd]Autodesk.AutoCAD.DatabaseServices.Transaction, string)");
+                        writer.WriteLine("    stloc.s    V_7");
+                        writer.WriteLine("    ldloca.s   V_7");
+                        writer.WriteLine("    call       instance bool [Acdbmgd]Autodesk.AutoCAD.DatabaseServices.ObjectId::get_IsNull()");
+                        writer.WriteLine("    brtrue.s   IL_0001");
+                        writer.WriteLine("    ldloc.s    V_7");
+                        writer.WriteLine("    ret");
+                        patchedWireEnsure++;
+                        continue;
+                    }
+                    if (line.Contains("} // end of method WireCad010::EnsureType")) insideEnsureType = false;
+                }
+
+                // 3. Patch WireModel010::CheckSettings to allow custom DIEN_SS_*_SS linetypes regardless of MSLTSCALE
+                if (line.Contains("CheckSettings(class Tvxd.Meps.WireStyle010 s,")) insideWireCheckSettings = true;
+                if (insideWireCheckSettings) {
+                    if (line.Contains("IL_000e:  nop")) {
+                        writer.WriteLine(line);
+                        writer.WriteLine("    ldarg.0");
+                        writer.WriteLine("    ldfld      string Tvxd.Meps.WireStyle010::linetype");
+                        writer.WriteLine("    call       bool Tvxd.Meps.HtktWireFix027::IsCustomLinetype(string)");
+                        writer.WriteLine("    brfalse.s  IL_000f");
+                        writer.WriteLine("    ret");
+                        patchedWireCheck++;
+                        continue;
+                    }
+                    if (line.Contains("} // end of method WireModel010::CheckSettings")) insideWireCheckSettings = false;
+                }
+
+                // Inject ModernThemeEngine & HtktWireFix027 before disassembly completion marker
                 if (line.StartsWith("// *********** DISASSEMBLY COMPLETE")) {
+                    if (newHtktWireSection.Length > 0) {
+                        writer.Write(newHtktWireSection.ToString());
+                    }
                     if (newModernThemeSection.Length > 0) {
                         writer.Write(newModernThemeSection.ToString());
                         injectedModernTheme++;
@@ -285,7 +369,7 @@ class MergeMeps {
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}).",
-            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands));
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}), HtktLayer ({11}), WireEnsure ({12}), WireCheck ({13}).",
+            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands, patchedHtktLayer, patchedWireEnsure, patchedWireCheck));
     }
 }

@@ -15,6 +15,7 @@ set "SRC_TOADO=%TOOLS_DIR%..\src\Toado\ToadoPart.cs"
 set "SRC_VIETCHU=%TOOLS_DIR%..\src\Vietchu\VietchuPart.cs"
 set "SRC_TAGSEQ=%TOOLS_DIR%..\src\TagSeq\TagSeqPart.cs"
 set "SRC_PALETTE=%TOOLS_DIR%..\src\Palette\ModernThemeEngine.cs"
+set "SRC_HTKT_WIRE=%TOOLS_DIR%..\src\Modules\HtktWireFix027.cs"
 set "BASE_IL=%TOOLS_DIR%base\meps_orig.il"
 set "BASE_RES=%TOOLS_DIR%base\meps_orig.res"
 set "RELEASE_DLL=%TOOLS_DIR%..\release\TVXD.BG_V4\MEPS060\TVXD.Meps.dll"
@@ -40,10 +41,15 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo [4/8] Compiling ModernThemeEngine.cs...
+echo [4/8] Compiling ModernThemeEngine.cs and HtktWireFix027.cs...
 "%CSC%" /target:library /out:"%TOOLS_DIR%ModernThemeEngine.dll" /r:System.Windows.Forms.dll /r:System.Drawing.dll /r:System.Core.dll "%SRC_PALETTE%"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to compile ModernThemeEngine.cs
+    exit /b 1
+)
+"%CSC%" /target:library /out:"%TOOLS_DIR%HtktWireFix027.dll" /r:"%ACAD_DIR%\acdbmgd.dll" /r:"%ACAD_DIR%\acmgd.dll" /r:"%ACAD_DIR%\accoremgd.dll" "%SRC_HTKT_WIRE%"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to compile HtktWireFix027.cs
     exit /b 1
 )
 
@@ -66,6 +72,11 @@ if %errorlevel% neq 0 (
 "%ILDASM%" /out:"%TOOLS_DIR%ModernThemeEngine.il" "%TOOLS_DIR%ModernThemeEngine.dll"
 if %errorlevel% neq 0 (
     echo [ERROR] Failed to disassemble ModernThemeEngine.dll
+    exit /b 1
+)
+"%ILDASM%" /out:"%TOOLS_DIR%HtktWireFix027.il" "%TOOLS_DIR%HtktWireFix027.dll"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to disassemble HtktWireFix027.dll
     exit /b 1
 )
 
