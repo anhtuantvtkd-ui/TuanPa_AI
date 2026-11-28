@@ -127,6 +127,7 @@ class MergeMeps {
         int infCount = 0;
         int patchedRouteStatsCommands = 0;
         int patchedHtktLayer = 0;
+        int patchedHtktKnown = 0;
         int patchedWireEnsure = 0;
         int patchedWireCheck = 0;
 
@@ -141,6 +142,7 @@ class MergeMeps {
             bool insideRouteStatsCctor = false;
             bool afterCdsInRouteStats = false;
             bool insideHtktLayerName = false;
+            bool insideHtktKnown = false;
             bool insideEnsureType = false;
             bool insideWireCheckSettings = false;
 
@@ -236,6 +238,24 @@ class MergeMeps {
                         continue;
                     }
                     if (line.Contains("} // end of method")) insideHtktLayerName = false;
+                }
+
+                // 1b. Patch HtktLayer096::Known to accept E-HT-TTLL
+                if (patchedHtktKnown == 0 && line.Contains("Known(string name)")) insideHtktKnown = true;
+                if (insideHtktKnown) {
+                    if (line.Contains("IL_0000:  nop")) {
+                        writer.WriteLine(line);
+                        writer.WriteLine("    ldarg.0");
+                        writer.WriteLine("    ldstr      \"E-HT-TTLL\"");
+                        writer.WriteLine("    call       bool [mscorlib]System.String::Equals(string, string)");
+                        writer.WriteLine("    brfalse.s  IL_0001");
+                        writer.WriteLine("    ldc.i4.1");
+                        writer.WriteLine("    ret");
+                        patchedHtktKnown++;
+                        insideHtktKnown = false;
+                        continue;
+                    }
+                    if (line.Contains("} // end of method")) insideHtktKnown = false;
                 }
 
                 // 2. Patch WireCad010::EnsureType to load DIEN_SS_*_SS from linetypes076
@@ -369,9 +389,9 @@ class MergeMeps {
             }
         }
 
-        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}), HtktLayer ({11}), WireEnsure ({12}), WireCheck ({13}).",
-            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands, patchedHtktLayer, patchedWireEnsure, patchedWireCheck));
-        if (patchedHtktLayer != 1 || patchedWireEnsure != 1 || patchedWireCheck != 1) {
+        Console.WriteLine(string.Format("Done! Replaced Toado ({0}), Vietchu ({1}), TagSeq ({2}), Injected ModernTheme ({3}), Hooked ArrangeActions ({4}), Height ({5}), Titles ({6}), Buttons ({7}), Fixed nan ({8}), inf ({9}), RouteStats076 ({10}), HtktLayer ({11}), HtktKnown ({12}), WireEnsure ({13}), WireCheck ({14}).",
+            replacedToado, replacedVietchu, replacedTagSeq, injectedModernTheme, hookedArrangeActions, replacedSectionHeight, replacedTitles, replacedButtons, nanCount, infCount, patchedRouteStatsCommands, patchedHtktLayer, patchedHtktKnown, patchedWireEnsure, patchedWireCheck));
+        if (patchedHtktLayer != 1 || patchedHtktKnown != 1 || patchedWireEnsure != 1 || patchedWireCheck != 1) {
             throw new Exception("Missing required Task-0027 IL hook!");
         }
     }
