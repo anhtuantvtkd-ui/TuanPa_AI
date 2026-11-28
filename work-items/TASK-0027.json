@@ -38,13 +38,13 @@
       "check": "node --test services.test.mjs workflow-check.test.mjs",
       "status": "PASS",
       "detail": "19/19 PASS",
-      "commit": "uncommitted-working-tree"
+      "commit": "89f0d5c"
     },
     {
       "check": "accoreconsole TEST_FINAL_V25",
       "status": "PASS",
-      "detail": "HTKT_LAYER_OK, INSERT_OK, WIRE_OK (LTSCALE=0.2, WIDTH=0.2, LineWeight020)",
-      "commit": "uncommitted-working-tree"
+      "detail": "HTKT_LAYER_OK, INSERT_OK, WIRE_OK (LTSCALE=0.2, WIDTH=0.2, LineWeight020) on OUTPUT V25",
+      "commit": "89f0d5c"
     }
   ]
 }

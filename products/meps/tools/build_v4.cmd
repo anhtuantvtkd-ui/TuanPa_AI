@@ -107,7 +107,15 @@ if %errorlevel% neq 0 (
 
 echo [8/8] Updating release SHA256 checksums...
 "%CSC%" /out:"%TOOLS_DIR%update_v4.exe" "%TOOLS_DIR%update_v4.cs"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to compile update_v4.cs
+    exit /b 1
+)
 "%TOOLS_DIR%update_v4.exe"
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to run update_v4.exe
+    exit /b 1
+)
 
 REM Cleanup temporary files
 del /q "%TOOLS_DIR%ToadoPart.dll" "%TOOLS_DIR%ToadoPart.il" "%TOOLS_DIR%ToadoPart.res" 2>nul
