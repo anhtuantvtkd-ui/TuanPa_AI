@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-0027",
+  "title": "Chuẩn hóa 24 block và 14 nét dây (0.20mm) từ INPUT/Block new.dwg vào thư viện TVXD.BG",
+  "status": "IMPLEMENTING",
+  "risk": "MEDIUM",
+  "module": "meps",
+  "branch": "task/TASK-0027-block-new-wire-library",
+  "base_commit": "609806d5cc2b6b366aace248a9bb55b8ace2d89f",
+  "writer": {
+    "actor": "AI",
+    "model": "Gemini 4 Hydrogen (Medium)"
+  },
+  "reviewer": {
+    "actor": "Human",
+    "model": "owner"
+  },
+  "scope": [
+    "Chuẩn hóa 24 block từ D:\\TuanPa_AI\\INPUT\\Block new.dwg (giữ nguyên màu, chiều dày nét 0.15 mm, Layer 0, tâm hình học) vào LIBRARY_0_6.",
+    "Đặt tên 14 nét dây DIEN_SS_*_SS (chiều dày 0.20 mm) vào wire-menu.json, đồng bộ linetypes076/*.lin và bổ sung lệnh DAYCHUAN trong WirePattern076.lsp.",
+    "Đóng gói 25. TVXD.BG V25 tại D:\\TuanPa_AI\\OUTPUT\\25. TVXD.BG V25 và đồng bộ LocalAppData."
+  ],
+  "out_of_scope": [
+    "Không commit INPUT/Block new.dwg lên Git.",
+    "Không biên dịch lại TVXD.Meps.dll."
+  ],
+  "sources": [
+    "D:\\TuanPa_AI\\INPUT\\Block new.dwg",
+    "products/meps/release/TVXD.BG_V4/MEPS060/LIBRARY_0_6/catalog.json"
+  ],
+  "missing_inputs": [],
+  "required_checks": [
+    "24/24 blocks verified (SHA256 + preview)",
+    "14/14 wire-menu entries (0.20 mm) + 14 .lin files",
+    "node --test services.test.mjs workflow-check.test.mjs"
+  ],
+  "evidence": [
+    {
+      "check": "24/24 blocks verified (SHA256 + preview)",
+      "status": "PASS",
+      "detail": "Verified blocks: 24/24 in TVXD.BG_V4/MEPS060/LIBRARY_0_6 (catalog total 123)",
+      "commit": "uncommitted-working-tree"
+    },
+    {
+      "check": "14/14 wire-menu entries (0.20 mm) + 14 .lin files",
+      "status": "PASS",
+      "detail": "WireMenu groups: 6, Total wires: 40, Weight 20 (0.20mm): 14, linetypes076: 14",
+      "commit": "uncommitted-working-tree"
+    },
+    {
+      "check": "node --test services.test.mjs workflow-check.test.mjs",
+      "status": "PASS",
+      "detail": "19/19 PASS",
+      "commit": "uncommitted-working-tree"
+    }
+  ]
+}
