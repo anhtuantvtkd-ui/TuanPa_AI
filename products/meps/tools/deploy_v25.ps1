@@ -5,7 +5,7 @@ $appDataDir = "$env:LOCALAPPDATA\TVXD\MEPS060"
 
 # Deploy base payload to OUTPUT\25. TVXD.BG V25
 if (!(Test-Path $out25)) { New-Item -ItemType Directory -Force -Path $out25 | Out-Null }
-Copy-Item -Path "$src\*" -Destination $out25 -Recurse -Force -ErrorAction SilentlyContinue
+Copy-Item -Path "$src\*" -Destination $out25 -Recurse -Force -ErrorAction Stop
 
 # Remove backup/log artifacts from $out25 so package is clean
 Get-ChildItem -Path $out25 -Recurse -File -Force -Filter "*.bak" | Remove-Item -Force -ErrorAction SilentlyContinue
@@ -70,4 +70,10 @@ if ($mismatch -gt 0 -or $extra -gt 0) {
     Write-Error "FAILED: $mismatch hash mismatches, $extra unlisted files in $out25"
     exit 1
 }
-Write-Host "SUCCESS: Verified $($manifest.Count)/$($manifest.Count) hashes (0 unlisted) in $out25"
+$pb = Get-Content (Join-Path $out25 "PHIEN_BAN.json") -Raw -Encoding UTF8 | ConvertFrom-Json
+$dllOut = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $out25 "MEPS060\TVXD.Meps.dll")).Hash.ToLowerInvariant()
+if ($dllOut -ne $pb.dll_sha256) {
+    Write-Error "FAILED: TVXD.Meps.dll ($dllOut) != PHIEN_BAN.json dll_sha256 ($($pb.dll_sha256))"
+    exit 1
+}
+Write-Host "SUCCESS: Verified $($manifest.Count)/$($manifest.Count) hashes (0 unlisted, DLL=$dllOut) in $out25"
