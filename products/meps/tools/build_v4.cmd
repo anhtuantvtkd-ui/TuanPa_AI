@@ -100,6 +100,10 @@ if %errorlevel% neq 0 (
 )
 
 copy /y "%TOOLS_DIR%TVXD.Meps.Merged.dll" "%RELEASE_DLL%" >nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Failed to copy TVXD.Meps.Merged.dll to release
+    exit /b 1
+)
 
 echo [8/8] Updating release SHA256 checksums...
 "%CSC%" /out:"%TOOLS_DIR%update_v4.exe" "%TOOLS_DIR%update_v4.cs"
