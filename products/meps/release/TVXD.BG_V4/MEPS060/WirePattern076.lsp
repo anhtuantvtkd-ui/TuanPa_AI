@@ -241,6 +241,8 @@
     ("GNV"  "DIEN_SS_GNV_SS"   7 "Tuyen ong / Ganivo (GNV)")
     ("2D60" "DIEN_SS_2D60_SS"  7 "Tuyen ong 2D60")
   ))
+  (if (null *TVXD-TDAY-DIR*)
+    (setq *TVXD-TDAY-DIR* (strcat (getenv "LOCALAPPDATA") "\\TVXD\\MEPS060\\LIBRARY_0_6\\linetypes076\\")))
   (initget "22KV 22TK 22HT 35KV 35TK 35HT 04KV VX CS TTLL ADSS HDPE GNV 2D60")
   (setq kw (getkword "\nChon net day 0.20mm [22KV/22TK/22HT/35KV/35TK/35HT/04KV/VX/CS/TTLL/ADSS/HDPE/GNV/2D60] <22KV>: "))
   (if (null kw) (setq kw "22KV"))
@@ -249,14 +251,21 @@
     (progn
       (setq nameLT (cadr chosen) aci (caddr chosen))
       (setq linPath (strcat *TVXD-TDAY-DIR* "DayDien_" nameLT ".lin"))
+      (if (not (tblsearch "STYLE" "Tuan_arial"))
+        (progn
+          (vl-cmdf "-STYLE" "Tuan_arial" "arial.ttf" 0 1 0 "N" "N")
+          (while (> (getvar "CMDACTIVE") 0) (vl-cmdf ""))))
       (if (and (not (tblsearch "LTYPE" nameLT)) (findfile linPath))
         (progn
           (vl-cmdf "-linetype" "L" nameLT linPath "")
           (while (> (getvar "CMDACTIVE") 0) (vl-cmdf ""))))
-      (if (tblsearch "LTYPE" nameLT) (setvar "CELTYPE" nameLT))
-      (setvar "CECOLOR" (itoa aci))
-      (setvar "CELWEIGHT" 20)
-      (princ (strcat "\n[OK] Da chon: " (cadddr chosen) " | Kieu net: " nameLT " | Day: 0.20 mm. Hay ve PLINE/LINE."))))
+      (if (tblsearch "LTYPE" nameLT)
+        (progn
+          (setvar "CELTYPE" nameLT)
+          (setvar "CECOLOR" (itoa aci))
+          (setvar "CELWEIGHT" 20)
+          (princ (strcat "\n[OK] Da chon: " (cadddr chosen) " | Kieu net: " nameLT " | Day: 0.20 mm. Hay ve PLINE/LINE.")))
+        (princ (strcat "\n[LOI] Khong nap duoc kieu net " nameLT " tu " linPath)))))
   (setvar "CMDECHO" oldEcho)
   (princ))
 
